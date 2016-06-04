@@ -4,11 +4,13 @@
 #include <sstream>
 #include "flash.hpp"
 #include "memory.hpp"
+#include "alu.hpp"
 
 int main(int argc, char **argv)
 {
   Flash flash(8192);
   Memory ram(256);
+  Alu alu(flash);
 
   while (1)
   {
@@ -24,6 +26,17 @@ int main(int argc, char **argv)
     if (tokens[0] == "loadfile")
     {
       flash.ParseHex(tokens[1]);
+    }
+    else if (tokens[0] == "disassemble")
+    {
+      std::uint16_t address = stoi(tokens[1], nullptr, 16);
+      std::uint16_t length = stoi(tokens[2], nullptr, 16);
+      std::uint16_t limit = address + length;
+      while (address <= limit)
+      {
+        std::cout << alu.Disassemble(address) << std::endl;
+        address += 1 + alu.GetOperands(address);
+      }
     }
     else if (tokens[0] == "ram" || tokens[0] == "flash")
     {

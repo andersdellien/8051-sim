@@ -19,5 +19,13 @@ class InvalidHexFileException: public std::exception
   }
 };
 
+class IllegalInstructionException: public std::exception
+{
+  virtual const char *what() const throw()
+  {
+    return "Illegal instruction";
+  }
+};
+
 #endif
 

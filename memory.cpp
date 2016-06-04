@@ -8,7 +8,7 @@ Memory::Memory(std::uint16_t s)
   data = new std::uint8_t[s];
 }
 
-std::uint8_t Memory::Get(std::uint16_t address)
+std::uint8_t Memory::Get(std::uint16_t address) const
 {
   if (address < size)
   {

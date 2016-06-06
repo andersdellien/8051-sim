@@ -5,6 +5,7 @@
 #include "flash.hpp"
 #include "memory.hpp"
 #include "alu.hpp"
+#include "symbol_table.hpp"
 
 int main(int argc, char **argv)
 {
@@ -23,7 +24,11 @@ int main(int argc, char **argv)
     {
       tokens.push_back(token);
     }    
-    if (tokens[0] == "loadfile")
+    if (tokens[0] == "loadsym")
+    {
+      SymbolTable::GetInstance()->ParseFile(tokens[1]);
+    }
+    else if (tokens[0] == "loadfile")
     {
       flash.ParseHex(tokens[1]);
     }

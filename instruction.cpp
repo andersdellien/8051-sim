@@ -14,3 +14,7 @@ std::uint8_t Instruction::GetOperands() const
 {
   return operands;
 }
+
+void Instruction::Execute() const
+{
+}

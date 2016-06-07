@@ -3,9 +3,31 @@
 #include "alu.hpp"
 #include "instruction_set.hpp"
 #include "exceptions.hpp"
+#include "sfr.hpp"
 
-Alu::Alu(Flash &f): flash(f)
+class SfrSp: public Sfr
 {
+  public:
+    SfrSp(Alu &alu);
+    void OnWrite(std::uint8_t data);
+    std::uint8_t Read();
+  private:
+    Alu &alu;
+};
+
+class SfrDpl: public Sfr
+{
+  public:
+    SfrDpl(Alu &alu);
+    void OnWrite(std::uint8_t data);
+    std::uint8_t Read();
+  private:
+    Alu &alu;
+};
+
+Alu::Alu(Flash &f, std::uint16_t iramSize): flash(f)
+{
+  iram = new std::uint8_t[iramSize];
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
   ACALL_11 *acall_11 = new ACALL_11(*this);
@@ -516,6 +538,8 @@ Alu::Alu(Flash &f): flash(f)
   instructionSet[xrl_65->GetOpcode()] = xrl_65;
   XRL_63 *xrl_63 = new XRL_63(*this);
   instructionSet[xrl_63->GetOpcode()] = xrl_63;
+  RegisterSfr(0x81, new SfrSp(*this));
+  RegisterSfr(0x82, new SfrDpl(*this));
 }
 
 std::string Alu::Disassemble(std::uint16_t address)
@@ -546,3 +570,177 @@ std::uint8_t Alu::GetOperands(std::uint16_t address)
   }
 }
 
+void Alu::Reset()
+{
+  a = 0;
+  pc = 0;
+  sp = 7;
+  r0 = &iram[0];
+  r1 = &iram[1];
+  r2 = &iram[2];
+  r3 = &iram[3];
+  r4 = &iram[4];
+  r5 = &iram[5];
+  r6 = &iram[6];
+  r7 = &iram[7];
+  *r0 = 0;
+  *r1 = 0;
+  *r2 = 0;
+  *r3 = 0;
+  *r4 = 0;
+  *r5 = 0;
+  *r6 = 0;
+  *r7 = 0;
+}
+
+void Alu::Step()
+{
+  instructionSet[flash.Get(pc)]->Execute();  
+}
+
+std::uint16_t Alu::GetPC()
+{
+  return pc;
+}
+
+std::uint8_t Alu::GetSP()
+{
+  return sp;
+}
+void Alu::SetSP(std::uint8_t s)
+{
+  sp = s;
+}
+
+void Alu::SetPC(std::uint16_t newPC)
+{
+  pc = newPC;
+}
+
+std::uint16_t Alu::GetDP()
+{
+  return dp;
+}
+
+void Alu::SetA(std::uint8_t a)
+{
+  this->a = a;
+}
+
+std::uint8_t Alu::GetA()
+{
+  return a;
+}
+
+std::uint8_t Alu::GetR0()
+{
+  return *r0;
+}
+
+std::uint8_t Alu::GetR1()
+{
+  return *r1;
+}
+
+std::uint8_t Alu::GetR2()
+{
+  return *r2;
+}
+
+std::uint8_t Alu::GetR3()
+{
+  return *r3;
+}
+
+std::uint8_t Alu::GetR4()
+{
+  return *r4;
+}
+
+std::uint8_t Alu::GetR5()
+{
+  return *r5;
+}
+
+std::uint8_t Alu::GetR6()
+{
+  return *r6;
+}
+
+std::uint8_t Alu::GetR7()
+{
+  return *r7;
+}
+
+void Alu::SetR0(std::uint8_t val)
+{
+  *r0 = val;
+}
+
+void Alu::SetR1(std::uint8_t val)
+{
+  *r1 = val;
+}
+
+void Alu::SetR2(std::uint8_t val)
+{
+  *r2 = val;
+}
+
+void Alu::SetR3(std::uint8_t val)
+{
+  *r3 = val;
+}
+
+void Alu::SetR4(std::uint8_t val)
+{
+  *r4 = val;
+}
+
+void Alu::SetR5(std::uint8_t val)
+{
+  *r5 = val;
+}
+
+void Alu::SetR6(std::uint8_t val)
+{
+  *r6 = val;
+}
+
+void Alu::SetR7(std::uint8_t val)
+{
+  *r7 = val;
+}
+
+void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr)
+{
+  specialFunctionRegisters[address] = sfr;
+}
+
+void SfrSp::OnWrite(std::uint8_t data)
+{
+  alu.sp = data;  
+}
+
+std::uint8_t SfrSp::Read()
+{
+  return alu.sp;
+}
+
+SfrSp::SfrSp(Alu &a): alu(a)
+{
+}
+
+SfrDpl::SfrDpl(Alu &a): alu(a)
+{
+}
+
+void SfrDpl::OnWrite(std::uint8_t data)
+{
+  alu.dp = (alu.dp & 0xff00) + data;  
+}
+
+std::uint8_t SfrDpl::Read()
+{
+  return alu.dp & 0xff;
+}

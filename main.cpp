@@ -7,11 +7,13 @@
 #include "memory.hpp"
 #include "alu.hpp"
 #include "symbol_table.hpp"
+#include "port2.hpp"
 
 int main(int argc, char **argv)
 {
   Flash flash(8192);
   Alu alu(flash, 256);
+  Port2 port2(alu);
 
   alu.Reset();
   while (1)

@@ -18,7 +18,7 @@ static void PrintAddress(std::stringstream &ss, std::uint16_t address)
   }
   else
   {
-    ss << (int) address;
+    ss << std::setw(2) << (int) address;
   }
 }
 
@@ -791,9 +791,9 @@ CJNE_B6::CJNE_B6(Alu &a) : Instruction(a)
 std::string CJNE_B6::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "CJNE @R0, #";
-  ss << (int) memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
   return ss.str();
 }
 
@@ -1985,10 +1985,10 @@ MOV_90::MOV_90(Alu &a) : Instruction(a)
 std::string MOV_90::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV DPTR, #";
-  ss << (int) memory.Get(address+1);
-  ss << (int) memory.Get(address+2);
+  ss << std::setw(2) << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+2);
   return ss.str();
 }
 
@@ -2011,7 +2011,7 @@ std::string MOV_75::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
   PrintAddress(ss, memory.Get(address+1));
-  ss << ", #" << (int) memory.Get(address+2);
+  ss << ", #" << std::setw(2) << (int) memory.Get(address+2);
   return ss.str();
 }
 
@@ -2046,7 +2046,7 @@ std::string MOV_85::Disassemble(const Memory& memory, std::uint16_t address) con
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
   return ss.str();
 }
 
@@ -2189,9 +2189,9 @@ MOV_78::MOV_78(Alu &a) : Instruction(a)
 std::string MOV_78::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV R0, #";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
 }
 
@@ -2210,9 +2210,9 @@ MOV_79::MOV_79(Alu &a) : Instruction(a)
 std::string MOV_79::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV R1, #";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
 }
 
@@ -2231,9 +2231,9 @@ MOV_7A::MOV_7A(Alu &a) : Instruction(a)
 std::string MOV_7A::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV R2, #";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
 }
 
@@ -2252,9 +2252,9 @@ MOV_7B::MOV_7B(Alu &a) : Instruction(a)
 std::string MOV_7B::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV R3, #";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
 }
 
@@ -2273,9 +2273,9 @@ MOV_7C::MOV_7C(Alu &a) : Instruction(a)
 std::string MOV_7C::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV R4, #";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
 }
 
@@ -2294,9 +2294,9 @@ MOV_7D::MOV_7D(Alu &a) : Instruction(a)
 std::string MOV_7D::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV R5, #";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
 }
 
@@ -2315,9 +2315,9 @@ MOV_7E::MOV_7E(Alu &a) : Instruction(a)
 std::string MOV_7E::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV R6, #";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
 }
 
@@ -2336,9 +2336,9 @@ MOV_7F::MOV_7F(Alu &a) : Instruction(a)
 std::string MOV_7F::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "MOV R7, #";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
 }
 

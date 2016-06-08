@@ -33,15 +33,17 @@ int main(int argc, char **argv)
       alu.Reset();
     } else if (tokens[0] == "reg")
     {
-      std::cout << std::hex << "PC:" << (int) alu.GetPC() << " SP:" << (int) alu.GetSP() << " A:" << (int) alu.GetA();
-      std::cout << "R0:" << (int) alu.GetR0() << " ";
-      std::cout << "R1:" << (int) alu.GetR1() << " ";
-      std::cout << "R2:" << (int) alu.GetR2() << " ";
-      std::cout << "R3:" << (int) alu.GetR3() << " ";
-      std::cout << "R4:" << (int) alu.GetR4() << " ";
-      std::cout << "R5:" << (int) alu.GetR5() << " ";
-      std::cout << "R6:" << (int) alu.GetR6() << " ";
-      std::cout << "R7:" << (int) alu.GetR7();
+      std::cout << std::hex << "PC:" << std::setw(4) << (int) alu.GetPC();
+      std::cout << " SP:" << std::setw(2) << (int) alu.GetSP();
+      std::cout << " A:" << std::setw(2) << (int) alu.GetA();
+      std::cout << " R0:" << std::setw(2) << (int) alu.GetR0() << " ";
+      std::cout << "R1:" << std::setw(2) << (int) alu.GetR1() << " ";
+      std::cout << "R2:" << std::setw(2) << (int) alu.GetR2() << " ";
+      std::cout << "R3:" << std::setw(2) << (int) alu.GetR3() << " ";
+      std::cout << "R4:" << std::setw(2) << (int) alu.GetR4() << " ";
+      std::cout << "R5:" << std::setw(2) << (int) alu.GetR5() << " ";
+      std::cout << "R6:" << std::setw(2) << (int) alu.GetR6() << " ";
+      std::cout << "R7:" << std::setw(2) << (int) alu.GetR7();
       std::cout << std::endl;
     }
     else if (tokens[0] == "step")

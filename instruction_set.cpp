@@ -2816,7 +2816,7 @@ void MOV_F5::Execute() const
 {
   std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.iram[addr] = alu.GetA();
+  Write(alu, addr, alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

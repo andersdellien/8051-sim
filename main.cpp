@@ -7,16 +7,28 @@
 #include "memory.hpp"
 #include "alu.hpp"
 #include "symbol_table.hpp"
-#include "port2.hpp"
 #include "port0.hpp"
+#include "port1.hpp"
+#include "port2.hpp"
+#include "pca.hpp"
+#include "vreg.hpp"
+#include "system.hpp"
+#include "uart.hpp"
+#include "adc.hpp"
 
 int main(int argc, char **argv)
 {
   Flash flash(8192);
   Memory xram(1024);
   Alu alu(flash, xram, 256);
-  Port2 port2(alu);
   Port0 port0(alu);
+  Port1 port1(alu);
+  Port2 port2(alu);
+  Pca pca(alu);
+  Vreg vreg(alu);
+  System system(alu);
+  Uart uart(alu);
+  Adc adc(alu);
 
   alu.Reset();
   while (1)

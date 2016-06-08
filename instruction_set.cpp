@@ -6,7 +6,39 @@
 #include "symbol_table.hpp"
 #include "exceptions.hpp"
 
-static void PrintAddress(std::stringstream &ss, std::uint16_t address)
+static void Write(Alu &alu, std::uint8_t address, std::uint8_t data)
+{
+  if (address < 0x80)
+  {
+    alu.iram[address] = data;
+  }
+  else if (alu.specialFunctionRegisters.find(address) != alu.specialFunctionRegisters.end())
+  {
+    alu.specialFunctionRegisters[address]->OnWrite(data);
+  }
+  else
+  {
+    throw new IllegalAddressException();
+  }
+}
+
+static std::uint8_t Read(Alu &alu, std::uint8_t address)
+{
+  if (address < 0x80)
+  {
+    return alu.iram[address];
+  }
+  else if (alu.specialFunctionRegisters.find(address) != alu.specialFunctionRegisters.end())
+  {
+    return alu.specialFunctionRegisters[address]->Read();
+  }
+  else
+  {
+    throw new IllegalAddressException();
+  }
+}
+
+static void PrintAddress(std::stringstream &ss, std::uint8_t address)
 {
   bool found;
   std::string name;
@@ -19,6 +51,22 @@ static void PrintAddress(std::stringstream &ss, std::uint16_t address)
   else
   {
     ss << std::setw(2) << (int) address;
+  }
+}
+
+static void PrintAddress(std::stringstream &ss, std::uint16_t address)
+{
+  bool found;
+  std::string name;
+
+  SymbolTable::GetInstance()->LookupAddress(address, name, found);
+  if (found)
+  {
+    ss << name;
+  }
+  else
+  {
+    ss << std::setw(4) << (int) address;
   }
 }
 
@@ -591,10 +639,17 @@ ANL_54::ANL_54(Alu &a) : Instruction(a)
 std::string ANL_54::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ANL A,";
-  ss << (int) memory.Get(address+1);
+  ss << std::setfill('0') << std::hex;
+  ss << "ANL A, #";
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
+}
+
+void ANL_54::Execute() const
+{
+  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
+  alu.SetA(operand & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ANL_55::ANL_55(Alu &a) : Instruction(a)
@@ -606,10 +661,17 @@ ANL_55::ANL_55(Alu &a) : Instruction(a)
 std::string ANL_55::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "ANL A,";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
+}
+
+void ANL_55::Execute() const
+{
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+  alu.SetA(alu.iram[address] & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ANL_56::ANL_56(Alu &a) : Instruction(a)
@@ -645,6 +707,12 @@ std::string ANL_58::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ANL A, R0";
 }
 
+void ANL_58::Execute() const
+{
+  alu.SetA(alu.GetR0() & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ANL_59::ANL_59(Alu &a) : Instruction(a)
 {
   opcode = 0x59;
@@ -654,6 +722,12 @@ ANL_59::ANL_59(Alu &a) : Instruction(a)
 std::string ANL_59::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ANL A, R1";
+}
+
+void ANL_59::Execute() const
+{
+  alu.SetA(alu.GetR1() & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ANL_5A::ANL_5A(Alu &a) : Instruction(a)
@@ -667,6 +741,12 @@ std::string ANL_5A::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ANL A, R2";
 }
 
+void ANL_5A::Execute() const
+{
+  alu.SetA(alu.GetR0() & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ANL_5B::ANL_5B(Alu &a) : Instruction(a)
 {
   opcode = 0x5B;
@@ -676,6 +756,12 @@ ANL_5B::ANL_5B(Alu &a) : Instruction(a)
 std::string ANL_5B::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ANL A, R3";
+}
+
+void ANL_5B::Execute() const
+{
+  alu.SetA(alu.GetR3() & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ANL_5C::ANL_5C(Alu &a) : Instruction(a)
@@ -689,6 +775,12 @@ std::string ANL_5C::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ANL A, R4";
 }
 
+void ANL_5C::Execute() const
+{
+  alu.SetA(alu.GetR4() & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ANL_5D::ANL_5D(Alu &a) : Instruction(a)
 {
   opcode = 0x5D;
@@ -698,6 +790,12 @@ ANL_5D::ANL_5D(Alu &a) : Instruction(a)
 std::string ANL_5D::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ANL A, R5";
+}
+
+void ANL_5D::Execute() const
+{
+  alu.SetA(alu.GetR5() & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ANL_5E::ANL_5E(Alu &a) : Instruction(a)
@@ -711,6 +809,12 @@ std::string ANL_5E::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ANL A, R6";
 }
 
+void ANL_5E::Execute() const
+{
+  alu.SetA(alu.GetR6() & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ANL_5F::ANL_5F(Alu &a) : Instruction(a)
 {
   opcode = 0x5F;
@@ -720,6 +824,12 @@ ANL_5F::ANL_5F(Alu &a) : Instruction(a)
 std::string ANL_5F::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ANL A, R7";
+}
+
+void ANL_5F::Execute() const
+{
+  alu.SetA(alu.GetR7() & alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ANL_82::ANL_82(Alu &a) : Instruction(a)
@@ -1937,7 +2047,7 @@ std::string LCALL_12::Disassemble(const Memory& memory, std::uint16_t address) c
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "LCALL ";
-  ss << (int) memory.Get(address+1) << (int) memory.Get(address+2);
+  PrintAddress(ss, (uint16_t) (memory.Get(address + 1) * 256 + memory.Get(address + 2)));
   return ss.str();
 }
 
@@ -1967,7 +2077,7 @@ std::string LJMP_2::Disassemble(const Memory& memory, std::uint16_t address) con
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "LJMP ";
-  ss << std::setw(2) << (int) memory.Get(address+1) << std::setw(2) << (int) memory.Get(address+2);
+  PrintAddress(ss, (uint16_t) (memory.Get(address + 1) * 256 + memory.Get(address + 2)));
   return ss.str();
 }
 
@@ -2020,18 +2130,7 @@ void MOV_75::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
   std::uint8_t data = alu.flash.Get(alu.GetPC() + 2);
 
-  if (address < 0x80)
-  {
-    alu.iram[address] = data;
-  }
-  else if (alu.specialFunctionRegisters.find(address) != alu.specialFunctionRegisters.end())
-  {
-    alu.specialFunctionRegisters[address]->OnWrite(data);
-  }
-  else
-  {
-    throw new IllegalAddressException();
-  }
+  Write(alu, address, data);
   alu.SetPC(alu.GetPC() + operands + 1);
 }
 
@@ -3117,10 +3216,20 @@ ORL_43::ORL_43(Alu &a) : Instruction(a)
 std::string ORL_43::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "ORL ";
-  ss << (int) memory.Get(address+1) << ", #" << (int) memory.Get(address+2);
+  PrintAddress(ss, memory.Get(address + 1));
+  ss << ", #" << std::setw(2) << (int) memory.Get(address+2);
   return ss.str();
+}
+
+void ORL_43::Execute() const
+{
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+  std::uint8_t data = Read(alu, address);
+
+  Write(alu, address, data | alu.flash.Get(alu.GetPC() + 2));
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ORL_42::ORL_42(Alu &a) : Instruction(a)
@@ -3346,10 +3455,17 @@ PUSH_C0::PUSH_C0(Alu &a) : Instruction(a)
 std::string PUSH_C0::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << std::setfill('0') << std::hex;
   ss << "PUSH ";
-  ss << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) memory.Get(address+1);
   return ss.str();
+}
+
+void PUSH_C0::Execute() const
+{
+  alu.SetSP(alu.GetSP() + 1);
+  alu.iram[alu.GetSP()] = alu.iram[alu.flash.Get(alu.GetPC() + 1)];
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 RET_22::RET_22(Alu &a) : Instruction(a)

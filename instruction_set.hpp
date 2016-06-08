@@ -490,6 +490,7 @@ class ORL_43: public Instruction
   public:
     ORL_43(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_44: public Instruction
@@ -611,6 +612,7 @@ class ANL_54: public Instruction
   public:
     ANL_54(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_55: public Instruction
@@ -618,6 +620,7 @@ class ANL_55: public Instruction
   public:
     ANL_55(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_56: public Instruction
@@ -639,6 +642,7 @@ class ANL_58: public Instruction
   public:
     ANL_58(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_59: public Instruction
@@ -646,6 +650,7 @@ class ANL_59: public Instruction
   public:
     ANL_59(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_5A: public Instruction
@@ -653,6 +658,7 @@ class ANL_5A: public Instruction
   public:
     ANL_5A(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_5B: public Instruction
@@ -660,6 +666,7 @@ class ANL_5B: public Instruction
   public:
     ANL_5B(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_5C: public Instruction
@@ -667,6 +674,7 @@ class ANL_5C: public Instruction
   public:
     ANL_5C(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_5D: public Instruction
@@ -674,6 +682,7 @@ class ANL_5D: public Instruction
   public:
     ANL_5D(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_5E: public Instruction
@@ -681,6 +690,7 @@ class ANL_5E: public Instruction
   public:
     ANL_5E(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_5F: public Instruction
@@ -688,6 +698,7 @@ class ANL_5F: public Instruction
   public:
     ANL_5F(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class JZ_60: public Instruction
@@ -1390,6 +1401,7 @@ class PUSH_C0: public Instruction
   public:
     PUSH_C0(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class AJMP_C1: public Instruction

@@ -2464,7 +2464,9 @@ std::string MOV_A8::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_A8::Execute() const
 {
-  alu.SetR0(alu.iram[alu.flash.Get(alu.GetPC() + 1)]);
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetR0(Read(alu, address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2485,7 +2487,9 @@ std::string MOV_A9::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_A9::Execute() const
 {
-  alu.SetR1(alu.iram[alu.flash.Get(alu.GetPC() + 1)]);
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetR1(Read(alu, address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2506,7 +2510,9 @@ std::string MOV_AA::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_AA::Execute() const
 {
-  alu.SetR2(alu.iram[alu.flash.Get(alu.GetPC() + 1)]);
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetR2(Read(alu, address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2527,7 +2533,9 @@ std::string MOV_AB::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_AB::Execute() const
 {
-  alu.SetR3(alu.iram[alu.flash.Get(alu.GetPC() + 1)]);
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetR3(Read(alu, address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2548,7 +2556,9 @@ std::string MOV_AC::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_AC::Execute() const
 {
-  alu.SetR4(alu.iram[alu.flash.Get(alu.GetPC() + 1)]);
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetR4(Read(alu, address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2569,7 +2579,9 @@ std::string MOV_AD::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_AD::Execute() const
 {
-  alu.SetR5(alu.iram[alu.flash.Get(alu.GetPC() + 1)]);
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetR5(Read(alu, address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2590,7 +2602,9 @@ std::string MOV_AE::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_AE::Execute() const
 {
-  alu.SetR6(alu.iram[alu.flash.Get(alu.GetPC() + 1)]);
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetR6(Read(alu, address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2611,7 +2625,9 @@ std::string MOV_AF::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_AF::Execute() const
 {
-  alu.SetR7(alu.iram[alu.flash.Get(alu.GetPC() + 1)]);
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetR7(Read(alu, address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

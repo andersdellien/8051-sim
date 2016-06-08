@@ -8,6 +8,7 @@
 #include "alu.hpp"
 #include "symbol_table.hpp"
 #include "port2.hpp"
+#include "port0.hpp"
 
 int main(int argc, char **argv)
 {
@@ -15,6 +16,7 @@ int main(int argc, char **argv)
   Memory xram(1024);
   Alu alu(flash, xram, 256);
   Port2 port2(alu);
+  Port0 port0(alu);
 
   alu.Reset();
   while (1)

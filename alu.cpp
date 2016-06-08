@@ -712,6 +712,11 @@ void Alu::SetR7(std::uint8_t val)
   *r7 = val;
 }
 
+void Alu::SetDPTR(std::uint16_t val)
+{
+  dptr = val;
+}
+
 void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr)
 {
   specialFunctionRegisters[address] = sfr;

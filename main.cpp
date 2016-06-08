@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include "flash.hpp"
 #include "memory.hpp"
 #include "alu.hpp"
@@ -29,7 +30,7 @@ int main(int argc, char **argv)
       alu.Reset();
     } else if (tokens[0] == "reg")
     {
-      std::cout << std::hex << "pc:" << alu.GetPC() << " sp:" << (int) alu.GetSP() << " a:" << alu.GetA();
+      std::cout << std::hex << "PC:" << (int) alu.GetPC() << " SP:" << (int) alu.GetSP() << " A:" << (int) alu.GetA();
       std::cout << "R0:" << (int) alu.GetR0() << " ";
       std::cout << "R1:" << (int) alu.GetR1() << " ";
       std::cout << "R2:" << (int) alu.GetR2() << " ";
@@ -42,7 +43,7 @@ int main(int argc, char **argv)
     }
     else if (tokens[0] == "step")
     {
-      std::cout << std::hex << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
+      std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
       alu.Step();
     }
     else if (tokens[0] == "loadsym")

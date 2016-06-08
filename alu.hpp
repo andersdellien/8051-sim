@@ -49,10 +49,12 @@ class Alu
     void SetR5(std::uint8_t val);
     void SetR6(std::uint8_t val);
     void SetR7(std::uint8_t val);
+    void SetDPTR(std::uint16_t val);
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint8_t a;
     std::uint16_t pc;
+    std::uint16_t dptr;
     std::uint8_t sp;
     std::uint16_t dp;
     std::uint8_t *r0;

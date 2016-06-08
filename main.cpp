@@ -12,7 +12,8 @@
 int main(int argc, char **argv)
 {
   Flash flash(8192);
-  Alu alu(flash, 256);
+  Memory xram(1024);
+  Alu alu(flash, xram, 256);
   Port2 port2(alu);
 
   alu.Reset();
@@ -45,8 +46,16 @@ int main(int argc, char **argv)
     }
     else if (tokens[0] == "step")
     {
-      std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
-      alu.Step();
+      int limit = 1;
+      if (tokens.size() > 1)
+      {
+        limit = stoi(tokens[1], nullptr, 16);
+      }
+      for (int i = 0; i < limit; i++)
+      {
+        std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
+        alu.Step();
+      }
     }
     else if (tokens[0] == "loadsym")
     {

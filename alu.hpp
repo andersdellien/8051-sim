@@ -18,10 +18,11 @@ class Alu
   friend class SfrDpl;
   public:
     Flash &flash;
+    Memory &xram;
     std::uint8_t *iram;
     std::string Disassemble(std::uint16_t address);
     std::uint8_t GetOperands(std::uint16_t address);
-    Alu(Flash &f, std::uint16_t iramSize);
+    Alu(Flash &f, Memory &x, std::uint16_t iramSize);
     void Reset();
     void Step();
     std::uint16_t GetPC();
@@ -50,6 +51,8 @@ class Alu
     void SetR6(std::uint8_t val);
     void SetR7(std::uint8_t val);
     void SetDPTR(std::uint16_t val);
+    std::uint16_t GetDPTR();
+    void SetC();
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint8_t a;
@@ -65,6 +68,7 @@ class Alu
     std::uint8_t *r5;
     std::uint8_t *r6;
     std::uint8_t *r7;
+    bool c;
 };
 
 #endif

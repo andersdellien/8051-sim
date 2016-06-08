@@ -25,7 +25,7 @@ class SfrDpl: public Sfr
     Alu &alu;
 };
 
-Alu::Alu(Flash &f, std::uint16_t iramSize): flash(f)
+Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
 {
   iram = new std::uint8_t[iramSize];
   INC_7 *inc_7 = new INC_7(*this);
@@ -715,6 +715,16 @@ void Alu::SetR7(std::uint8_t val)
 void Alu::SetDPTR(std::uint16_t val)
 {
   dptr = val;
+}
+
+std::uint16_t Alu::GetDPTR()
+{
+  return dptr;
+}
+
+void Alu::SetC()
+{
+  c = true;
 }
 
 void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr)

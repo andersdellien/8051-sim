@@ -67,6 +67,7 @@ class INC_8: public Instruction
   public:
     INC_8(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_9: public Instruction
@@ -74,6 +75,7 @@ class INC_9: public Instruction
   public:
     INC_9(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_A: public Instruction
@@ -81,6 +83,7 @@ class INC_A: public Instruction
   public:
     INC_A(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_B: public Instruction
@@ -88,6 +91,7 @@ class INC_B: public Instruction
   public:
     INC_B(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_C: public Instruction
@@ -95,6 +99,7 @@ class INC_C: public Instruction
   public:
     INC_C(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_D: public Instruction
@@ -102,6 +107,7 @@ class INC_D: public Instruction
   public:
     INC_D(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_E: public Instruction
@@ -109,6 +115,7 @@ class INC_E: public Instruction
   public:
     INC_E(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_F: public Instruction
@@ -116,6 +123,7 @@ class INC_F: public Instruction
   public:
     INC_F(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class JBC_10: public Instruction
@@ -828,6 +836,7 @@ class MOV_74: public Instruction
   public:
     MOV_74(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_75: public Instruction
@@ -1055,6 +1064,7 @@ class MOVC_93: public Instruction
   public:
     MOVC_93(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class SUBB_94: public Instruction
@@ -1167,6 +1177,7 @@ class INC_A3: public Instruction
   public:
     INC_A3(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MUL_A4: public Instruction
@@ -1195,6 +1206,7 @@ class MOV_A8: public Instruction
   public:
     MOV_A8(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_A9: public Instruction
@@ -1202,6 +1214,7 @@ class MOV_A9: public Instruction
   public:
     MOV_A9(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_AA: public Instruction
@@ -1209,6 +1222,7 @@ class MOV_AA: public Instruction
   public:
     MOV_AA(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_AB: public Instruction
@@ -1216,6 +1230,7 @@ class MOV_AB: public Instruction
   public:
     MOV_AB(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_AC: public Instruction
@@ -1223,6 +1238,7 @@ class MOV_AC: public Instruction
   public:
     MOV_AC(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_AD: public Instruction
@@ -1230,6 +1246,7 @@ class MOV_AD: public Instruction
   public:
     MOV_AD(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_AE: public Instruction
@@ -1237,6 +1254,7 @@ class MOV_AE: public Instruction
   public:
     MOV_AE(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_AF: public Instruction
@@ -1244,6 +1262,7 @@ class MOV_AF: public Instruction
   public:
     MOV_AF(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_B0: public Instruction
@@ -1307,6 +1326,7 @@ class CJNE_B8: public Instruction
   public:
     CJNE_B8(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_B9: public Instruction
@@ -1314,6 +1334,7 @@ class CJNE_B9: public Instruction
   public:
     CJNE_B9(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_BA: public Instruction
@@ -1321,6 +1342,7 @@ class CJNE_BA: public Instruction
   public:
     CJNE_BA(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_BB: public Instruction
@@ -1328,6 +1350,7 @@ class CJNE_BB: public Instruction
   public:
     CJNE_BB(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_BC: public Instruction
@@ -1335,6 +1358,7 @@ class CJNE_BC: public Instruction
   public:
     CJNE_BC(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_BD: public Instruction
@@ -1342,6 +1366,7 @@ class CJNE_BD: public Instruction
   public:
     CJNE_BD(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_BE: public Instruction
@@ -1349,6 +1374,7 @@ class CJNE_BE: public Instruction
   public:
     CJNE_BE(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_BF: public Instruction
@@ -1356,6 +1382,7 @@ class CJNE_BF: public Instruction
   public:
     CJNE_BF(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class PUSH_C0: public Instruction
@@ -1377,6 +1404,7 @@ class CLR_C2: public Instruction
   public:
     CLR_C2(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CLR_C3: public Instruction
@@ -1489,6 +1517,7 @@ class SETB_D2: public Instruction
   public:
     SETB_D2(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class SETB_D3: public Instruction
@@ -1531,6 +1560,7 @@ class DJNZ_D8: public Instruction
   public:
     DJNZ_D8(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DJNZ_D9: public Instruction
@@ -1538,6 +1568,7 @@ class DJNZ_D9: public Instruction
   public:
     DJNZ_D9(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DJNZ_DA: public Instruction
@@ -1545,6 +1576,7 @@ class DJNZ_DA: public Instruction
   public:
     DJNZ_DA(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DJNZ_DB: public Instruction
@@ -1552,6 +1584,7 @@ class DJNZ_DB: public Instruction
   public:
     DJNZ_DB(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DJNZ_DC: public Instruction
@@ -1559,6 +1592,7 @@ class DJNZ_DC: public Instruction
   public:
     DJNZ_DC(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DJNZ_DD: public Instruction
@@ -1566,6 +1600,7 @@ class DJNZ_DD: public Instruction
   public:
     DJNZ_DD(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DJNZ_DE: public Instruction
@@ -1573,6 +1608,7 @@ class DJNZ_DE: public Instruction
   public:
     DJNZ_DE(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DJNZ_DF: public Instruction
@@ -1580,6 +1616,7 @@ class DJNZ_DF: public Instruction
   public:
     DJNZ_DF(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOVX_E0: public Instruction
@@ -1615,6 +1652,7 @@ class CLR_E4: public Instruction
   public:
     CLR_E4(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_E5: public Instruction
@@ -1722,6 +1760,7 @@ class MOVX_F2: public Instruction
   public:
     MOVX_F2(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOVX_F3: public Instruction
@@ -1743,6 +1782,7 @@ class MOV_F5: public Instruction
   public:
     MOV_F5(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_F6: public Instruction
@@ -1750,6 +1790,7 @@ class MOV_F6: public Instruction
   public:
     MOV_F6(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_F7: public Instruction

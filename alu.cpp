@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include "flash.hpp"
 #include "alu.hpp"
@@ -19,6 +20,26 @@ class SfrDpl: public Sfr
 {
   public:
     SfrDpl(Alu &alu);
+    void OnWrite(std::uint8_t data);
+    std::uint8_t Read();
+  private:
+    Alu &alu;
+};
+
+class SfrIP: public Sfr
+{
+  public:
+    SfrIP(Alu &alu);
+    void OnWrite(std::uint8_t data);
+    std::uint8_t Read();
+  private:
+    Alu &alu;
+};
+
+class SfrSFRPAGE: public Sfr
+{
+  public:
+    SfrSFRPAGE(Alu &alu);
     void OnWrite(std::uint8_t data);
     std::uint8_t Read();
   private:
@@ -540,6 +561,8 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[xrl_63->GetOpcode()] = xrl_63;
   RegisterSfr(0x81, new SfrSp(*this));
   RegisterSfr(0x82, new SfrDpl(*this));
+  RegisterSfr(0xb8, new SfrIP(*this));
+  RegisterSfr(0xa7, new SfrSFRPAGE(*this));
 }
 
 std::string Alu::Disassemble(std::uint16_t address)
@@ -763,4 +786,34 @@ void SfrDpl::OnWrite(std::uint8_t data)
 std::uint8_t SfrDpl::Read()
 {
   return alu.dp & 0xff;
+}
+
+SfrIP::SfrIP(Alu &a): alu(a)
+{
+}
+
+void SfrIP::OnWrite(std::uint8_t data)
+{
+  std::cout << "SFRIP write " << (int) data << std::endl;
+}
+
+std::uint8_t SfrIP::Read()
+{
+  std::cout << "SFRIP read" << std::endl;
+  return 0;
+}
+
+SfrSFRPAGE::SfrSFRPAGE(Alu &a): alu(a)
+{
+}
+
+void SfrSFRPAGE::OnWrite(std::uint8_t data)
+{
+  std::cout << "SFRPAGE write " << (int) data << std::endl;
+}
+
+std::uint8_t SfrSFRPAGE::Read()
+{
+  std::cout << "SFRPAGE read" << std::endl;
+  return 0;
 }

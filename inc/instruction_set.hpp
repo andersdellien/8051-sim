@@ -528,6 +528,7 @@ class ORL_48: public Instruction
   public:
     ORL_48(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_49: public Instruction
@@ -535,6 +536,7 @@ class ORL_49: public Instruction
   public:
     ORL_49(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_4A: public Instruction
@@ -542,6 +544,7 @@ class ORL_4A: public Instruction
   public:
     ORL_4A(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_4B: public Instruction
@@ -549,6 +552,7 @@ class ORL_4B: public Instruction
   public:
     ORL_4B(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_4C: public Instruction
@@ -556,6 +560,7 @@ class ORL_4C: public Instruction
   public:
     ORL_4C(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_4D: public Instruction
@@ -563,6 +568,7 @@ class ORL_4D: public Instruction
   public:
     ORL_4D(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_4E: public Instruction
@@ -570,6 +576,7 @@ class ORL_4E: public Instruction
   public:
     ORL_4E(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_4F: public Instruction
@@ -577,6 +584,7 @@ class ORL_4F: public Instruction
   public:
     ORL_4F(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class JNC_50: public Instruction
@@ -819,6 +827,7 @@ class JNZ_70: public Instruction
   public:
     JNZ_70(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ACALL_71: public Instruction

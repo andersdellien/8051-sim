@@ -1976,6 +1976,19 @@ std::string JNZ_70::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void JNZ_70::Execute() const
+{
+  if (alu.GetA() != 0)
+  {
+    std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
+    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+  }
+  else
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands);
+  }
+}
+
 JZ_60::JZ_60(Alu &a) : Instruction(a)
 {
   opcode = 0x60;
@@ -3335,6 +3348,12 @@ std::string ORL_48::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ORL A, R0";
 }
 
+void ORL_48::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.GetR0());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ORL_49::ORL_49(Alu &a) : Instruction(a)
 {
   opcode = 0x49;
@@ -3344,6 +3363,12 @@ ORL_49::ORL_49(Alu &a) : Instruction(a)
 std::string ORL_49::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ORL A, R1";
+}
+
+void ORL_49::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.GetR1());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ORL_4A::ORL_4A(Alu &a) : Instruction(a)
@@ -3357,6 +3382,12 @@ std::string ORL_4A::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ORL A, R2";
 }
 
+void ORL_4A::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.GetR2());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ORL_4B::ORL_4B(Alu &a) : Instruction(a)
 {
   opcode = 0x4B;
@@ -3366,6 +3397,12 @@ ORL_4B::ORL_4B(Alu &a) : Instruction(a)
 std::string ORL_4B::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ORL A, R3";
+}
+
+void ORL_4B::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.GetR3());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ORL_4C::ORL_4C(Alu &a) : Instruction(a)
@@ -3379,6 +3416,12 @@ std::string ORL_4C::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ORL A, R4";
 }
 
+void ORL_4C::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.GetR4());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ORL_4D::ORL_4D(Alu &a) : Instruction(a)
 {
   opcode = 0x4D;
@@ -3388,6 +3431,12 @@ ORL_4D::ORL_4D(Alu &a) : Instruction(a)
 std::string ORL_4D::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ORL A, R5";
+}
+
+void ORL_4D::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.GetR5());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ORL_4E::ORL_4E(Alu &a) : Instruction(a)
@@ -3401,6 +3450,12 @@ std::string ORL_4E::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ORL A, R6";
 }
 
+void ORL_4E::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.GetR6());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ORL_4F::ORL_4F(Alu &a) : Instruction(a)
 {
   opcode = 0x4F;
@@ -3410,6 +3465,12 @@ ORL_4F::ORL_4F(Alu &a) : Instruction(a)
 std::string ORL_4F::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ORL A, R7";
+}
+
+void ORL_4F::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.GetR7());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 POP_D0::POP_D0(Alu &a) : Instruction(a)

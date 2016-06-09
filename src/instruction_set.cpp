@@ -3807,7 +3807,7 @@ void SETB_D2::Execute(void) const
 SJMP_80::SJMP_80(Alu &a) : Instruction(a)
 {
   opcode = 0x80;
-  operands = 2;
+  operands = 1;
 }
 
 std::string SJMP_80::Disassemble(const Memory& memory, std::uint16_t address) const

@@ -4,6 +4,8 @@
 #include <iostream>
 #include "flash.hpp"
 #include "exceptions.hpp"
+#include "sfr.hpp"
+#include "alu.hpp"
 
 typedef enum
 {
@@ -17,6 +19,12 @@ typedef enum
 
 Flash::Flash(std::uint16_t s) : Memory(s)
 {
+}
+
+void Flash::SetAlu(Alu &a)
+{
+  a.RegisterSfr(0xb7, new Sfr("FLSCL"), 0x00);
+  a.RegisterSfr(0xb6, new Sfr("FLKEY"));
 }
 
 void Flash::ParseHex(std::string fileName)

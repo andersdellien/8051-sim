@@ -32,6 +32,7 @@ int main(int argc, char **argv)
   Adc adc(alu);
   Timer timer(alu);
 
+  flash.SetAlu(alu);
   alu.Reset();
   while (1)
   {

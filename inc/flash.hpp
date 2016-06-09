@@ -5,11 +5,14 @@
 #include <cstdint>
 #include "memory.hpp"
 
+class Alu;
+
 class Flash : public Memory
 {
   public:
     Flash(std::uint16_t s);
     void ParseHex(std::string fileName);
+    void SetAlu(Alu &alu);
 };
 
 #endif

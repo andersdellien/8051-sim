@@ -873,6 +873,7 @@ class SJMP_80: public Instruction
   public:
     SJMP_80(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class AJMP_81: public Instruction

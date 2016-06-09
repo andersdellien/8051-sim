@@ -3819,6 +3819,12 @@ std::string SJMP_80::Disassemble(const Memory& memory, std::uint16_t address) co
   return ss.str();
 }
 
+void SJMP_80::Execute() const
+{
+  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
+  alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+}
+
 SUBB_94::SUBB_94(Alu &a) : Instruction(a)
 {
   opcode = 0x94;

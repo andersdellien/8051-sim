@@ -3142,7 +3142,7 @@ std::string MOV_F8::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_F8::Execute() const
 {
-  alu.SetA(alu.GetR0());
+  alu.SetR0(alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3159,7 +3159,7 @@ std::string MOV_F9::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_F9::Execute() const
 {
-  alu.SetA(alu.GetR1());
+  alu.SetR1(alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3176,7 +3176,7 @@ std::string MOV_FA::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_FA::Execute() const
 {
-  alu.SetA(alu.GetR2());
+  alu.SetR2(alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3193,7 +3193,7 @@ std::string MOV_FB::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_FB::Execute() const
 {
-  alu.SetA(alu.GetR3());
+  alu.SetR3(alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3210,7 +3210,7 @@ std::string MOV_FC::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_FC::Execute() const
 {
-  alu.SetA(alu.GetR4());
+  alu.SetR4(alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3227,7 +3227,7 @@ std::string MOV_FD::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_FD::Execute() const
 {
-  alu.SetA(alu.GetR5());
+  alu.SetR5(alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3244,7 +3244,7 @@ std::string MOV_FE::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_FE::Execute() const
 {
-  alu.SetA(alu.GetR6());
+  alu.SetR6(alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3261,7 +3261,7 @@ std::string MOV_FF::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_FF::Execute() const
 {
-  alu.SetA(alu.GetR7());
+  alu.SetR7(alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

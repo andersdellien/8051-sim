@@ -1790,6 +1790,7 @@ class MOVX_F0: public Instruction
   public:
     MOVX_F0(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ACALL_F1: public Instruction

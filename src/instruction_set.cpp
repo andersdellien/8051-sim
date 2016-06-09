@@ -3306,6 +3306,12 @@ std::string MOVX_F0::Disassemble(const Memory& memory, std::uint16_t address) co
   return "MOVX @DPTR, A";
 }
 
+void MOVX_F0::Execute() const
+{
+  alu.xram.Set(alu.GetDPTR(), alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOVX_F2::MOVX_F2(Alu &a) : Instruction(a)
 {
   opcode = 0xF2;

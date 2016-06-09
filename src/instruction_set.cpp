@@ -2717,6 +2717,12 @@ std::string MOV_88::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void MOV_88::Execute() const
+{
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR0());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_89::MOV_89(Alu &a) : Instruction(a)
 {
   opcode = 0x89;
@@ -2730,6 +2736,12 @@ std::string MOV_89::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << "MOV ";
   ss << (int) memory.Get(address+1) << ", R1";
   return ss.str();
+}
+
+void MOV_89::Execute() const
+{
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR1());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_8A::MOV_8A(Alu &a) : Instruction(a)
@@ -2747,6 +2759,12 @@ std::string MOV_8A::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void MOV_8A::Execute() const
+{
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR2());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_8B::MOV_8B(Alu &a) : Instruction(a)
 {
   opcode = 0x8B;
@@ -2760,6 +2778,12 @@ std::string MOV_8B::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << "MOV ";
   ss << (int) memory.Get(address+1) << ", R3";
   return ss.str();
+}
+
+void MOV_8B::Execute() const
+{
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR3());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_8C::MOV_8C(Alu &a) : Instruction(a)
@@ -2777,6 +2801,12 @@ std::string MOV_8C::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void MOV_8C::Execute() const
+{
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR4());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_8D::MOV_8D(Alu &a) : Instruction(a)
 {
   opcode = 0x8D;
@@ -2790,6 +2820,12 @@ std::string MOV_8D::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << "MOV ";
   ss << (int) memory.Get(address+1) << ", R5";
   return ss.str();
+}
+
+void MOV_8D::Execute() const
+{
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR5());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_8E::MOV_8E(Alu &a) : Instruction(a)
@@ -2807,6 +2843,12 @@ std::string MOV_8E::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void MOV_8E::Execute() const
+{
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR6());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_8F::MOV_8F(Alu &a) : Instruction(a)
 {
   opcode = 0x8F;
@@ -2820,6 +2862,12 @@ std::string MOV_8F::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << "MOV ";
   ss << (int) memory.Get(address+1) << ", R7";
   return ss.str();
+}
+
+void MOV_8F::Execute() const
+{
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR7());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_F5::MOV_F5(Alu &a) : Instruction(a)

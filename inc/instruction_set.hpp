@@ -1015,6 +1015,7 @@ class MOV_88: public Instruction
   public:
     MOV_88(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_89: public Instruction
@@ -1022,6 +1023,7 @@ class MOV_89: public Instruction
   public:
     MOV_89(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_8A: public Instruction
@@ -1029,6 +1031,7 @@ class MOV_8A: public Instruction
   public:
     MOV_8A(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_8B: public Instruction
@@ -1036,6 +1039,7 @@ class MOV_8B: public Instruction
   public:
     MOV_8B(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_8C: public Instruction
@@ -1043,6 +1047,7 @@ class MOV_8C: public Instruction
   public:
     MOV_8C(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_8D: public Instruction
@@ -1050,6 +1055,7 @@ class MOV_8D: public Instruction
   public:
     MOV_8D(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_8E: public Instruction
@@ -1057,6 +1063,7 @@ class MOV_8E: public Instruction
   public:
     MOV_8E(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_8F: public Instruction
@@ -1064,6 +1071,7 @@ class MOV_8F: public Instruction
   public:
     MOV_8F(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_90: public Instruction

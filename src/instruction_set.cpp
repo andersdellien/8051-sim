@@ -3411,6 +3411,13 @@ std::string ORL_42::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void ORL_42::Execute() const
+{
+  std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
+  alu.Write(addr, alu.GetA() | alu.Read(addr));
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ORL_44::ORL_44(Alu &a) : Instruction(a)
 {
   opcode = 0x44;

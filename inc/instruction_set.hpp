@@ -492,6 +492,7 @@ class ORL_42: public Instruction
   public:
     ORL_42(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ORL_43: public Instruction

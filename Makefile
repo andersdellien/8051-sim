@@ -1,16 +1,27 @@
-CPP_FILES := $(wildcard src/*.cpp)
-OBJ_FILES := $(addprefix out/,$(notdir $(CPP_FILES:.cpp=.o)))
-LD_FLAGS :=
-CC_FLAGS := -I inc
-INCLUDE_DIR := inc
 SRC_DIR := src
+OBJ_DIR := out
+INCLUDE_DIR := inc
+
+CPP_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES := $(addprefix $(OBJ_DIR)/,$(notdir $(CPP_FILES:.cpp=.o)))
+
+LD_FLAGS :=
+CC_FLAGS := -I $(INCLUDE_DIR)
+
+.PHONY: all clean
+all: $(OBJ_DIR)/8051-sim
+
+clean:
+	rm -rf $(OBJ_DIR)
 
 out/8051-sim: $(OBJ_FILES)
-	g++ $(LD_FLAGS) -o $@ $^
+	@echo "Linking $@"
+	@g++ $(LD_FLAGS) -o $@ $^
 
 out/%.o: $(SRC_DIR)/%.cpp
-	-mkdir -p out
-	g++ $(CC_FLAGS) -c -o $@ $<
+	@echo "Compiling $<"
+	@mkdir -p $(OBJ_DIR)
+	@g++ $(CC_FLAGS) -c -o $@ $<
 
 CC_FLAGS += -MMD -MP
--include $(OBJFILES:.o=.d)
+-include $(OBJ_FILES:.o=.d)

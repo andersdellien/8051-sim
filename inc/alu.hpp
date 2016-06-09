@@ -74,8 +74,10 @@ class Alu
     bool c;
     Sfr *sfrSP;
     Sfr *sfrDPL;
+    Sfr *sfrDPH;
     Sfr *sfrIP;
     Sfr *sfrSFRPAGE;
+    Sfr *sfrB;
 };
 
 #endif

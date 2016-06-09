@@ -521,12 +521,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[xrl_63->GetOpcode()] = xrl_63;
   sfrSP = new Sfr("SP");
   sfrDPL = new Sfr("DPL");
+  sfrDPH = new Sfr("DPH");
   sfrIP = new Sfr("IP");
   sfrSFRPAGE = new Sfr("SFRPAGE");
+  sfrB = new Sfr("B");
   RegisterSfr(0x81, sfrSP);
   RegisterSfr(0x82, sfrDPL);
+  RegisterSfr(0x83, sfrDPH);
   RegisterSfr(0xb8, sfrIP);
   RegisterSfr(0xa7, sfrSFRPAGE);
+  RegisterSfr(0xf0, sfrB);
 }
 
 std::string Alu::Disassemble(std::uint16_t address)

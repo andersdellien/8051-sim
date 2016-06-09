@@ -1761,6 +1761,17 @@ class MovIndirect: public Instruction
     std::uint8_t reg;
 };
 
+// 0xa6 and 0xa7
+class MovIndirectFromMem: public Instruction
+{
+  public:
+    MovIndirectFromMem(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
+  private:
+    std::uint8_t reg;
+};
+
 class MOV_F8: public Instruction
 {
   public:

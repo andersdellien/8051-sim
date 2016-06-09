@@ -2146,36 +2146,6 @@ std::string MOV_77::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
-MOV_A6::MOV_A6(Alu &a) : Instruction(a)
-{
-  opcode = 0xA6;
-  operands = 1;
-}
-
-std::string MOV_A6::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV @R0, ";
-  PrintAddress(ss, memory.Get(address+1));
-  return ss.str();
-}
-
-MOV_A7::MOV_A7(Alu &a) : Instruction(a)
-{
-  opcode = 0xA7;
-  operands = 1;
-}
-
-std::string MOV_A7::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV @R1, ";
-  PrintAddress(ss, memory.Get(address+1));
-  return ss.str();
-}
-
 MOV_74::MOV_74(Alu &a) : Instruction(a)
 {
   opcode = 0x74;
@@ -2875,6 +2845,27 @@ std::string MovIndirect::Disassemble(const Memory& memory, std::uint16_t address
 void MovIndirect::Execute() const
 {
   alu.iram[alu.GetReg(reg)] = alu.GetA();
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
+MovIndirectFromMem::MovIndirectFromMem(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+{
+  operands = 1;
+}
+
+std::string MovIndirectFromMem::Disassemble(const Memory& memory, std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "MOV @R";
+  ss << (int) reg;
+  ss << ", ";
+  ss << std::hex << std::setw(2) << (int) alu.flash.Get(alu.GetPC() + 1);
+  return ss.str();
+}
+
+void MovIndirectFromMem::Execute() const
+{
+  alu.iram[alu.GetReg(reg)] = alu.iram[alu.flash.Get(alu.GetPC() + 1)];
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

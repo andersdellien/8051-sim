@@ -85,6 +85,7 @@ class Alu
     Sfr *sfrIP;
     Sfr *sfrSFRPAGE;
     Sfr *sfrB;
+    Sfr *sfrACC;
 };
 
 #endif

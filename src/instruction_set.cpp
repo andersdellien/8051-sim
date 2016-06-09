@@ -1877,6 +1877,19 @@ std::string JC_40::Disassemble(const Memory& memory, std::uint16_t address) cons
   return ss.str();
 }
 
+void JC_40::Execute() const
+{
+  if (alu.GetC())
+  {
+    std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
+    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+  }
+  else
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands);
+  }
+}
+
 JMP_73::JMP_73(Alu &a) : Instruction(a)
 {
   opcode = 0x73;

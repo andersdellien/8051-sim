@@ -389,6 +389,7 @@ class JC_40: public Instruction
   public:
     JC_40(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class AJMP_41: public Instruction

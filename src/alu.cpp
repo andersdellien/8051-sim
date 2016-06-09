@@ -311,10 +311,10 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[mov_8f->GetOpcode()] = mov_8f;
   MOV_F5 *mov_f5 = new MOV_F5(*this);
   instructionSet[mov_f5->GetOpcode()] = mov_f5;
-  MOV_F6 *mov_f6 = new MOV_F6(*this);
-  instructionSet[mov_f6->GetOpcode()] = mov_f6;
-  MOV_F7 *mov_f7 = new MOV_F7(*this);
-  instructionSet[mov_f7->GetOpcode()] = mov_f7;
+
+  instructionSet[0xf6] = new MovIndirect(*this, 0xf6, 0);
+  instructionSet[0xf7] = new MovIndirect(*this, 0xf7, 1);
+
   MOV_E6 *mov_e6 = new MOV_E6(*this);
   instructionSet[mov_e6->GetOpcode()] = mov_e6;
   MOV_E7 *mov_e7 = new MOV_E7(*this);

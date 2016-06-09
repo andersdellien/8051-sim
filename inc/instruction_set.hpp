@@ -1750,19 +1750,15 @@ class MOV_F5: public Instruction
     void Execute() const;
 };
 
-class MOV_F6: public Instruction
+// 0xf6 and 0xf7
+class MovIndirect: public Instruction
 {
   public:
-    MOV_F6(Alu&);
+    MovIndirect(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
-};
-
-class MOV_F7: public Instruction
-{
-  public:
-    MOV_F7(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+  private:
+    std::uint8_t reg;
 };
 
 class MOV_F8: public Instruction

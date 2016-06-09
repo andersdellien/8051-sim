@@ -258,92 +258,22 @@ std::string ADD_27::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ADD A, @R1";
 }
 
-ADD_28::ADD_28(Alu &a) : Instruction(a)
+ADD_A_REG::ADD_A_REG(Alu &a, std::uint8_t r, std::uint8_t o) : Instruction(a, o), reg(r)
 {
-  opcode = 0x28;
   operands = 0;
 }
 
-std::string ADD_28::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ADD_A_REG::Disassemble(const Memory& memory, std::uint16_t address) const
 {
-  return "ADD A, R0";
+  std::stringstream ss;
+  ss << "ADD A, R" << (int) reg;
+  return ss.str();
 }
 
-ADD_29::ADD_29(Alu &a) : Instruction(a)
+void ADD_A_REG::Execute() const
 {
-  opcode = 0x29;
-  operands = 0;
-}
-
-std::string ADD_29::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADD A, R1";
-}
-
-ADD_2A::ADD_2A(Alu &a) : Instruction(a)
-{
-  opcode = 0x2A;
-  operands = 0;
-}
-
-std::string ADD_2A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADD A, R2";
-}
-
-ADD_2B::ADD_2B(Alu &a) : Instruction(a)
-{
-  opcode = 0x2B;
-  operands = 0;
-}
-
-std::string ADD_2B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADD A, R3";
-}
-
-ADD_2C::ADD_2C(Alu &a) : Instruction(a)
-{
-  opcode = 0x2C;
-  operands = 0;
-}
-
-std::string ADD_2C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADD A, R4";
-}
-
-ADD_2D::ADD_2D(Alu &a) : Instruction(a)
-{
-  opcode = 0x2D;
-  operands = 0;
-}
-
-std::string ADD_2D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADD A, R5";
-}
-
-ADD_2E::ADD_2E(Alu &a) : Instruction(a)
-{
-  opcode = 0x2E;
-  operands = 0;
-}
-
-std::string ADD_2E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADD A, R6";
-}
-
-ADD_2F::ADD_2F(Alu &a) : Instruction(a)
-{
-  opcode = 0x2F;
-  operands = 0;
-}
-
-std::string ADD_2F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADD A, R7";
+  alu.SetA(alu.GetA() + alu.GetReg(reg)); 
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ADDC_34::ADDC_34(Alu &a) : Instruction(a)

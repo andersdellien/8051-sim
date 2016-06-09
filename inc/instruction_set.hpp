@@ -308,60 +308,15 @@ class ADD_27: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class ADD_28: public Instruction
+/* Instructions 0x28 - 0x2f */
+class ADD_A_REG: public Instruction
 {
   public:
-    ADD_28(Alu&);
+    ADD_A_REG(Alu&, uint8_t reg, std::uint8_t opcode);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADD_29: public Instruction
-{
-  public:
-    ADD_29(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADD_2A: public Instruction
-{
-  public:
-    ADD_2A(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADD_2B: public Instruction
-{
-  public:
-    ADD_2B(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADD_2C: public Instruction
-{
-  public:
-    ADD_2C(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADD_2D: public Instruction
-{
-  public:
-    ADD_2D(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADD_2E: public Instruction
-{
-  public:
-    ADD_2E(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADD_2F: public Instruction
-{
-  public:
-    ADD_2F(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class JNB_30: public Instruction

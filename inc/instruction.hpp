@@ -10,9 +10,10 @@ class Instruction
 {
   protected:
     int operands;
-    int opcode;
+    std::uint8_t opcode;
     Alu &alu;
   public:
+    Instruction(Alu&, std::uint8_t opcode);
     Instruction(Alu&);
     virtual std::string Disassemble(const Memory& memory, std::uint16_t address) const = 0;
     virtual void Execute() const;

@@ -1,7 +1,11 @@
 #include <cstdint>
 #include "instruction.hpp"
 
-Instruction::Instruction(Alu& a) : alu(a)
+Instruction::Instruction(Alu& a, std::uint8_t o) : alu(a), opcode(o)
+{
+}
+
+Instruction::Instruction(Alu& a) : alu(a), opcode(0)
 {
 }
 

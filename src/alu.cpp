@@ -35,22 +35,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[add_26->GetOpcode()] = add_26;
   ADD_27 *add_27 = new ADD_27(*this);
   instructionSet[add_27->GetOpcode()] = add_27;
-  ADD_28 *add_28 = new ADD_28(*this);
-  instructionSet[add_28->GetOpcode()] = add_28;
-  ADD_29 *add_29 = new ADD_29(*this);
-  instructionSet[add_29->GetOpcode()] = add_29;
-  ADD_2A *add_2a = new ADD_2A(*this);
-  instructionSet[add_2a->GetOpcode()] = add_2a;
-  ADD_2B *add_2b = new ADD_2B(*this);
-  instructionSet[add_2b->GetOpcode()] = add_2b;
-  ADD_2C *add_2c = new ADD_2C(*this);
-  instructionSet[add_2c->GetOpcode()] = add_2c;
-  ADD_2D *add_2d = new ADD_2D(*this);
-  instructionSet[add_2d->GetOpcode()] = add_2d;
-  ADD_2E *add_2e = new ADD_2E(*this);
-  instructionSet[add_2e->GetOpcode()] = add_2e;
-  ADD_2F *add_2f = new ADD_2F(*this);
-  instructionSet[add_2f->GetOpcode()] = add_2f;
+
+  instructionSet[0x28] = new ADD_A_REG(*this, 0, 0x28);
+  instructionSet[0x29] = new ADD_A_REG(*this, 1, 0x29);
+  instructionSet[0x2a] = new ADD_A_REG(*this, 2, 0x2a);
+  instructionSet[0x2b] = new ADD_A_REG(*this, 3, 0x2b);
+  instructionSet[0x2c] = new ADD_A_REG(*this, 4, 0x2c);
+  instructionSet[0x2d] = new ADD_A_REG(*this, 5, 0x2d);
+  instructionSet[0x2e] = new ADD_A_REG(*this, 6, 0x2e);
+  instructionSet[0x2f] = new ADD_A_REG(*this, 7, 0x2f);
+
   ADDC_34 *addc_34 = new ADDC_34(*this);
   instructionSet[addc_34->GetOpcode()] = addc_34;
   ADDC_35 *addc_35 = new ADDC_35(*this);

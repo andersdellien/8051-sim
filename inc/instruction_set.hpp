@@ -1259,6 +1259,7 @@ class CJNE_B5: public Instruction
   public:
     CJNE_B5(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_B6: public Instruction

@@ -750,6 +750,26 @@ std::string CJNE_B5::Disassemble(const Memory& memory, std::uint16_t address) co
   return ss.str();
 }
 
+void CJNE_B5::Execute() const
+{
+  std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
+  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
+
+  if (alu.GetA() != alu.Read(addr))
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+  }
+  else
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands);
+  }
+
+  if (alu.GetA() < alu.Read(addr))
+  {
+    alu.SetC();
+  }
+}
+
 CJNE_B6::CJNE_B6(Alu &a) : Instruction(a)
 {
   opcode = 0xB6;

@@ -3108,6 +3108,12 @@ std::string MOV_F8::Disassemble(const Memory& memory, std::uint16_t address) con
   return "MOV R0, A";
 }
 
+void MOV_F8::Execute() const
+{
+  alu.SetA(alu.GetR0());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_F9::MOV_F9(Alu &a) : Instruction(a)
 {
   opcode = 0xF9;
@@ -3117,6 +3123,12 @@ MOV_F9::MOV_F9(Alu &a) : Instruction(a)
 std::string MOV_F9::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "MOV R1, A";
+}
+
+void MOV_F9::Execute() const
+{
+  alu.SetA(alu.GetR1());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_FA::MOV_FA(Alu &a) : Instruction(a)
@@ -3130,6 +3142,12 @@ std::string MOV_FA::Disassemble(const Memory& memory, std::uint16_t address) con
   return "MOV R2, A";
 }
 
+void MOV_FA::Execute() const
+{
+  alu.SetA(alu.GetR2());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_FB::MOV_FB(Alu &a) : Instruction(a)
 {
   opcode = 0xFB;
@@ -3139,6 +3157,12 @@ MOV_FB::MOV_FB(Alu &a) : Instruction(a)
 std::string MOV_FB::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "MOV R3, A";
+}
+
+void MOV_FB::Execute() const
+{
+  alu.SetA(alu.GetR3());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_FC::MOV_FC(Alu &a) : Instruction(a)
@@ -3152,6 +3176,12 @@ std::string MOV_FC::Disassemble(const Memory& memory, std::uint16_t address) con
   return "MOV R4, A";
 }
 
+void MOV_FC::Execute() const
+{
+  alu.SetA(alu.GetR4());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_FD::MOV_FD(Alu &a) : Instruction(a)
 {
   opcode = 0xFD;
@@ -3161,6 +3191,12 @@ MOV_FD::MOV_FD(Alu &a) : Instruction(a)
 std::string MOV_FD::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "MOV R5, A";
+}
+
+void MOV_FD::Execute() const
+{
+  alu.SetA(alu.GetR5());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_FE::MOV_FE(Alu &a) : Instruction(a)
@@ -3174,6 +3210,12 @@ std::string MOV_FE::Disassemble(const Memory& memory, std::uint16_t address) con
   return "MOV R6, A";
 }
 
+void MOV_FE::Execute() const
+{
+  alu.SetA(alu.GetR6());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_FF::MOV_FF(Alu &a) : Instruction(a)
 {
   opcode = 0xFF;
@@ -3183,6 +3225,12 @@ MOV_FF::MOV_FF(Alu &a) : Instruction(a)
 std::string MOV_FF::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "MOV R7, A";
+}
+
+void MOV_FF::Execute() const
+{
+  alu.SetA(alu.GetR7());
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOVC_93::MOVC_93(Alu &a) : Instruction(a)

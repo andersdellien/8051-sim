@@ -1845,6 +1845,7 @@ class MOV_F8: public Instruction
   public:
     MOV_F8(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_F9: public Instruction
@@ -1852,6 +1853,7 @@ class MOV_F9: public Instruction
   public:
     MOV_F9(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_FA: public Instruction
@@ -1859,6 +1861,7 @@ class MOV_FA: public Instruction
   public:
     MOV_FA(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_FB: public Instruction
@@ -1866,6 +1869,7 @@ class MOV_FB: public Instruction
   public:
     MOV_FB(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_FC: public Instruction
@@ -1873,6 +1877,7 @@ class MOV_FC: public Instruction
   public:
     MOV_FC(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_FD: public Instruction
@@ -1880,6 +1885,7 @@ class MOV_FD: public Instruction
   public:
     MOV_FD(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_FE: public Instruction
@@ -1887,6 +1893,7 @@ class MOV_FE: public Instruction
   public:
     MOV_FE(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_FF: public Instruction
@@ -1894,6 +1901,7 @@ class MOV_FF: public Instruction
   public:
     MOV_FF(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 #endif

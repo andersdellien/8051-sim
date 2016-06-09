@@ -27,9 +27,8 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[acall_d1->GetOpcode()] = acall_d1;
   ACALL_F1 *acall_f1 = new ACALL_F1(*this);
   instructionSet[acall_f1->GetOpcode()] = acall_f1;
-  ADD_24 *add_24 = new ADD_24(*this);
-  instructionSet[add_24->GetOpcode()] = add_24;
 
+  instructionSet[0x24] = new AddImmediate(*this, 0x24, false);
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);
 
   ADD_26 *add_26 = new ADD_26(*this);
@@ -45,10 +44,7 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[0x2d] = new AddRegister(*this, 5, 0x2d, false);
   instructionSet[0x2e] = new AddRegister(*this, 6, 0x2e, false);
   instructionSet[0x2f] = new AddRegister(*this, 7, 0x2f, false);
-
-  ADDC_34 *addc_34 = new ADDC_34(*this);
-  instructionSet[addc_34->GetOpcode()] = addc_34;
-
+  instructionSet[0x34] = new AddImmediate(*this, 0x34, true);
   instructionSet[0x35] = new AddMemory(*this, 0x35, true);
 
   ADDC_36 *addc_36 = new ADDC_36(*this);

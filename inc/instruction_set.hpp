@@ -279,13 +279,6 @@ class RL_23: public Instruction
     void Execute() const;
 };
 
-class ADD_24: public Instruction
-{
-  public:
-    ADD_24(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
 class AdditionHelper: public Instruction
 {
   public:
@@ -295,6 +288,15 @@ class AdditionHelper: public Instruction
     bool carry;
 };
 
+// 0x24 and 0x34
+class AddImmediate: public AdditionHelper
+{
+  public:
+    AddImmediate(Alu&, std::uint8_t opcode, bool carry);
+    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
+};
+
 // 0x25 and 0x35
 class AddMemory: public AdditionHelper
 {
@@ -302,8 +304,6 @@ class AddMemory: public AdditionHelper
     AddMemory(Alu&, std::uint8_t opcode, bool carry);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
-  private:
-    bool carry;
 };
 
 class ADD_26: public Instruction

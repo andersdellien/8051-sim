@@ -168,19 +168,25 @@ std::string ACALL_F1::Disassemble(const Memory& memory, std::uint16_t address) c
   return ss.str();
 }
 
-ADD_24::ADD_24(Alu &a) : Instruction(a)
+/* 0x24 and 0x34 */
+AddImmediate::AddImmediate(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, c)
 {
-  opcode = 0x24;
   operands = 1;
 }
 
-std::string ADD_24::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AddImmediate::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ADD A, #";
   ss << (int) memory.Get(address+1);
   return ss.str();
+}
+
+void AddImmediate::Execute() const
+{
+  Helper(alu.flash.Get(alu.GetPC() + 1));
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, bool c): Instruction(alu, opcode), carry(c)
@@ -299,21 +305,6 @@ void AddRegister::Execute() const
 
   Helper(data);
   alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ADDC_34::ADDC_34(Alu &a) : Instruction(a)
-{
-  opcode = 0x34;
-  operands = 1;
-}
-
-std::string ADDC_34::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ADDC A, #";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
 }
 
 ADDC_36::ADDC_36(Alu &a) : Instruction(a)

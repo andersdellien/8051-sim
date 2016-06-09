@@ -183,36 +183,19 @@ std::string ADD_24::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
-/* 0x25 and 0x35 */
-AddAMemory::AddAMemory(Alu &a, std::uint8_t opcode, bool c) : Instruction(a, opcode), carry(c)
+AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, bool c): Instruction(alu, opcode), carry(c)
 {
-  operands = 1;
 }
 
-std::string AddAMemory::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ADD A";
-  if (carry)
-  {
-    ss << "C";
-  }
-  ss << ",";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void AddAMemory::Execute() const
-{
-  std::uint16_t data = alu.Read(alu.flash.Get(alu.GetPC() + 1));
-
+void AdditionHelper::Helper(std::uint16_t data) const
+{ 
   if (carry && alu.GetC())
   {
     data++;
   }
  
   std::uint16_t result = data + alu.GetA();
+
   if (result > 255)
   {
     alu.SetC();
@@ -243,6 +226,31 @@ void AddAMemory::Execute() const
   }
 
   alu.SetA(data + alu.GetA());
+}
+
+/* 0x25 and 0x35 */
+AddMemory::AddMemory(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, c)
+{
+  operands = 1;
+}
+
+std::string AddMemory::Disassemble(const Memory& memory, std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << "ADD A";
+  if (carry)
+  {
+    ss << "C";
+  }
+  ss << ",";
+  ss << (int) memory.Get(address+1);
+  return ss.str();
+}
+
+void AddMemory::Execute() const
+{
+  Helper(alu.Read(alu.flash.Get(alu.GetPC() + 1)));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -268,12 +276,12 @@ std::string ADD_27::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ADD A, @R1";
 }
 
-ADD_A_REG::ADD_A_REG(Alu &a, std::uint8_t r, std::uint8_t o, bool c) : Instruction(a, o), reg(r), carry(c)
+AddRegister::AddRegister(Alu &a, std::uint8_t r, std::uint8_t o, bool c) : AdditionHelper(a, r, o), carry(c)
 {
   operands = 0;
 }
 
-std::string ADD_A_REG::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AddRegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "ADD";
@@ -285,46 +293,11 @@ std::string ADD_A_REG::Disassemble(const Memory& memory, std::uint16_t address) 
   return ss.str();
 }
 
-void ADD_A_REG::Execute() const
+void AddRegister::Execute() const
 {
   std::uint16_t data = alu.GetReg(reg);
 
-  if (carry && alu.GetC())
-  {
-    data++;
-  }
-
-  std::uint16_t result = data + alu.GetA();
-  if (result > 255)
-  {
-    alu.SetC();
-  }
-  else
-  {
-    alu.ClrC();
-  }
-
-  result = (data & 0xf) + (alu.GetA() & 0xf);
-  if (result > 0xf)
-  {
-    alu.SetAC();
-  }
-  else
-  {
-    alu.ClrAC();
-  }
-
-  std::int16_t signedResult = (int8_t) data + (int8_t) alu.GetA();
-  if (signedResult > 127 || signedResult < -128)
-  {
-    alu.SetOV();
-  }
-  else
-  {
-    alu.ClrOV();
-  }
-
-  alu.SetA(alu.GetReg(reg) + alu.GetA());
+  Helper(data);
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

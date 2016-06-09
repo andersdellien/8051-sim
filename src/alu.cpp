@@ -30,40 +30,40 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   ADD_24 *add_24 = new ADD_24(*this);
   instructionSet[add_24->GetOpcode()] = add_24;
 
-  instructionSet[0x25] = new AddAMemory(*this, 0x25, false);
+  instructionSet[0x25] = new AddMemory(*this, 0x25, false);
 
   ADD_26 *add_26 = new ADD_26(*this);
   instructionSet[add_26->GetOpcode()] = add_26;
   ADD_27 *add_27 = new ADD_27(*this);
   instructionSet[add_27->GetOpcode()] = add_27;
 
-  instructionSet[0x28] = new ADD_A_REG(*this, 0, 0x28, false);
-  instructionSet[0x29] = new ADD_A_REG(*this, 1, 0x29, false);
-  instructionSet[0x2a] = new ADD_A_REG(*this, 2, 0x2a, false);
-  instructionSet[0x2b] = new ADD_A_REG(*this, 3, 0x2b, false);
-  instructionSet[0x2c] = new ADD_A_REG(*this, 4, 0x2c, false);
-  instructionSet[0x2d] = new ADD_A_REG(*this, 5, 0x2d, false);
-  instructionSet[0x2e] = new ADD_A_REG(*this, 6, 0x2e, false);
-  instructionSet[0x2f] = new ADD_A_REG(*this, 7, 0x2f, false);
+  instructionSet[0x28] = new AddRegister(*this, 0, 0x28, false);
+  instructionSet[0x29] = new AddRegister(*this, 1, 0x29, false);
+  instructionSet[0x2a] = new AddRegister(*this, 2, 0x2a, false);
+  instructionSet[0x2b] = new AddRegister(*this, 3, 0x2b, false);
+  instructionSet[0x2c] = new AddRegister(*this, 4, 0x2c, false);
+  instructionSet[0x2d] = new AddRegister(*this, 5, 0x2d, false);
+  instructionSet[0x2e] = new AddRegister(*this, 6, 0x2e, false);
+  instructionSet[0x2f] = new AddRegister(*this, 7, 0x2f, false);
 
   ADDC_34 *addc_34 = new ADDC_34(*this);
   instructionSet[addc_34->GetOpcode()] = addc_34;
 
-  instructionSet[0x35] = new AddAMemory(*this, 0x35, true);
+  instructionSet[0x35] = new AddMemory(*this, 0x35, true);
 
   ADDC_36 *addc_36 = new ADDC_36(*this);
   instructionSet[addc_36->GetOpcode()] = addc_36;
   ADDC_37 *addc_37 = new ADDC_37(*this);
   instructionSet[addc_37->GetOpcode()] = addc_37;
 
-  instructionSet[0x38] = new ADD_A_REG(*this, 0, 0x38, true);
-  instructionSet[0x39] = new ADD_A_REG(*this, 1, 0x39, true);
-  instructionSet[0x3a] = new ADD_A_REG(*this, 2, 0x3a, true);
-  instructionSet[0x3b] = new ADD_A_REG(*this, 3, 0x3b, true);
-  instructionSet[0x3c] = new ADD_A_REG(*this, 4, 0x3c, true);
-  instructionSet[0x3d] = new ADD_A_REG(*this, 5, 0x3d, true);
-  instructionSet[0x3e] = new ADD_A_REG(*this, 6, 0x3e, true);
-  instructionSet[0x3f] = new ADD_A_REG(*this, 7, 0x3f, true);
+  instructionSet[0x38] = new AddRegister(*this, 0, 0x38, true);
+  instructionSet[0x39] = new AddRegister(*this, 1, 0x39, true);
+  instructionSet[0x3a] = new AddRegister(*this, 2, 0x3a, true);
+  instructionSet[0x3b] = new AddRegister(*this, 3, 0x3b, true);
+  instructionSet[0x3c] = new AddRegister(*this, 4, 0x3c, true);
+  instructionSet[0x3d] = new AddRegister(*this, 5, 0x3d, true);
+  instructionSet[0x3e] = new AddRegister(*this, 6, 0x3e, true);
+  instructionSet[0x3f] = new AddRegister(*this, 7, 0x3f, true);
 
   AJMP_1 *ajmp_1 = new AJMP_1(*this);
   instructionSet[ajmp_1->GetOpcode()] = ajmp_1;

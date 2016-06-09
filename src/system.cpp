@@ -8,5 +8,6 @@ System::System(Alu &a)
   a.RegisterSfr(0xb2, new Sfr("OSCICN"), 0x00);
   a.RegisterSfr(0xef, new Sfr("RSTSRC"), 0x00);
   a.RegisterSfr(0xd1, new Sfr("REF0CN"), 0x00);
+  a.RegisterSfr(0xae, new Sfr("RTC0KEY"), 0x00);
 }
 

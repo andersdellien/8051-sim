@@ -626,6 +626,43 @@ std::uint8_t Alu::GetA()
   return a;
 }
 
+std::uint8_t Alu::GetReg(std::uint8_t reg)
+{
+  if (reg == 0)
+  {
+    return GetR0();
+  }
+  else if (reg == 1)
+  {
+    return GetR1();
+  }
+  else if (reg == 2)
+  {
+    return GetR2();
+  }
+  else if (reg == 3)
+  {
+    return GetR3();
+  }
+  else if (reg == 4)
+  {
+    return GetR4();
+  }
+  else if (reg == 5)
+  {
+    return GetR5();
+  }
+  else if (reg == 6)
+  {
+    return GetR6();
+  }
+  else if (reg == 7)
+  {
+    return GetR7();
+  }
+  return 0;
+}
+
 std::uint8_t Alu::GetR0()
 {
   return *r0;
@@ -714,6 +751,11 @@ void Alu::SetDPTR(std::uint16_t val)
 std::uint16_t Alu::GetDPTR()
 {
   return dptr;
+}
+
+bool Alu::GetC()
+{
+  return c;
 }
 
 void Alu::SetC()

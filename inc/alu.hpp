@@ -35,6 +35,7 @@ class Alu
     void RegisterSfr(std::uint8_t page, Sfr *sfr, std::uint8_t address);
     void RegisterSfr(std::uint8_t page, Sfr *sfr);
     std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
+    std::uint8_t GetReg(std::uint8_t reg);
     std::uint8_t GetR0();
     std::uint8_t GetR1();
     std::uint8_t GetR2();
@@ -53,6 +54,7 @@ class Alu
     void SetR7(std::uint8_t val);
     void SetDPTR(std::uint16_t val);
     std::uint16_t GetDPTR();
+    bool GetC();
     void SetC();
     void ClrC();
     void SetAC();

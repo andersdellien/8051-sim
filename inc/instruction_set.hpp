@@ -276,6 +276,7 @@ class RL_23: public Instruction
   public:
     RL_23(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ADD_24: public Instruction
@@ -390,6 +391,7 @@ class RLC_33: public Instruction
   public:
     RLC_33(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ADDC_34: public Instruction

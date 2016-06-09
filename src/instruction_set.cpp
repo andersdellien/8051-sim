@@ -3806,6 +3806,19 @@ std::string RL_23::Disassemble(const Memory& memory, std::uint16_t address) cons
   return "RL A";
 }
 
+void RL_23::Execute() const
+{
+  std::uint16_t result = alu.GetA() << 1;
+
+  if (result & 0x100)
+  {
+    result |= 0x01;
+  }
+  result = result & 0xff;
+  alu.SetA((uint8_t) result);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 RLC_33::RLC_33(Alu &a) : Instruction(a)
 {
   opcode = 0x33;
@@ -3815,6 +3828,29 @@ RLC_33::RLC_33(Alu &a) : Instruction(a)
 std::string RLC_33::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "RLC A";
+}
+
+void RLC_33::Execute() const
+{
+  std::uint16_t result = alu.GetA() << 1;
+  bool c = alu.GetC();
+
+  if (result & 0x100)
+  {
+    alu.SetC();
+  }
+  else
+  {
+    alu.ClrC();
+  }
+
+  result = result & 0xff;
+  if (c)
+  {
+    result |= 0x01;
+  }
+  alu.SetA((uint8_t) result);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 RR_3::RR_3(Alu &a) : Instruction(a)

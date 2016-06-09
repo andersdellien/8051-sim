@@ -198,6 +198,44 @@ std::string ADD_25::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void ADD_25::Execute() const
+{
+  std::uint8_t data = alu.Read(alu.flash.Get(alu.GetPC() + 1));
+
+  std::uint16_t result = data + alu.GetA();
+  if (result > 255)
+  {
+    alu.SetC();
+  }
+  else
+  {
+    alu.ClrC();
+  }
+
+  result = (data & 0xf) + (alu.GetA() & 0xf);
+  if (result > 0xf)
+  {
+    alu.SetAC();
+  }
+  else
+  {
+    alu.ClrAC();
+  }
+
+  std::int16_t signedResult = (int8_t) data + (int8_t) alu.GetA();
+  if (signedResult > 127 || signedResult < -128)
+  {
+    alu.SetOV();
+  }
+  else
+  {
+    alu.ClrOV();
+  }
+
+  alu.SetA(data + alu.GetA());
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ADD_26::ADD_26(Alu &a) : Instruction(a)
 {
   opcode = 0x26;

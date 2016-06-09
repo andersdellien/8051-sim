@@ -290,6 +290,7 @@ class ADD_25: public Instruction
   public:
     ADD_25(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ADD_26: public Instruction

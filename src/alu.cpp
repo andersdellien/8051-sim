@@ -719,6 +719,31 @@ void Alu::SetC()
   c = true;
 }
 
+void Alu::ClrC()
+{
+  c = false;
+}
+
+void Alu::SetAC()
+{
+  ac = true;
+}
+
+void Alu::ClrAC()
+{
+  ac = false;
+}
+
+void Alu::SetOV()
+{
+  ov = true;
+}
+
+void Alu::ClrOV()
+{
+  ov = false;
+}
+
 void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr, std::uint8_t page)
 {
   specialFunctionRegisters[page][address] = sfr;

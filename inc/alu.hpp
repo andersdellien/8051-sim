@@ -54,6 +54,11 @@ class Alu
     void SetDPTR(std::uint16_t val);
     std::uint16_t GetDPTR();
     void SetC();
+    void ClrC();
+    void SetAC();
+    void ClrAC();
+    void SetOV();
+    void ClrOV();
     std::uint8_t Read(std::uint8_t address);
     void Write(std::uint8_t address, std::uint8_t value);
   private:
@@ -72,6 +77,8 @@ class Alu
     std::uint8_t *r6;
     std::uint8_t *r7;
     bool c;
+    bool ac;
+    bool ov;
     Sfr *sfrSP;
     Sfr *sfrDPL;
     Sfr *sfrDPH;

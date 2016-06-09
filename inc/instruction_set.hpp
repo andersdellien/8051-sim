@@ -188,6 +188,7 @@ class DEC_18: public Instruction
   public:
     DEC_18(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DEC_19: public Instruction
@@ -195,6 +196,7 @@ class DEC_19: public Instruction
   public:
     DEC_19(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DEC_1A: public Instruction
@@ -202,6 +204,7 @@ class DEC_1A: public Instruction
   public:
     DEC_1A(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DEC_1B: public Instruction
@@ -209,6 +212,7 @@ class DEC_1B: public Instruction
   public:
     DEC_1B(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DEC_1C: public Instruction
@@ -216,6 +220,7 @@ class DEC_1C: public Instruction
   public:
     DEC_1C(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DEC_1D: public Instruction
@@ -223,6 +228,7 @@ class DEC_1D: public Instruction
   public:
     DEC_1D(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DEC_1E: public Instruction
@@ -230,6 +236,7 @@ class DEC_1E: public Instruction
   public:
     DEC_1E(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DEC_1F: public Instruction
@@ -237,6 +244,7 @@ class DEC_1F: public Instruction
   public:
     DEC_1F(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class JB_20: public Instruction
@@ -1525,6 +1533,7 @@ class POP_D0: public Instruction
   public:
     POP_D0(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ACALL_D1: public Instruction

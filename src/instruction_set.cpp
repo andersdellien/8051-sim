@@ -1330,6 +1330,12 @@ std::string DEC_18::Disassemble(const Memory& memory, std::uint16_t address) con
   return "DEC R0";
 }
 
+void DEC_18::Execute() const
+{
+  alu.SetR0(alu.GetR0() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 DEC_19::DEC_19(Alu &a) : Instruction(a)
 {
   opcode = 0x19;
@@ -1339,6 +1345,12 @@ DEC_19::DEC_19(Alu &a) : Instruction(a)
 std::string DEC_19::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "DEC R1";
+}
+
+void DEC_19::Execute() const
+{
+  alu.SetR1(alu.GetR1() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 DEC_1A::DEC_1A(Alu &a) : Instruction(a)
@@ -1352,6 +1364,12 @@ std::string DEC_1A::Disassemble(const Memory& memory, std::uint16_t address) con
   return "DEC R2";
 }
 
+void DEC_1A::Execute() const
+{
+  alu.SetR2(alu.GetR2() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 DEC_1B::DEC_1B(Alu &a) : Instruction(a)
 {
   opcode = 0x1B;
@@ -1361,6 +1379,12 @@ DEC_1B::DEC_1B(Alu &a) : Instruction(a)
 std::string DEC_1B::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "DEC R3";
+}
+
+void DEC_1B::Execute() const
+{
+  alu.SetR3(alu.GetR3() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 DEC_1C::DEC_1C(Alu &a) : Instruction(a)
@@ -1374,6 +1398,12 @@ std::string DEC_1C::Disassemble(const Memory& memory, std::uint16_t address) con
   return "DEC R4";
 }
 
+void DEC_1C::Execute() const
+{
+  alu.SetR4(alu.GetR4() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 DEC_1D::DEC_1D(Alu &a) : Instruction(a)
 {
   opcode = 0x1D;
@@ -1383,6 +1413,12 @@ DEC_1D::DEC_1D(Alu &a) : Instruction(a)
 std::string DEC_1D::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "DEC R5";
+}
+
+void DEC_1D::Execute() const
+{
+  alu.SetR5(alu.GetR5() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 DEC_1E::DEC_1E(Alu &a) : Instruction(a)
@@ -1396,6 +1432,12 @@ std::string DEC_1E::Disassemble(const Memory& memory, std::uint16_t address) con
   return "DEC R6";
 }
 
+void DEC_1E::Execute() const
+{
+  alu.SetR6(alu.GetR6() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 DEC_1F::DEC_1F(Alu &a) : Instruction(a)
 {
   opcode = 0x1F;
@@ -1405,6 +1447,12 @@ DEC_1F::DEC_1F(Alu &a) : Instruction(a)
 std::string DEC_1F::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "DEC R7";
+}
+
+void DEC_1F::Execute() const
+{
+  alu.SetR7(alu.GetR7() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 DIV_84::DIV_84(Alu &a) : Instruction(a)
@@ -3486,6 +3534,13 @@ std::string POP_D0::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << "POP ";
   ss << (int) memory.Get(address+1);
   return ss.str();
+}
+
+void POP_D0::Execute() const
+{
+  alu.iram[alu.flash.Get(alu.GetPC() + 1)] = alu.iram[alu.GetSP()];
+  alu.SetSP(alu.GetSP() - 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 PUSH_C0::PUSH_C0(Alu &a) : Instruction(a)

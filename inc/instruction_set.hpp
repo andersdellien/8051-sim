@@ -252,6 +252,7 @@ class JB_20: public Instruction
   public:
     JB_20(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class AJMP_21: public Instruction

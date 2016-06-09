@@ -1943,6 +1943,23 @@ std::string JB_20::Disassemble(const Memory& memory, std::uint16_t address) cons
   return ss.str();
 }
 
+void JB_20::Execute() const
+{
+  std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
+  std::uint8_t relAddr = alu.flash.Get(alu.GetPC() + 2);
+  std::uint8_t byteAddr = 0x20 + bitAddr / 8;
+  std::uint8_t bit = 1 << byteAddr % 8;
+
+  if (alu.iram[byteAddr] & bit)
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands + relAddr);
+  }
+  else
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands);
+  }
+}
+
 JBC_10::JBC_10(Alu &a) : Instruction(a)
 {
   opcode = 0x10;
@@ -2010,7 +2027,7 @@ void JNB_30::Execute() const
   std::uint8_t byteAddr = 0x20 + bitAddr / 8;
   std::uint8_t bit = 1 << byteAddr % 8;
 
-  if (alu.iram[byteAddr] & bit)
+  if (!(alu.iram[byteAddr] & bit))
   {
     alu.SetPC(alu.GetPC() + 1 + operands + relAddr);
   }

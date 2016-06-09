@@ -1003,6 +1003,7 @@ class MOV_92: public Instruction
   public:
     MOV_92(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOVC_93: public Instruction
@@ -1116,6 +1117,7 @@ class MOV_A2: public Instruction
   public:
     MOV_A2(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_A3: public Instruction
@@ -1373,6 +1375,7 @@ class XCH_C5: public Instruction
   public:
     XCH_C5(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_C6: public Instruction

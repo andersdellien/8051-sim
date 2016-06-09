@@ -2276,6 +2276,23 @@ std::string MOV_A2::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void MOV_A2::Execute(void) const
+{
+  std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
+  std::uint8_t byteAddr = 0x20 + bitAddr / 8;
+  std::uint8_t bit = 1 << byteAddr % 8;
+
+  if (alu.Read(byteAddr) & bit)
+  {
+    alu.SetC();
+  }
+  else
+  {
+    alu.ClrC();
+  }
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_78::MOV_78(Alu &a) : Instruction(a)
 {
   opcode = 0x78;
@@ -2641,6 +2658,23 @@ std::string MOV_92::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << "MOV ";
   ss << (int) memory.Get(address+1) << ", C";
   return ss.str();
+}
+
+void MOV_92::Execute(void) const
+{
+  std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
+  std::uint8_t byteAddr = 0x20 + bitAddr / 8;
+  std::uint8_t bit = 1 << byteAddr % 8;
+
+  if (alu.GetC())
+  {
+    alu.Write(byteAddr, alu.Read(byteAddr) | bit);
+  }
+  else
+  {
+    alu.Write(byteAddr, alu.Read(byteAddr) & ~bit);
+  }
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_86::MOV_86(Alu &a) : Instruction(a)
@@ -3974,6 +4008,16 @@ std::string XCH_C5::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << "XCH A, ";
   ss << (int) memory.Get(address+1);
   return ss.str();
+}
+
+void XCH_C5::Execute() const
+{
+  std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
+  std::uint8_t temp = alu.GetA();
+
+  alu.SetA(alu.Read(addr));
+  alu.Write(addr, temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 XCH_C6::XCH_C6(Alu &a) : Instruction(a)

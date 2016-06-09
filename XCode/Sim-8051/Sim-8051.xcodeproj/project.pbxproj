@@ -1,0 +1,308 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		95CA13071D09F38B00CF1B51 /* alu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12F61D09F38B00CF1B51 /* alu.cpp */; };
+		95CA13081D09F38B00CF1B51 /* flash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12F71D09F38B00CF1B51 /* flash.cpp */; };
+		95CA13091D09F38B00CF1B51 /* instruction_set.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12F81D09F38B00CF1B51 /* instruction_set.cpp */; };
+		95CA130A1D09F38B00CF1B51 /* instruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12F91D09F38B00CF1B51 /* instruction.cpp */; };
+		95CA130B1D09F38B00CF1B51 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12FA1D09F38B00CF1B51 /* main.cpp */; };
+		95CA130C1D09F38B00CF1B51 /* memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12FB1D09F38B00CF1B51 /* memory.cpp */; };
+		95CA130D1D09F38B00CF1B51 /* pca.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12FC1D09F38B00CF1B51 /* pca.cpp */; };
+		95CA130E1D09F38B00CF1B51 /* port.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12FD1D09F38B00CF1B51 /* port.cpp */; };
+		95CA130F1D09F38B00CF1B51 /* port0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12FE1D09F38B00CF1B51 /* port0.cpp */; };
+		95CA13101D09F38B00CF1B51 /* port1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12FF1D09F38B00CF1B51 /* port1.cpp */; };
+		95CA13111D09F38B00CF1B51 /* port2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13001D09F38B00CF1B51 /* port2.cpp */; };
+		95CA13121D09F38B00CF1B51 /* sfr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13011D09F38B00CF1B51 /* sfr.cpp */; };
+		95CA13131D09F38B00CF1B51 /* symbol_table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13021D09F38B00CF1B51 /* symbol_table.cpp */; };
+		95CA13141D09F38B00CF1B51 /* system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13031D09F38B00CF1B51 /* system.cpp */; };
+		95CA13151D09F38B00CF1B51 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13041D09F38B00CF1B51 /* timer.cpp */; };
+		95CA13161D09F38B00CF1B51 /* uart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13051D09F38B00CF1B51 /* uart.cpp */; };
+		95CA13171D09F38B00CF1B51 /* vreg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13061D09F38B00CF1B51 /* vreg.cpp */; };
+		95CA13191D09F4D300CF1B51 /* adc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13181D09F4D300CF1B51 /* adc.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		95CA12E01D09EBA700CF1B51 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		95CA12E21D09EBA700CF1B51 /* Sim-8051 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Sim-8051"; sourceTree = BUILT_PRODUCTS_DIR; };
+		95CA12F61D09F38B00CF1B51 /* alu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = alu.cpp; path = ../../src/alu.cpp; sourceTree = "<group>"; };
+		95CA12F71D09F38B00CF1B51 /* flash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = flash.cpp; path = ../../src/flash.cpp; sourceTree = "<group>"; };
+		95CA12F81D09F38B00CF1B51 /* instruction_set.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = instruction_set.cpp; path = ../../src/instruction_set.cpp; sourceTree = "<group>"; };
+		95CA12F91D09F38B00CF1B51 /* instruction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = instruction.cpp; path = ../../src/instruction.cpp; sourceTree = "<group>"; };
+		95CA12FA1D09F38B00CF1B51 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../src/main.cpp; sourceTree = "<group>"; };
+		95CA12FB1D09F38B00CF1B51 /* memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = memory.cpp; path = ../../src/memory.cpp; sourceTree = "<group>"; };
+		95CA12FC1D09F38B00CF1B51 /* pca.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pca.cpp; path = ../../src/pca.cpp; sourceTree = "<group>"; };
+		95CA12FD1D09F38B00CF1B51 /* port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = port.cpp; path = ../../src/port.cpp; sourceTree = "<group>"; };
+		95CA12FE1D09F38B00CF1B51 /* port0.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = port0.cpp; path = ../../src/port0.cpp; sourceTree = "<group>"; };
+		95CA12FF1D09F38B00CF1B51 /* port1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = port1.cpp; path = ../../src/port1.cpp; sourceTree = "<group>"; };
+		95CA13001D09F38B00CF1B51 /* port2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = port2.cpp; path = ../../src/port2.cpp; sourceTree = "<group>"; };
+		95CA13011D09F38B00CF1B51 /* sfr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sfr.cpp; path = ../../src/sfr.cpp; sourceTree = "<group>"; };
+		95CA13021D09F38B00CF1B51 /* symbol_table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = symbol_table.cpp; path = ../../src/symbol_table.cpp; sourceTree = "<group>"; };
+		95CA13031D09F38B00CF1B51 /* system.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = system.cpp; path = ../../src/system.cpp; sourceTree = "<group>"; };
+		95CA13041D09F38B00CF1B51 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = ../../src/timer.cpp; sourceTree = "<group>"; };
+		95CA13051D09F38B00CF1B51 /* uart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = uart.cpp; path = ../../src/uart.cpp; sourceTree = "<group>"; };
+		95CA13061D09F38B00CF1B51 /* vreg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vreg.cpp; path = ../../src/vreg.cpp; sourceTree = "<group>"; };
+		95CA13181D09F4D300CF1B51 /* adc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = adc.cpp; path = ../../src/adc.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		95CA12DF1D09EBA700CF1B51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		95CA12D91D09EBA700CF1B51 = {
+			isa = PBXGroup;
+			children = (
+				95CA13181D09F4D300CF1B51 /* adc.cpp */,
+				95CA12F61D09F38B00CF1B51 /* alu.cpp */,
+				95CA12F71D09F38B00CF1B51 /* flash.cpp */,
+				95CA12F81D09F38B00CF1B51 /* instruction_set.cpp */,
+				95CA12F91D09F38B00CF1B51 /* instruction.cpp */,
+				95CA12FA1D09F38B00CF1B51 /* main.cpp */,
+				95CA12FB1D09F38B00CF1B51 /* memory.cpp */,
+				95CA12FC1D09F38B00CF1B51 /* pca.cpp */,
+				95CA12FD1D09F38B00CF1B51 /* port.cpp */,
+				95CA12FE1D09F38B00CF1B51 /* port0.cpp */,
+				95CA12FF1D09F38B00CF1B51 /* port1.cpp */,
+				95CA13001D09F38B00CF1B51 /* port2.cpp */,
+				95CA13011D09F38B00CF1B51 /* sfr.cpp */,
+				95CA13021D09F38B00CF1B51 /* symbol_table.cpp */,
+				95CA13031D09F38B00CF1B51 /* system.cpp */,
+				95CA13041D09F38B00CF1B51 /* timer.cpp */,
+				95CA13051D09F38B00CF1B51 /* uart.cpp */,
+				95CA13061D09F38B00CF1B51 /* vreg.cpp */,
+				95CA12E31D09EBA700CF1B51 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		95CA12E31D09EBA700CF1B51 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				95CA12E21D09EBA700CF1B51 /* Sim-8051 */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		95CA12E11D09EBA700CF1B51 /* Sim-8051 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95CA12E91D09EBA700CF1B51 /* Build configuration list for PBXNativeTarget "Sim-8051" */;
+			buildPhases = (
+				95CA12DE1D09EBA700CF1B51 /* Sources */,
+				95CA12DF1D09EBA700CF1B51 /* Frameworks */,
+				95CA12E01D09EBA700CF1B51 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Sim-8051";
+			productName = "Sim-8051";
+			productReference = 95CA12E21D09EBA700CF1B51 /* Sim-8051 */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		95CA12DA1D09EBA700CF1B51 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Ulrik Sjölin";
+				TargetAttributes = {
+					95CA12E11D09EBA700CF1B51 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 95CA12DD1D09EBA700CF1B51 /* Build configuration list for PBXProject "Sim-8051" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 95CA12D91D09EBA700CF1B51;
+			productRefGroup = 95CA12E31D09EBA700CF1B51 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				95CA12E11D09EBA700CF1B51 /* Sim-8051 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		95CA12DE1D09EBA700CF1B51 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95CA13081D09F38B00CF1B51 /* flash.cpp in Sources */,
+				95CA13091D09F38B00CF1B51 /* instruction_set.cpp in Sources */,
+				95CA130C1D09F38B00CF1B51 /* memory.cpp in Sources */,
+				95CA13121D09F38B00CF1B51 /* sfr.cpp in Sources */,
+				95CA13111D09F38B00CF1B51 /* port2.cpp in Sources */,
+				95CA13161D09F38B00CF1B51 /* uart.cpp in Sources */,
+				95CA13191D09F4D300CF1B51 /* adc.cpp in Sources */,
+				95CA130D1D09F38B00CF1B51 /* pca.cpp in Sources */,
+				95CA13131D09F38B00CF1B51 /* symbol_table.cpp in Sources */,
+				95CA13101D09F38B00CF1B51 /* port1.cpp in Sources */,
+				95CA130A1D09F38B00CF1B51 /* instruction.cpp in Sources */,
+				95CA130F1D09F38B00CF1B51 /* port0.cpp in Sources */,
+				95CA13141D09F38B00CF1B51 /* system.cpp in Sources */,
+				95CA13151D09F38B00CF1B51 /* timer.cpp in Sources */,
+				95CA130B1D09F38B00CF1B51 /* main.cpp in Sources */,
+				95CA130E1D09F38B00CF1B51 /* port.cpp in Sources */,
+				95CA13171D09F38B00CF1B51 /* vreg.cpp in Sources */,
+				95CA13071D09F38B00CF1B51 /* alu.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		95CA12E71D09EBA700CF1B51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		95CA12E81D09EBA700CF1B51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		95CA12EA1D09EBA700CF1B51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = ../../inc;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		95CA12EB1D09EBA700CF1B51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = ../../inc;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		95CA12DD1D09EBA700CF1B51 /* Build configuration list for PBXProject "Sim-8051" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95CA12E71D09EBA700CF1B51 /* Debug */,
+				95CA12E81D09EBA700CF1B51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95CA12E91D09EBA700CF1B51 /* Build configuration list for PBXNativeTarget "Sim-8051" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95CA12EA1D09EBA700CF1B51 /* Debug */,
+				95CA12EB1D09EBA700CF1B51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 95CA12DA1D09EBA700CF1B51 /* Project object */;
+}

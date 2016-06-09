@@ -23,7 +23,7 @@ $(OBJ_DIR)/$(EXE_FILE): $(OBJ_FILES)
 	@echo "Linking $@"
 	@g++ $(LD_FLAGS) -o $@ $^
 
-out/%.o: $(SRC_DIR)/%.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "Compiling $<"
 	@mkdir -p $(OBJ_DIR)
 	@g++ $(CC_FLAGS) -c -o $@ $<

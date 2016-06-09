@@ -1155,6 +1155,19 @@ std::string CPL_B3::Disassemble(const Memory& memory, std::uint16_t address) con
   return "CPL C";
 }
 
+void CPL_B3::Execute() const
+{
+  if (alu.GetC())
+  {
+    alu.ClrC();
+  }
+  else
+  {
+    alu.SetC();
+  }
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 CPL_B2::CPL_B2(Alu &a) : Instruction(a)
 {
   opcode = 0xB2;
@@ -1970,6 +1983,19 @@ std::string JNC_50::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << "JNC ";
   ss << (int) memory.Get(address+1);
   return ss.str();
+}
+
+void JNC_50::Execute() const
+{
+  if (!alu.GetC())
+  {
+    std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
+    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+  }
+  else
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands);
+  }
 }
 
 JNZ_70::JNZ_70(Alu &a) : Instruction(a)

@@ -514,6 +514,7 @@ class JNC_50: public Instruction
   public:
     JNC_50(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ACALL_51: public Instruction
@@ -1246,6 +1247,7 @@ class CPL_B3: public Instruction
   public:
     CPL_B3(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CJNE_B4: public Instruction

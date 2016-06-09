@@ -1306,6 +1306,12 @@ std::string DEC_14::Disassemble(const Memory& memory, std::uint16_t address) con
   return "DEC A";
 }
 
+void DEC_14::Execute() const
+{
+  alu.SetA(alu.GetA() + 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 DEC_16::DEC_16(Alu &a) : Instruction(a)
 {
   opcode = 0x16;

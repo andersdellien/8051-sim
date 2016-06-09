@@ -4051,6 +4051,15 @@ std::string XCH_C8::Disassemble(const Memory& memory, std::uint16_t address) con
   return "XCH A, R0";
 }
 
+void XCH_C8::Execute() const
+{
+  std::uint8_t temp = alu.GetR0();
+
+  alu.SetR0(alu.GetA());
+  alu.SetA(temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 XCH_C9::XCH_C9(Alu &a) : Instruction(a)
 {
   opcode = 0xC9;
@@ -4060,6 +4069,15 @@ XCH_C9::XCH_C9(Alu &a) : Instruction(a)
 std::string XCH_C9::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "XCH A, R1";
+}
+
+void XCH_C9::Execute() const
+{
+  std::uint8_t temp = alu.GetR1();
+
+  alu.SetR1(alu.GetA());
+  alu.SetA(temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 XCH_CA::XCH_CA(Alu &a) : Instruction(a)
@@ -4073,6 +4091,15 @@ std::string XCH_CA::Disassemble(const Memory& memory, std::uint16_t address) con
   return "XCH A, R2";
 }
 
+void XCH_CA::Execute() const
+{
+  std::uint8_t temp = alu.GetR2();
+
+  alu.SetR2(alu.GetA());
+  alu.SetA(temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 XCH_CB::XCH_CB(Alu &a) : Instruction(a)
 {
   opcode = 0xCB;
@@ -4082,6 +4109,15 @@ XCH_CB::XCH_CB(Alu &a) : Instruction(a)
 std::string XCH_CB::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "XCH A, R3";
+}
+
+void XCH_CB::Execute() const
+{
+  std::uint8_t temp = alu.GetR3();
+
+  alu.SetR3(alu.GetA());
+  alu.SetA(temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 XCH_CC::XCH_CC(Alu &a) : Instruction(a)
@@ -4095,6 +4131,15 @@ std::string XCH_CC::Disassemble(const Memory& memory, std::uint16_t address) con
   return "XCH A, R4";
 }
 
+void XCH_CC::Execute() const
+{
+  std::uint8_t temp = alu.GetR4();
+
+  alu.SetR4(alu.GetA());
+  alu.SetA(temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 XCH_CD::XCH_CD(Alu &a) : Instruction(a)
 {
   opcode = 0xCD;
@@ -4104,6 +4149,15 @@ XCH_CD::XCH_CD(Alu &a) : Instruction(a)
 std::string XCH_CD::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "XCH A, R5";
+}
+
+void XCH_CD::Execute() const
+{
+  std::uint8_t temp = alu.GetR5();
+
+  alu.SetR5(alu.GetA());
+  alu.SetA(temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 XCH_CE::XCH_CE(Alu &a) : Instruction(a)
@@ -4117,6 +4171,15 @@ std::string XCH_CE::Disassemble(const Memory& memory, std::uint16_t address) con
   return "XCH A, R6";
 }
 
+void XCH_CE::Execute() const
+{
+  std::uint8_t temp = alu.GetR6();
+
+  alu.SetR6(alu.GetA());
+  alu.SetA(temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 XCH_CF::XCH_CF(Alu &a) : Instruction(a)
 {
   opcode = 0xCF;
@@ -4126,6 +4189,15 @@ XCH_CF::XCH_CF(Alu &a) : Instruction(a)
 std::string XCH_CF::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "XCH A, R7";
+}
+
+void XCH_CF::Execute() const
+{
+  std::uint8_t temp = alu.GetR7();
+
+  alu.SetR7(alu.GetA());
+  alu.SetA(temp);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 XCHD_D6::XCHD_D6(Alu &a) : Instruction(a)

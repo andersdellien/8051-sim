@@ -1490,6 +1490,7 @@ class XCH_C8: public Instruction
   public:
     XCH_C8(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_C9: public Instruction
@@ -1497,6 +1498,7 @@ class XCH_C9: public Instruction
   public:
     XCH_C9(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_CA: public Instruction
@@ -1504,6 +1506,7 @@ class XCH_CA: public Instruction
   public:
     XCH_CA(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_CB: public Instruction
@@ -1511,6 +1514,7 @@ class XCH_CB: public Instruction
   public:
     XCH_CB(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_CC: public Instruction
@@ -1518,6 +1522,7 @@ class XCH_CC: public Instruction
   public:
     XCH_CC(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_CD: public Instruction
@@ -1525,6 +1530,7 @@ class XCH_CD: public Instruction
   public:
     XCH_CD(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_CE: public Instruction
@@ -1532,6 +1538,7 @@ class XCH_CE: public Instruction
   public:
     XCH_CE(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_CF: public Instruction
@@ -1539,6 +1546,7 @@ class XCH_CF: public Instruction
   public:
     XCH_CF(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class POP_D0: public Instruction

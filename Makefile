@@ -8,13 +8,18 @@ OBJ_FILES := $(addprefix $(OBJ_DIR)/,$(notdir $(CPP_FILES:.cpp=.o)))
 LD_FLAGS :=
 CC_FLAGS := -I $(INCLUDE_DIR)
 
-.PHONY: all clean
-all: $(OBJ_DIR)/8051-sim
+EXE_FILE := 8051-sim
+
+.PHONY: all clean test
+all: $(OBJ_DIR)/$(EXE_FILE)
 
 clean:
 	rm -rf $(OBJ_DIR)
 
-out/8051-sim: $(OBJ_FILES)
+test: $(OBJ_DIR)/$(EXE_FILE)
+	cat ./bin/cmd | ./$(OBJ_DIR)/$(EXE_FILE)
+
+$(OBJ_DIR)/$(EXE_FILE): $(OBJ_FILES)
 	@echo "Linking $@"
 	@g++ $(LD_FLAGS) -o $@ $^
 

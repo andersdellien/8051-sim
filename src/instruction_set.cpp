@@ -183,25 +183,35 @@ std::string ADD_24::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
-ADD_25::ADD_25(Alu &a) : Instruction(a)
+/* 0x25 and 0x35 */
+AddAMemory::AddAMemory(Alu &a, std::uint8_t opcode, bool c) : Instruction(a, opcode), carry(c)
 {
-  opcode = 0x25;
   operands = 1;
 }
 
-std::string ADD_25::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AddAMemory::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ADD A,";
+  ss << "ADD A";
+  if (carry)
+  {
+    ss << "C";
+  }
+  ss << ",";
   ss << (int) memory.Get(address+1);
   return ss.str();
 }
 
-void ADD_25::Execute() const
+void AddAMemory::Execute() const
 {
-  std::uint8_t data = alu.Read(alu.flash.Get(alu.GetPC() + 1));
+  std::uint16_t data = alu.Read(alu.flash.Get(alu.GetPC() + 1));
 
+  if (carry && alu.GetC())
+  {
+    data++;
+  }
+ 
   std::uint16_t result = data + alu.GetA();
   if (result > 255)
   {
@@ -329,21 +339,6 @@ std::string ADDC_34::Disassemble(const Memory& memory, std::uint16_t address) co
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ADDC A, #";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-ADDC_35::ADDC_35(Alu &a) : Instruction(a)
-{
-  opcode = 0x35;
-  operands = 1;
-}
-
-std::string ADDC_35::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ADDC A,";
   ss << (int) memory.Get(address+1);
   return ss.str();
 }

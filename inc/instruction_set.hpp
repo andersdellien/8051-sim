@@ -286,12 +286,15 @@ class ADD_24: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class ADD_25: public Instruction
+// 0x25 and 0x35
+class AddAMemory: public Instruction
 {
   public:
-    ADD_25(Alu&);
+    AddAMemory(Alu&, std::uint8_t opcode, bool carry);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
+  private:
+    bool carry;
 };
 
 class ADD_26: public Instruction
@@ -355,13 +358,6 @@ class ADDC_34: public Instruction
 {
   public:
     ADDC_34(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_35: public Instruction
-{
-  public:
-    ADDC_35(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 

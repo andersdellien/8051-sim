@@ -365,6 +365,7 @@ class JNB_30: public Instruction
   public:
     JNB_30(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ACALL_31: public Instruction

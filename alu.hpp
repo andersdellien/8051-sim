@@ -32,8 +32,12 @@ class Alu
     void SetSP(std::uint8_t sp);
     void SetA(std::uint8_t data);
     std::uint16_t GetDP();
+    // Register "low page" SFR (SFRPAGE = 0x00) 
     void RegisterSfr(std::uint8_t address, Sfr *sfr);
+    // Register "high page" SFR (SFRPAGE = 0x0F) 
+    void RegisterSfrHigh(std::uint8_t address, Sfr *sfr);
     std::map<std::uint8_t, Sfr*> specialFunctionRegisters;
+    std::map<std::uint8_t, Sfr*> specialFunctionRegistersHigh;
     std::uint8_t GetR0();
     std::uint8_t GetR1();
     std::uint8_t GetR2();

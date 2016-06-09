@@ -22,6 +22,6 @@ std::uint8_t SfrTOFFL::Read()
 
 Adc::Adc(Alu &a)
 {
-  a.RegisterSfr(0x8d, new SfrTOFFL());
+  a.RegisterSfrHigh(0x8d, new SfrTOFFL());
 }
 

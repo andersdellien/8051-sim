@@ -732,6 +732,11 @@ void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr)
   specialFunctionRegisters[address] = sfr;
 }
 
+void Alu::RegisterSfrHigh(std::uint8_t address, Sfr *sfr)
+{
+  specialFunctionRegistersHigh[address] = sfr;
+}
+
 void SfrSp::OnWrite(std::uint8_t data)
 {
   alu.sp = data;  

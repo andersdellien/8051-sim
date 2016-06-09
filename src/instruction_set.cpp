@@ -258,7 +258,7 @@ std::string ADD_27::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ADD A, @R1";
 }
 
-ADD_A_REG::ADD_A_REG(Alu &a, std::uint8_t r, std::uint8_t o) : Instruction(a, o), reg(r)
+ADD_A_REG::ADD_A_REG(Alu &a, std::uint8_t r, std::uint8_t o, bool c) : Instruction(a, o), reg(r), carry(c)
 {
   operands = 0;
 }
@@ -266,13 +266,55 @@ ADD_A_REG::ADD_A_REG(Alu &a, std::uint8_t r, std::uint8_t o) : Instruction(a, o)
 std::string ADD_A_REG::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "ADD A, R" << (int) reg;
+  ss << "ADD";
+  if (carry)
+  {
+    ss << "C ";
+  }
+  ss << "A, R" << (int) reg;
   return ss.str();
 }
 
 void ADD_A_REG::Execute() const
 {
-  alu.SetA(alu.GetA() + alu.GetReg(reg)); 
+  std::uint16_t data = alu.GetReg(reg);
+
+  if (carry && alu.GetC())
+  {
+    data++;
+  }
+
+  std::uint16_t result = data + alu.GetA();
+  if (result > 255)
+  {
+    alu.SetC();
+  }
+  else
+  {
+    alu.ClrC();
+  }
+
+  result = (data & 0xf) + (alu.GetA() & 0xf);
+  if (result > 0xf)
+  {
+    alu.SetAC();
+  }
+  else
+  {
+    alu.ClrAC();
+  }
+
+  std::int16_t signedResult = (int8_t) data + (int8_t) alu.GetA();
+  if (signedResult > 127 || signedResult < -128)
+  {
+    alu.SetOV();
+  }
+  else
+  {
+    alu.ClrOV();
+  }
+
+  alu.SetA(alu.GetReg(reg) + alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -326,94 +368,6 @@ ADDC_37::ADDC_37(Alu &a) : Instruction(a)
 std::string ADDC_37::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "ADDC A, @R1";
-}
-
-ADDC_38::ADDC_38(Alu &a) : Instruction(a)
-{
-  opcode = 0x38;
-  operands = 0;
-}
-
-std::string ADDC_38::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADDC A, R0";
-}
-
-ADDC_39::ADDC_39(Alu &a) : Instruction(a)
-{
-  opcode = 0x39;
-  operands = 0;
-}
-
-std::string ADDC_39::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADDC A, R1";
-}
-
-ADDC_3A::ADDC_3A(Alu &a) : Instruction(a)
-{
-  opcode = 0x3A;
-  operands = 0;
-}
-
-std::string ADDC_3A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADDC A, R2";
-}
-
-ADDC_3B::ADDC_3B(Alu &a) : Instruction(a)
-{
-  opcode = 0x3B;
-  operands = 0;
-}
-
-std::string ADDC_3B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADDC A, R3";
-}
-
-ADDC_3C::ADDC_3C(Alu &a) : Instruction(a)
-{
-  opcode = 0x3C;
-  operands = 0;
-}
-
-std::string ADDC_3C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADDC A, R4";
-}
-
-ADDC_3D::ADDC_3D(Alu &a) : Instruction(a)
-{
-  opcode = 0x3D;
-  operands = 0;
-}
-
-std::string ADDC_3D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADDC A, R5";
-}
-
-ADDC_3E::ADDC_3E(Alu &a) : Instruction(a)
-{
-  opcode = 0x3E;
-  operands = 0;
-}
-
-std::string ADDC_3E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADDC A, R6";
-}
-
-ADDC_3F::ADDC_3F(Alu &a) : Instruction(a)
-{
-  opcode = 0x3F;
-  operands = 0;
-}
-
-std::string ADDC_3F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADDC A, R7";
 }
 
 AJMP_1::AJMP_1(Alu &a) : Instruction(a)

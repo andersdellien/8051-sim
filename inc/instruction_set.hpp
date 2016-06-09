@@ -308,15 +308,17 @@ class ADD_27: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-/* Instructions 0x28 - 0x2f */
+/* Instructions 0x28 - 0x2f ADD A, R{n}*/
+/* Instructions 0x38 - 0x3f ADDC A, R{n}*/
 class ADD_A_REG: public Instruction
 {
   public:
-    ADD_A_REG(Alu&, uint8_t reg, std::uint8_t opcode);
+    ADD_A_REG(Alu&, uint8_t reg, std::uint8_t opcode, bool carry);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
   private:
     std::uint8_t reg;
+    bool carry;
 };
 
 class JNB_30: public Instruction
@@ -374,62 +376,6 @@ class ADDC_37: public Instruction
 {
   public:
     ADDC_37(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_38: public Instruction
-{
-  public:
-    ADDC_38(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_39: public Instruction
-{
-  public:
-    ADDC_39(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_3A: public Instruction
-{
-  public:
-    ADDC_3A(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_3B: public Instruction
-{
-  public:
-    ADDC_3B(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_3C: public Instruction
-{
-  public:
-    ADDC_3C(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_3D: public Instruction
-{
-  public:
-    ADDC_3D(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_3E: public Instruction
-{
-  public:
-    ADDC_3E(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADDC_3F: public Instruction
-{
-  public:
-    ADDC_3F(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 

@@ -36,14 +36,14 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   ADD_27 *add_27 = new ADD_27(*this);
   instructionSet[add_27->GetOpcode()] = add_27;
 
-  instructionSet[0x28] = new ADD_A_REG(*this, 0, 0x28);
-  instructionSet[0x29] = new ADD_A_REG(*this, 1, 0x29);
-  instructionSet[0x2a] = new ADD_A_REG(*this, 2, 0x2a);
-  instructionSet[0x2b] = new ADD_A_REG(*this, 3, 0x2b);
-  instructionSet[0x2c] = new ADD_A_REG(*this, 4, 0x2c);
-  instructionSet[0x2d] = new ADD_A_REG(*this, 5, 0x2d);
-  instructionSet[0x2e] = new ADD_A_REG(*this, 6, 0x2e);
-  instructionSet[0x2f] = new ADD_A_REG(*this, 7, 0x2f);
+  instructionSet[0x28] = new ADD_A_REG(*this, 0, 0x28, false);
+  instructionSet[0x29] = new ADD_A_REG(*this, 1, 0x29, false);
+  instructionSet[0x2a] = new ADD_A_REG(*this, 2, 0x2a, false);
+  instructionSet[0x2b] = new ADD_A_REG(*this, 3, 0x2b, false);
+  instructionSet[0x2c] = new ADD_A_REG(*this, 4, 0x2c, false);
+  instructionSet[0x2d] = new ADD_A_REG(*this, 5, 0x2d, false);
+  instructionSet[0x2e] = new ADD_A_REG(*this, 6, 0x2e, false);
+  instructionSet[0x2f] = new ADD_A_REG(*this, 7, 0x2f, false);
 
   ADDC_34 *addc_34 = new ADDC_34(*this);
   instructionSet[addc_34->GetOpcode()] = addc_34;
@@ -53,22 +53,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[addc_36->GetOpcode()] = addc_36;
   ADDC_37 *addc_37 = new ADDC_37(*this);
   instructionSet[addc_37->GetOpcode()] = addc_37;
-  ADDC_38 *addc_38 = new ADDC_38(*this);
-  instructionSet[addc_38->GetOpcode()] = addc_38;
-  ADDC_39 *addc_39 = new ADDC_39(*this);
-  instructionSet[addc_39->GetOpcode()] = addc_39;
-  ADDC_3A *addc_3a = new ADDC_3A(*this);
-  instructionSet[addc_3a->GetOpcode()] = addc_3a;
-  ADDC_3B *addc_3b = new ADDC_3B(*this);
-  instructionSet[addc_3b->GetOpcode()] = addc_3b;
-  ADDC_3C *addc_3c = new ADDC_3C(*this);
-  instructionSet[addc_3c->GetOpcode()] = addc_3c;
-  ADDC_3D *addc_3d = new ADDC_3D(*this);
-  instructionSet[addc_3d->GetOpcode()] = addc_3d;
-  ADDC_3E *addc_3e = new ADDC_3E(*this);
-  instructionSet[addc_3e->GetOpcode()] = addc_3e;
-  ADDC_3F *addc_3f = new ADDC_3F(*this);
-  instructionSet[addc_3f->GetOpcode()] = addc_3f;
+
+  instructionSet[0x38] = new ADD_A_REG(*this, 0, 0x38, true);
+  instructionSet[0x39] = new ADD_A_REG(*this, 1, 0x39, true);
+  instructionSet[0x3a] = new ADD_A_REG(*this, 2, 0x3a, true);
+  instructionSet[0x3b] = new ADD_A_REG(*this, 3, 0x3b, true);
+  instructionSet[0x3c] = new ADD_A_REG(*this, 4, 0x3c, true);
+  instructionSet[0x3d] = new ADD_A_REG(*this, 5, 0x3d, true);
+  instructionSet[0x3e] = new ADD_A_REG(*this, 6, 0x3e, true);
+  instructionSet[0x3f] = new ADD_A_REG(*this, 7, 0x3f, true);
+
   AJMP_1 *ajmp_1 = new AJMP_1(*this);
   instructionSet[ajmp_1->GetOpcode()] = ajmp_1;
   AJMP_21 *ajmp_21 = new AJMP_21(*this);

@@ -6,38 +6,6 @@
 #include "symbol_table.hpp"
 #include "exceptions.hpp"
 
-static void Write(Alu &alu, std::uint8_t address, std::uint8_t data)
-{
-  if (address < 0x80)
-  {
-    alu.iram[address] = data;
-  }
-  else if (alu.specialFunctionRegisters.find(address) != alu.specialFunctionRegisters.end())
-  {
-    alu.specialFunctionRegisters[address]->OnWrite(data);
-  }
-  else
-  {
-    throw new IllegalAddressException();
-  }
-}
-
-static std::uint8_t Read(Alu &alu, std::uint8_t address)
-{
-  if (address < 0x80)
-  {
-    return alu.iram[address];
-  }
-  else if (alu.specialFunctionRegisters.find(address) != alu.specialFunctionRegisters.end())
-  {
-    return alu.specialFunctionRegisters[address]->Read();
-  }
-  else
-  {
-    throw new IllegalAddressException();
-  }
-}
-
 static void PrintAddress(std::stringstream &ss, std::uint8_t address)
 {
   bool found;
@@ -2130,7 +2098,7 @@ void MOV_75::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
   std::uint8_t data = alu.flash.Get(alu.GetPC() + 2);
 
-  Write(alu, address, data);
+  alu.Write(address, data);
   alu.SetPC(alu.GetPC() + operands + 1);
 }
 
@@ -2151,9 +2119,9 @@ std::string MOV_85::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void MOV_85::Execute() const
 {
-  std::uint8_t data = Read(alu, alu.flash.Get(alu.GetPC() + 1));
+  std::uint8_t data = alu.Read(alu.flash.Get(alu.GetPC() + 1));
 
-  Write(alu, alu.flash.Get(alu.GetPC() + 2), data);
+  alu.Write(alu.flash.Get(alu.GetPC() + 2), data);
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2257,18 +2225,7 @@ void MOV_E5::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  if (address < 0x80)
-  {
-    alu.SetA(alu.flash.Get(address));
-  }
-  else if (alu.specialFunctionRegisters.find(address) != alu.specialFunctionRegisters.end())
-  {
-    alu.SetA(alu.specialFunctionRegisters[address]->Read());
-  }
-  else
-  {
-    throw new IllegalAddressException();
-  }
+  alu.SetA(alu.Read(address));
   alu.SetPC(alu.GetPC() + operands + 1);
 }
 
@@ -2474,7 +2431,7 @@ void MOV_A8::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR0(Read(alu, address));
+  alu.SetR0(alu.Read(address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2497,7 +2454,7 @@ void MOV_A9::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR1(Read(alu, address));
+  alu.SetR1(alu.Read(address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2520,7 +2477,7 @@ void MOV_AA::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR2(Read(alu, address));
+  alu.SetR2(alu.Read(address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2543,7 +2500,7 @@ void MOV_AB::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR3(Read(alu, address));
+  alu.SetR3(alu.Read(address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2566,7 +2523,7 @@ void MOV_AC::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR4(Read(alu, address));
+  alu.SetR4(alu.Read(address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2589,7 +2546,7 @@ void MOV_AD::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR5(Read(alu, address));
+  alu.SetR5(alu.Read(address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2612,7 +2569,7 @@ void MOV_AE::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR6(Read(alu, address));
+  alu.SetR6(alu.Read(address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2635,7 +2592,7 @@ void MOV_AF::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR7(Read(alu, address));
+  alu.SetR7(alu.Read(address));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2824,7 +2781,7 @@ void MOV_F5::Execute() const
 {
   std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
 
-  Write(alu, addr, alu.GetA());
+  alu.Write(addr, alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3250,9 +3207,9 @@ std::string ORL_43::Disassemble(const Memory& memory, std::uint16_t address) con
 void ORL_43::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-  std::uint8_t data = Read(alu, address);
+  std::uint8_t data = alu.Read(address);
 
-  Write(alu, address, data | alu.flash.Get(alu.GetPC() + 2));
+  alu.Write(address, data | alu.flash.Get(alu.GetPC() + 2));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

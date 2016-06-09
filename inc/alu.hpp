@@ -32,12 +32,9 @@ class Alu
     void SetSP(std::uint8_t sp);
     void SetA(std::uint8_t data);
     std::uint16_t GetDP();
-    // Register "low page" SFR (SFRPAGE = 0x00) 
-    void RegisterSfr(std::uint8_t address, Sfr *sfr);
-    // Register "high page" SFR (SFRPAGE = 0x0F) 
-    void RegisterSfrHigh(std::uint8_t address, Sfr *sfr);
-    std::map<std::uint8_t, Sfr*> specialFunctionRegisters;
-    std::map<std::uint8_t, Sfr*> specialFunctionRegistersHigh;
+    void RegisterSfr(std::uint8_t page, Sfr *sfr, std::uint8_t address);
+    void RegisterSfr(std::uint8_t page, Sfr *sfr);
+    std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
     std::uint8_t GetR0();
     std::uint8_t GetR1();
     std::uint8_t GetR2();
@@ -57,6 +54,8 @@ class Alu
     void SetDPTR(std::uint16_t val);
     std::uint16_t GetDPTR();
     void SetC();
+    std::uint8_t Read(std::uint8_t address);
+    void Write(std::uint8_t address, std::uint8_t value);
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint8_t a;
@@ -73,6 +72,10 @@ class Alu
     std::uint8_t *r6;
     std::uint8_t *r7;
     bool c;
+    Sfr *sfrSP;
+    Sfr *sfrDPL;
+    Sfr *sfrIP;
+    Sfr *sfrSFRPAGE;
 };
 
 #endif

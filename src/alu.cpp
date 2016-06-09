@@ -6,46 +6,6 @@
 #include "exceptions.hpp"
 #include "sfr.hpp"
 
-class SfrSp: public Sfr
-{
-  public:
-    SfrSp(Alu &alu);
-    void OnWrite(std::uint8_t data);
-    std::uint8_t Read();
-  private:
-    Alu &alu;
-};
-
-class SfrDpl: public Sfr
-{
-  public:
-    SfrDpl(Alu &alu);
-    void OnWrite(std::uint8_t data);
-    std::uint8_t Read();
-  private:
-    Alu &alu;
-};
-
-class SfrIP: public Sfr
-{
-  public:
-    SfrIP(Alu &alu);
-    void OnWrite(std::uint8_t data);
-    std::uint8_t Read();
-  private:
-    Alu &alu;
-};
-
-class SfrSFRPAGE: public Sfr
-{
-  public:
-    SfrSFRPAGE(Alu &alu);
-    void OnWrite(std::uint8_t data);
-    std::uint8_t Read();
-  private:
-    Alu &alu;
-};
-
 Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
 {
   iram = new std::uint8_t[iramSize];
@@ -559,10 +519,14 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[xrl_65->GetOpcode()] = xrl_65;
   XRL_63 *xrl_63 = new XRL_63(*this);
   instructionSet[xrl_63->GetOpcode()] = xrl_63;
-  RegisterSfr(0x81, new SfrSp(*this));
-  RegisterSfr(0x82, new SfrDpl(*this));
-  RegisterSfr(0xb8, new SfrIP(*this));
-  RegisterSfr(0xa7, new SfrSFRPAGE(*this));
+  sfrSP = new Sfr("SP");
+  sfrDPL = new Sfr("DPL");
+  sfrIP = new Sfr("IP");
+  sfrSFRPAGE = new Sfr("SFRPAGE");
+  RegisterSfr(0x81, sfrSP);
+  RegisterSfr(0x82, sfrDPL);
+  RegisterSfr(0xb8, sfrIP);
+  RegisterSfr(0xa7, sfrSFRPAGE);
 }
 
 std::string Alu::Disassemble(std::uint16_t address)
@@ -597,7 +561,8 @@ void Alu::Reset()
 {
   a = 0;
   pc = 0;
-  sp = 7;
+  sfrSP->data = 7;
+  sfrSFRPAGE->data = 0;
   r0 = &iram[0];
   r1 = &iram[1];
   r2 = &iram[2];
@@ -628,11 +593,11 @@ std::uint16_t Alu::GetPC()
 
 std::uint8_t Alu::GetSP()
 {
-  return sp;
+  return sfrSP->data;
 }
 void Alu::SetSP(std::uint8_t s)
 {
-  sp = s;
+  sfrSP->data = s;
 }
 
 void Alu::SetPC(std::uint16_t newPC)
@@ -750,70 +715,46 @@ void Alu::SetC()
   c = true;
 }
 
+void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr, std::uint8_t page)
+{
+  specialFunctionRegisters[page][address] = sfr;
+}
+
 void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr)
 {
-  specialFunctionRegisters[address] = sfr;
+  RegisterSfr(address, sfr, 0x00);
+  RegisterSfr(address, sfr, 0x0f);
 }
 
-void Alu::RegisterSfrHigh(std::uint8_t address, Sfr *sfr)
+void Alu::Write(std::uint8_t address, std::uint8_t data)
 {
-  specialFunctionRegistersHigh[address] = sfr;
+  if (address < 0x80)
+  {
+    iram[address] = data;
+  }
+  else if (specialFunctionRegisters[sfrSFRPAGE->data].find(address) != specialFunctionRegisters[sfrSFRPAGE->data].end())
+  {
+    specialFunctionRegisters[sfrSFRPAGE->data][address]->OnWrite(data);
+  }
+  else
+  {
+    throw new IllegalAddressException();
+  }
 }
 
-void SfrSp::OnWrite(std::uint8_t data)
+std::uint8_t Alu::Read(std::uint8_t address)
 {
-  alu.sp = data;  
+  if (address < 0x80)
+  {
+    return iram[address];
+  }
+  else if (specialFunctionRegisters[sfrSFRPAGE->data].find(address) != specialFunctionRegisters[sfrSFRPAGE->data].end())
+  {
+    return specialFunctionRegisters[sfrSFRPAGE->data][address]->Read();
+  }
+  else
+  {
+    throw new IllegalAddressException();
+  }
 }
 
-std::uint8_t SfrSp::Read()
-{
-  return alu.sp;
-}
-
-SfrSp::SfrSp(Alu &a): alu(a)
-{
-}
-
-SfrDpl::SfrDpl(Alu &a): alu(a)
-{
-}
-
-void SfrDpl::OnWrite(std::uint8_t data)
-{
-  alu.dp = (alu.dp & 0xff00) + data;  
-}
-
-std::uint8_t SfrDpl::Read()
-{
-  return alu.dp & 0xff;
-}
-
-SfrIP::SfrIP(Alu &a): alu(a)
-{
-}
-
-void SfrIP::OnWrite(std::uint8_t data)
-{
-  std::cout << "SFRIP write " << (int) data << std::endl;
-}
-
-std::uint8_t SfrIP::Read()
-{
-  std::cout << "SFRIP read" << std::endl;
-  return 0;
-}
-
-SfrSFRPAGE::SfrSFRPAGE(Alu &a): alu(a)
-{
-}
-
-void SfrSFRPAGE::OnWrite(std::uint8_t data)
-{
-  std::cout << "SFRPAGE write " << (int) data << std::endl;
-}
-
-std::uint8_t SfrSFRPAGE::Read()
-{
-  std::cout << "SFRPAGE read" << std::endl;
-  return 0;
-}

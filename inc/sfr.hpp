@@ -2,12 +2,17 @@
 #define _SFR_HPP
 
 #include <cstdint>
+#include <string>
 
 class Sfr
 {
   public:
-    virtual void OnWrite(std::uint8_t data) = 0;
-    virtual std::uint8_t Read() = 0;
+    Sfr(std::string name);
+    virtual void OnWrite(std::uint8_t data);
+    virtual std::uint8_t Read();
+    std::uint8_t data;
+  private:
+    std::string name;
 };
 
 #endif

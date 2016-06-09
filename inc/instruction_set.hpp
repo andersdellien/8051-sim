@@ -622,6 +622,7 @@ class ANL_53: public Instruction
   public:
     ANL_53(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ANL_54: public Instruction

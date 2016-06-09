@@ -598,6 +598,15 @@ std::string ANL_53::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void ANL_53::Execute() const
+{
+  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 2);
+  std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.Write(addr, alu.Read(addr) & operand);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 ANL_54::ANL_54(Alu &a) : Instruction(a)
 {
   opcode = 0x54;

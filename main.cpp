@@ -15,6 +15,7 @@
 #include "system.hpp"
 #include "uart.hpp"
 #include "adc.hpp"
+#include "timer.hpp"
 
 int main(int argc, char **argv)
 {
@@ -29,6 +30,7 @@ int main(int argc, char **argv)
   System system(alu);
   Uart uart(alu);
   Adc adc(alu);
+  Timer timer(alu);
 
   alu.Reset();
   while (1)

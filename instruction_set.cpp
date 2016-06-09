@@ -2149,6 +2149,14 @@ std::string MOV_85::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void MOV_85::Execute() const
+{
+  std::uint8_t data = Read(alu, alu.flash.Get(alu.GetPC() + 1));
+
+  Write(alu, alu.flash.Get(alu.GetPC() + 2), data);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOV_76::MOV_76(Alu &a) : Instruction(a)
 {
   opcode = 0x76;

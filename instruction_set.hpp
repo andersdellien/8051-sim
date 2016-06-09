@@ -976,6 +976,7 @@ class MOV_85: public Instruction
   public:
     MOV_85(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_86: public Instruction

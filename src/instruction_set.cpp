@@ -1677,6 +1677,14 @@ std::string INC_5::Disassemble(const Memory& memory, std::uint16_t address) cons
   return ss.str();
 }
 
+void INC_5::Execute() const
+{
+  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.Write(address, alu.Read(address) + 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 INC_4::INC_4(Alu &a) : Instruction(a)
 {
   opcode = 4;

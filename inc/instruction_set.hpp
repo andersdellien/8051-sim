@@ -46,6 +46,7 @@ class INC_5: public Instruction
   public:
     INC_5(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_6: public Instruction

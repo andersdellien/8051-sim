@@ -106,7 +106,8 @@ int main(int argc, char **argv)
       std::cout << std::hex << "PC:" << std::setw(4) << (int) alu.GetPC();
       std::cout << " SP:" << std::setw(2) << (int) alu.GetSP();
       std::cout << " A:" << std::setw(2) << (int) alu.GetA();
-      std::cout << " R0:" << std::setw(2) << (int) alu.GetR0() << " ";
+      std::cout << " DPTR:" << std::setw(4) << (int) alu.GetDPTR() << std::endl;
+      std::cout << "R0:" << std::setw(2) << (int) alu.GetR0() << " ";
       std::cout << "R1:" << std::setw(2) << (int) alu.GetR1() << " ";
       std::cout << "R2:" << std::setw(2) << (int) alu.GetR2() << " ";
       std::cout << "R3:" << std::setw(2) << (int) alu.GetR3() << " ";

@@ -78,8 +78,6 @@ class Alu
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;
-    std::uint16_t dptr;
-    std::uint16_t dp;
     bool c;
     bool ac;
     bool ov;

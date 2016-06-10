@@ -581,11 +581,6 @@ void Alu::SetPC(std::uint16_t newPC)
   pc = newPC;
 }
 
-std::uint16_t Alu::GetDP()
-{
-  return dp;
-}
-
 void Alu::SetA(std::uint8_t a)
 {
   sfrACC->data = a;
@@ -688,12 +683,13 @@ void Alu::SetR7(std::uint8_t val)
 
 void Alu::SetDPTR(std::uint16_t val)
 {
-  dptr = val;
+  sfrDPL->data = val & 255;
+  sfrDPH->data = val / 256;
 }
 
 std::uint16_t Alu::GetDPTR()
 {
-  return dptr;
+  return sfrDPL->data + 256 * sfrDPH->data;
 }
 
 bool Alu::GetC()

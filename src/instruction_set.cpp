@@ -1872,7 +1872,7 @@ std::string JB_20::Disassemble(const Memory& memory, std::uint16_t address) cons
 void JB_20::Execute() const
 {
   std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
-  std::uint8_t relAddr = alu.flash.Get(alu.GetPC() + 2);
+  std::int8_t relAddr = alu.flash.Get(alu.GetPC() + 2);
   std::uint8_t byteAddr = 0x20 + bitAddr / 8;
   std::uint8_t bit = 1 << byteAddr % 8;
 
@@ -1962,7 +1962,7 @@ std::string JNB_30::Disassemble(const Memory& memory, std::uint16_t address) con
 void JNB_30::Execute() const
 {
   std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
-  std::uint8_t relAddr = alu.flash.Get(alu.GetPC() + 2);
+  std::int8_t relAddr = alu.flash.Get(alu.GetPC() + 2);
   std::uint8_t byteAddr = 0x20 + bitAddr / 8;
   std::uint8_t bit = 1 << byteAddr % 8;
 

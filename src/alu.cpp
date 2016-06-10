@@ -421,22 +421,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[xch_c6->GetOpcode()] = xch_c6;
   XCH_C7 *xch_c7 = new XCH_C7(*this);
   instructionSet[xch_c7->GetOpcode()] = xch_c7;
-  XCH_C8 *xch_c8 = new XCH_C8(*this);
-  instructionSet[xch_c8->GetOpcode()] = xch_c8;
-  XCH_C9 *xch_c9 = new XCH_C9(*this);
-  instructionSet[xch_c9->GetOpcode()] = xch_c9;
-  XCH_CA *xch_ca = new XCH_CA(*this);
-  instructionSet[xch_ca->GetOpcode()] = xch_ca;
-  XCH_CB *xch_cb = new XCH_CB(*this);
-  instructionSet[xch_cb->GetOpcode()] = xch_cb;
-  XCH_CC *xch_cc = new XCH_CC(*this);
-  instructionSet[xch_cc->GetOpcode()] = xch_cc;
-  XCH_CD *xch_cd = new XCH_CD(*this);
-  instructionSet[xch_cd->GetOpcode()] = xch_cd;
-  XCH_CE *xch_ce = new XCH_CE(*this);
-  instructionSet[xch_ce->GetOpcode()] = xch_ce;
-  XCH_CF *xch_cf = new XCH_CF(*this);
-  instructionSet[xch_cf->GetOpcode()] = xch_cf;
+
+  instructionSet[0xc8] = new XCHRegister(*this, 0xc8, 0);
+  instructionSet[0xc9] = new XCHRegister(*this, 0xc9, 1);
+  instructionSet[0xca] = new XCHRegister(*this, 0xca, 2);
+  instructionSet[0xcb] = new XCHRegister(*this, 0xcb, 3);
+  instructionSet[0xcc] = new XCHRegister(*this, 0xcc, 4);
+  instructionSet[0xcd] = new XCHRegister(*this, 0xcd, 5);
+  instructionSet[0xce] = new XCHRegister(*this, 0xce, 6);
+  instructionSet[0xcf] = new XCHRegister(*this, 0xcf, 7);
+
   XCHD_D6 *xchd_d6 = new XCHD_D6(*this);
   instructionSet[xchd_d6->GetOpcode()] = xchd_d6;
   XCHD_D7 *xchd_d7 = new XCHD_D7(*this);

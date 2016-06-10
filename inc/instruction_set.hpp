@@ -1238,68 +1238,14 @@ class XCH_C7: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class XCH_C8: public Instruction
+class XCHRegister: public Instruction
 {
   public:
-    XCH_C8(Alu&);
+    XCHRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
-};
-
-class XCH_C9: public Instruction
-{
-  public:
-    XCH_C9(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XCH_CA: public Instruction
-{
-  public:
-    XCH_CA(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XCH_CB: public Instruction
-{
-  public:
-    XCH_CB(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XCH_CC: public Instruction
-{
-  public:
-    XCH_CC(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XCH_CD: public Instruction
-{
-  public:
-    XCH_CD(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XCH_CE: public Instruction
-{
-  public:
-    XCH_CE(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XCH_CF: public Instruction
-{
-  public:
-    XCH_CF(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class POP_D0: public Instruction

@@ -434,22 +434,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[subb_96->GetOpcode()] = subb_96;
   SUBB_97 *subb_97 = new SUBB_97(*this);
   instructionSet[subb_97->GetOpcode()] = subb_97;
-  SUBB_98 *subb_98 = new SUBB_98(*this);
-  instructionSet[subb_98->GetOpcode()] = subb_98;
-  SUBB_99 *subb_99 = new SUBB_99(*this);
-  instructionSet[subb_99->GetOpcode()] = subb_99;
-  SUBB_9A *subb_9a = new SUBB_9A(*this);
-  instructionSet[subb_9a->GetOpcode()] = subb_9a;
-  SUBB_9B *subb_9b = new SUBB_9B(*this);
-  instructionSet[subb_9b->GetOpcode()] = subb_9b;
-  SUBB_9C *subb_9c = new SUBB_9C(*this);
-  instructionSet[subb_9c->GetOpcode()] = subb_9c;
-  SUBB_9D *subb_9d = new SUBB_9D(*this);
-  instructionSet[subb_9d->GetOpcode()] = subb_9d;
-  SUBB_9E *subb_9e = new SUBB_9E(*this);
-  instructionSet[subb_9e->GetOpcode()] = subb_9e;
-  SUBB_9F *subb_9f = new SUBB_9F(*this);
-  instructionSet[subb_9f->GetOpcode()] = subb_9f;
+
+  instructionSet[0x98] = new SubARegister(*this, 0x98, 0);
+  instructionSet[0x99] = new SubARegister(*this, 0x99, 1);
+  instructionSet[0x9a] = new SubARegister(*this, 0x9a, 2);
+  instructionSet[0x9b] = new SubARegister(*this, 0x9b, 3);
+  instructionSet[0x9c] = new SubARegister(*this, 0x9c, 4);
+  instructionSet[0x9d] = new SubARegister(*this, 0x9d, 5);
+  instructionSet[0x9e] = new SubARegister(*this, 0x9e, 6);
+  instructionSet[0x9f] = new SubARegister(*this, 0x9f, 7);
+
   SWAP_C4 *swap_c4 = new SWAP_C4(*this);
   instructionSet[swap_c4->GetOpcode()] = swap_c4;
   XCH_C5 *xch_c5 = new XCH_C5(*this);

@@ -1059,60 +1059,15 @@ class SUBB_97: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class SUBB_98: public Instruction
+// 0x98 - 0x9f
+class SubARegister: public SubtractionHelper
 {
   public:
-    SUBB_98(Alu&);
+    SubARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class SUBB_99: public Instruction
-{
-  public:
-    SUBB_99(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class SUBB_9A: public Instruction
-{
-  public:
-    SUBB_9A(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class SUBB_9B: public Instruction
-{
-  public:
-    SUBB_9B(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class SUBB_9C: public Instruction
-{
-  public:
-    SUBB_9C(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class SUBB_9D: public Instruction
-{
-  public:
-    SUBB_9D(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class SUBB_9E: public Instruction
-{
-  public:
-    SUBB_9E(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class SUBB_9F: public Instruction
-{
-  public:
-    SUBB_9F(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class ORL_A0: public Instruction

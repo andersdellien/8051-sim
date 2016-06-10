@@ -3953,92 +3953,22 @@ std::string SUBB_97::Disassemble(const Memory& memory, std::uint16_t address) co
   return "SUBB A, @R0";
 }
 
-SUBB_98::SUBB_98(Alu &a) : Instruction(a)
+SubARegister::SubARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : SubtractionHelper(a, opcode), reg(r)
 {
-  opcode = 0x98;
   operands = 0;
 }
 
-std::string SUBB_98::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SubARegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
-  return "SUBB A, R0";
+  std::stringstream ss;
+  ss << "SUBB A, R";
+  ss << (int) reg;
+  return ss.str();
 }
 
-SUBB_99::SUBB_99(Alu &a) : Instruction(a)
+void SubARegister::Execute() const
 {
-  opcode = 0x99;
-  operands = 0;
-}
-
-std::string SUBB_99::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "SUBB A, R1";
-}
-
-SUBB_9A::SUBB_9A(Alu &a) : Instruction(a)
-{
-  opcode = 0x9A;
-  operands = 0;
-}
-
-std::string SUBB_9A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "SUBB A, R2";
-}
-
-SUBB_9B::SUBB_9B(Alu &a) : Instruction(a)
-{
-  opcode = 0x9B;
-  operands = 0;
-}
-
-std::string SUBB_9B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "SUBB A, R3";
-}
-
-SUBB_9C::SUBB_9C(Alu &a) : Instruction(a)
-{
-  opcode = 0x9C;
-  operands = 0;
-}
-
-std::string SUBB_9C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "SUBB A, R4";
-}
-
-SUBB_9D::SUBB_9D(Alu &a) : Instruction(a)
-{
-  opcode = 0x9D;
-  operands = 0;
-}
-
-std::string SUBB_9D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "SUBB_A, R5";
-}
-
-SUBB_9E::SUBB_9E(Alu &a) : Instruction(a)
-{
-  opcode = 0x9E;
-  operands = 0;
-}
-
-std::string SUBB_9E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "SUBB A, R6";
-}
-
-SUBB_9F::SUBB_9F(Alu &a) : Instruction(a)
-{
-  opcode = 0x9F;
-  operands = 0;
-}
-
-std::string SUBB_9F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "SUBB A, R7";
+  Helper(alu.GetReg(reg));
 }
 
 SWAP_C4::SWAP_C4(Alu &a) : Instruction(a)

@@ -4351,6 +4351,14 @@ std::string XRL_64::Disassemble(const Memory& memory, std::uint16_t address) con
   return ss.str();
 }
 
+void XRL_64::Execute() const
+{
+  std::uint8_t data = alu.flash.Get(alu.GetPC() + 1);
+
+  alu.SetA(alu.GetA() | data);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 XRL_65::XRL_65(Alu &a) : Instruction(a)
 {
   opcode = 0x65;

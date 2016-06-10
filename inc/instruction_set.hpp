@@ -667,6 +667,7 @@ class XRL_64: public Instruction
   public:
     XRL_64(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XRL_65: public Instruction

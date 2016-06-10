@@ -110,22 +110,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[cjne_b6->GetOpcode()] = cjne_b6;
   CJNE_B7 *cjne_b7 = new CJNE_B7(*this);
   instructionSet[cjne_b7->GetOpcode()] = cjne_b7;
-  CJNE_B8 *cjne_b8 = new CJNE_B8(*this);
-  instructionSet[cjne_b8->GetOpcode()] = cjne_b8;
-  CJNE_B9 *cjne_b9 = new CJNE_B9(*this);
-  instructionSet[cjne_b9->GetOpcode()] = cjne_b9;
-  CJNE_BA *cjne_ba = new CJNE_BA(*this);
-  instructionSet[cjne_ba->GetOpcode()] = cjne_ba;
-  CJNE_BB *cjne_bb = new CJNE_BB(*this);
-  instructionSet[cjne_bb->GetOpcode()] = cjne_bb;
-  CJNE_BC *cjne_bc = new CJNE_BC(*this);
-  instructionSet[cjne_bc->GetOpcode()] = cjne_bc;
-  CJNE_BD *cjne_bd = new CJNE_BD(*this);
-  instructionSet[cjne_bd->GetOpcode()] = cjne_bd;
-  CJNE_BE *cjne_be = new CJNE_BE(*this);
-  instructionSet[cjne_be->GetOpcode()] = cjne_be;
-  CJNE_BF *cjne_bf = new CJNE_BF(*this);
-  instructionSet[cjne_bf->GetOpcode()] = cjne_bf;
+
+  instructionSet[0xb8] = new CJNERegister(*this, 0xb8, 0);
+  instructionSet[0xb9] = new CJNERegister(*this, 0xb9, 1);
+  instructionSet[0xba] = new CJNERegister(*this, 0xba, 2);
+  instructionSet[0xbb] = new CJNERegister(*this, 0xbb, 3);
+  instructionSet[0xbc] = new CJNERegister(*this, 0xbc, 4);
+  instructionSet[0xbd] = new CJNERegister(*this, 0xbd, 5);
+  instructionSet[0xbe] = new CJNERegister(*this, 0xbe, 6);
+  instructionSet[0xbf] = new CJNERegister(*this, 0xbf, 7);
+
   CLR_C2 *clr_c2 = new CLR_C2(*this);
   instructionSet[clr_c2->GetOpcode()] = clr_c2;
   CLR_C3 *clr_c3 = new CLR_C3(*this);

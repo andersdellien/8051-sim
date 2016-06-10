@@ -664,27 +664,26 @@ std::string CJNE_B7::Disassemble(const Memory& memory, std::uint16_t address) co
   return ss.str();
 }
 
-CJNE_B8::CJNE_B8(Alu &a) : Instruction(a)
+CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
 {
-  opcode = 0xB8;
   operands = 2;
 }
 
-std::string CJNE_B8::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CJNERegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
-  ss << "CJNE R0, #";
+  ss << "CJNE R" << (int) reg << ", #";
   ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
   return ss.str();
 }
 
-void CJNE_B8::Execute() const
+void CJNERegister::Execute() const
 {
   std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
   std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
 
-  if (alu.GetR0() != operand)
+  if (alu.GetReg(reg) != operand)
   {
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
   }
@@ -693,252 +692,7 @@ void CJNE_B8::Execute() const
     alu.SetPC(alu.GetPC() + 1 + operands);
   }
 
-  if (alu.GetR0() < operand)
-  {
-    alu.SetC();
-  }
-}
-
-CJNE_B9::CJNE_B9(Alu &a) : Instruction(a)
-{
-  opcode = 0xB9;
-  operands = 2;
-}
-
-std::string CJNE_B9::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "CJNE R1, #";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
-  return ss.str();
-}
-
-void CJNE_B9::Execute() const
-{
-  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
-
-  if (alu.GetR1() != operand)
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-
-  if (alu.GetR1() < operand)
-  {
-    alu.SetC();
-  }
-}
-
-CJNE_BA::CJNE_BA(Alu &a) : Instruction(a)
-{
-  opcode = 0xBA;
-  operands = 2;
-}
-
-std::string CJNE_BA::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "CJNE R2, #";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
-  return ss.str();
-}
-
-void CJNE_BA::Execute() const
-{
-  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
-
-  if (alu.GetR2() != operand)
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-
-  if (alu.GetR2() < operand)
-  {
-    alu.SetC();
-  }
-}
-
-CJNE_BB::CJNE_BB(Alu &a) : Instruction(a)
-{
-  opcode = 0xBB;
-  operands = 2;
-}
-
-std::string CJNE_BB::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "CJNE ";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
-  return ss.str();
-}
-
-void CJNE_BB::Execute() const
-{
-  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
-
-  if (alu.GetR3() != operand)
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-
-  if (alu.GetR3() < operand)
-  {
-    alu.SetC();
-  }
-}
-
-CJNE_BC::CJNE_BC(Alu &a) : Instruction(a)
-{
-  opcode = 0xBC;
-  operands = 2;
-}
-
-std::string CJNE_BC::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "CJNE R4, #";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
-  return ss.str();
-}
-
-void CJNE_BC::Execute() const
-{
-  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
-
-  if (alu.GetR4() != operand)
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-
-  if (alu.GetR4() < operand)
-  {
-    alu.SetC();
-  }
-}
-
-CJNE_BD::CJNE_BD(Alu &a) : Instruction(a)
-{
-  opcode = 0xBD;
-  operands = 2;
-}
-
-std::string CJNE_BD::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "CJNE R5, #";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
-  return ss.str();
-}
-
-void CJNE_BD::Execute() const
-{
-  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
-
-  if (alu.GetR5() != operand)
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-
-  if (alu.GetR5() < operand)
-  {
-    alu.SetC();
-  }
-}
-
-CJNE_BE::CJNE_BE(Alu &a) : Instruction(a)
-{
-  opcode = 0xBE;
-  operands = 2;
-}
-
-std::string CJNE_BE::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "CJNE R6, #";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
-  return ss.str();
-}
-
-void CJNE_BE::Execute() const
-{
-  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
-
-  if (alu.GetR6() != operand)
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-
-  if (alu.GetR6() < operand)
-  {
-    alu.SetC();
-  }
-}
-
-CJNE_BF::CJNE_BF(Alu &a) : Instruction(a)
-{
-  opcode = 0xBF;
-  operands = 2;
-}
-
-std::string CJNE_BF::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "CJNE R7, #";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
-  return ss.str();
-}
-
-void CJNE_BF::Execute() const
-{
-  std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 2);
-
-  if (alu.GetR7() != operand)
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-
-  if (alu.GetR7() < operand)
+  if (alu.GetReg(reg) < operand)
   {
     alu.SetC();
   }

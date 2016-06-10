@@ -1168,68 +1168,14 @@ class CJNE_B7: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class CJNE_B8: public Instruction
+class CJNERegister: public Instruction
 {
   public:
-    CJNE_B8(Alu&);
+    CJNERegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
-};
-
-class CJNE_B9: public Instruction
-{
-  public:
-    CJNE_B9(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class CJNE_BA: public Instruction
-{
-  public:
-    CJNE_BA(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class CJNE_BB: public Instruction
-{
-  public:
-    CJNE_BB(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class CJNE_BC: public Instruction
-{
-  public:
-    CJNE_BC(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class CJNE_BD: public Instruction
-{
-  public:
-    CJNE_BD(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class CJNE_BE: public Instruction
-{
-  public:
-    CJNE_BE(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class CJNE_BF: public Instruction
-{
-  public:
-    CJNE_BF(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class PUSH_C0: public Instruction

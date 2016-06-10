@@ -63,68 +63,14 @@ class INC_7: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class INC_8: public Instruction
+class IncRegister: public Instruction
 {
   public:
-    INC_8(Alu&);
+    IncRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
-};
-
-class INC_9: public Instruction
-{
-  public:
-    INC_9(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class INC_A: public Instruction
-{
-  public:
-    INC_A(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class INC_B: public Instruction
-{
-  public:
-    INC_B(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class INC_C: public Instruction
-{
-  public:
-    INC_C(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class INC_D: public Instruction
-{
-  public:
-    INC_D(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class INC_E: public Instruction
-{
-  public:
-    INC_E(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class INC_F: public Instruction
-{
-  public:
-    INC_F(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class JBC_10: public Instruction
@@ -446,68 +392,14 @@ class ORL_47: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class ORL_48: public Instruction
+class OrARegister: public Instruction
 {
   public:
-    ORL_48(Alu&);
+    OrARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
-};
-
-class ORL_49: public Instruction
-{
-  public:
-    ORL_49(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class ORL_4A: public Instruction
-{
-  public:
-    ORL_4A(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class ORL_4B: public Instruction
-{
-  public:
-    ORL_4B(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class ORL_4C: public Instruction
-{
-  public:
-    ORL_4C(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class ORL_4D: public Instruction
-{
-  public:
-    ORL_4D(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class ORL_4E: public Instruction
-{
-  public:
-    ORL_4E(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class ORL_4F: public Instruction
-{
-  public:
-    ORL_4F(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class JNC_50: public Instruction

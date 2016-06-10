@@ -196,22 +196,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[inc_4->GetOpcode()] = inc_4;
   INC_6 *inc_6 = new INC_6(*this);
   instructionSet[inc_6->GetOpcode()] = inc_6;
-  INC_8 *inc_8 = new INC_8(*this);
-  instructionSet[inc_8->GetOpcode()] = inc_8;
-  INC_9 *inc_9 = new INC_9(*this);
-  instructionSet[inc_9->GetOpcode()] = inc_9;
-  INC_A *inc_a = new INC_A(*this);
-  instructionSet[inc_a->GetOpcode()] = inc_a;
-  INC_B *inc_b = new INC_B(*this);
-  instructionSet[inc_b->GetOpcode()] = inc_b;
-  INC_C *inc_c = new INC_C(*this);
-  instructionSet[inc_c->GetOpcode()] = inc_c;
-  INC_D *inc_d = new INC_D(*this);
-  instructionSet[inc_d->GetOpcode()] = inc_d;
-  INC_E *inc_e = new INC_E(*this);
-  instructionSet[inc_e->GetOpcode()] = inc_e;
-  INC_F *inc_f = new INC_F(*this);
-  instructionSet[inc_f->GetOpcode()] = inc_f;
+
+  instructionSet[0x08] = new IncRegister(*this, 0x08, 0);
+  instructionSet[0x09] = new IncRegister(*this, 0x09, 1);
+  instructionSet[0x0a] = new IncRegister(*this, 0x0a, 2);
+  instructionSet[0x0b] = new IncRegister(*this, 0x0b, 3);
+  instructionSet[0x0c] = new IncRegister(*this, 0x0c, 4);
+  instructionSet[0x0d] = new IncRegister(*this, 0x0d, 5);
+  instructionSet[0x0e] = new IncRegister(*this, 0x0e, 6);
+  instructionSet[0x0f] = new IncRegister(*this, 0x0f, 7);
+
   INC_A3 *inc_a3 = new INC_A3(*this);
   instructionSet[inc_a3->GetOpcode()] = inc_a3;
   JB_20 *jb_20 = new JB_20(*this);
@@ -386,22 +380,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[orl_46->GetOpcode()] = orl_46;
   ORL_47 *orl_47 = new ORL_47(*this);
   instructionSet[orl_47->GetOpcode()] = orl_47;
-  ORL_48 *orl_48 = new ORL_48(*this);
-  instructionSet[orl_48->GetOpcode()] = orl_48;
-  ORL_49 *orl_49 = new ORL_49(*this);
-  instructionSet[orl_49->GetOpcode()] = orl_49;
-  ORL_4A *orl_4a = new ORL_4A(*this);
-  instructionSet[orl_4a->GetOpcode()] = orl_4a;
-  ORL_4B *orl_4b = new ORL_4B(*this);
-  instructionSet[orl_4b->GetOpcode()] = orl_4b;
-  ORL_4C *orl_4c = new ORL_4C(*this);
-  instructionSet[orl_4c->GetOpcode()] = orl_4c;
-  ORL_4D *orl_4d = new ORL_4D(*this);
-  instructionSet[orl_4d->GetOpcode()] = orl_4d;
-  ORL_4E *orl_4e = new ORL_4E(*this);
-  instructionSet[orl_4e->GetOpcode()] = orl_4e;
-  ORL_4F *orl_4f = new ORL_4F(*this);
-  instructionSet[orl_4f->GetOpcode()] = orl_4f;
+
+  instructionSet[0x48] = new OrARegister(*this, 0x48, 0);
+  instructionSet[0x49] = new OrARegister(*this, 0x49, 1);
+  instructionSet[0x4a] = new OrARegister(*this, 0x4a, 2);
+  instructionSet[0x4b] = new OrARegister(*this, 0x4b, 3);
+  instructionSet[0x4c] = new OrARegister(*this, 0x4c, 4);
+  instructionSet[0x4d] = new OrARegister(*this, 0x4d, 5);
+  instructionSet[0x4e] = new OrARegister(*this, 0x4e, 6);
+  instructionSet[0x4f] = new OrARegister(*this, 0x4f, 7);
+
   POP_D0 *pop_d0 = new POP_D0(*this);
   instructionSet[pop_d0->GetOpcode()] = pop_d0;
   PUSH_C0 *push_c0 = new PUSH_C0(*this);

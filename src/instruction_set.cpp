@@ -1707,139 +1707,20 @@ std::string INC_6::Disassemble(const Memory& memory, std::uint16_t address) cons
   return "INC @R0";
 }
 
-INC_8::INC_8(Alu &a) : Instruction(a)
+IncRegister::IncRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode), reg(r)
 {
-  opcode = 8;
-  operands = 0;
 }
 
-std::string INC_8::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string IncRegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
-  return "INC R0";
+  std::stringstream ss;
+  ss << "INC R" << (int) reg;
+  return ss.str();
 }
 
-void INC_8::Execute() const
+void IncRegister::Execute() const
 {
-  alu.SetR0(alu.GetR0() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-INC_9::INC_9(Alu &a) : Instruction(a)
-{
-  opcode = 9;
-  operands = 0;
-}
-
-std::string INC_9::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "INC R1";
-}
-
-void INC_9::Execute() const
-{
-  alu.SetR1(alu.GetR1() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-INC_A::INC_A(Alu &a) : Instruction(a)
-{
-  opcode = 0xA;
-  operands = 0;
-}
-
-std::string INC_A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "INC R2";
-}
-
-void INC_A::Execute() const
-{
-  alu.SetR2(alu.GetR2() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-INC_B::INC_B(Alu &a) : Instruction(a)
-{
-  opcode = 0xB;
-  operands = 0;
-}
-
-std::string INC_B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "INC R3";
-}
-
-void INC_B::Execute() const
-{
-  alu.SetR3(alu.GetR3() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-INC_C::INC_C(Alu &a) : Instruction(a)
-{
-  opcode = 0xC;
-  operands = 0;
-}
-
-std::string INC_C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "INC R4";
-}
-
-void INC_C::Execute() const
-{
-  alu.SetR4(alu.GetR4() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-INC_D::INC_D(Alu &a) : Instruction(a)
-{
-  opcode = 0xD;
-  operands = 0;
-}
-
-std::string INC_D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "INC R5";
-}
-
-void INC_D::Execute() const
-{
-  alu.SetR5(alu.GetR5() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-INC_E::INC_E(Alu &a) : Instruction(a)
-{
-  opcode = 0xE;
-  operands = 0;
-}
-
-std::string INC_E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "INC R6";
-}
-
-void INC_E::Execute() const
-{
-  alu.SetR6(alu.GetR6() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-INC_F::INC_F(Alu &a) : Instruction(a)
-{
-  opcode = 0xF;
-  operands = 0;
-}
-
-std::string INC_F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "INC R7";
-}
-
-void INC_F::Execute() const
-{
-  alu.SetR7(alu.GetR7() + 1);
+  alu.SetReg(reg, alu.GetReg(reg) + 1);
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3497,139 +3378,21 @@ std::string ORL_47::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ORL A, @R1";
 }
 
-ORL_48::ORL_48(Alu &a) : Instruction(a)
+OrARegister::OrARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
 {
-  opcode = 0x48;
-  operands = 0;
 }
 
-std::string ORL_48::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string OrARegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
-  return "ORL A, R0";
+  std::stringstream ss;
+  ss << "ORL A, R";
+  ss << (int) reg;
+  return ss.str();
 }
 
-void ORL_48::Execute() const
+void OrARegister::Execute() const
 {
-  alu.SetA(alu.GetA() | alu.GetR0());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ORL_49::ORL_49(Alu &a) : Instruction(a)
-{
-  opcode = 0x49;
-  operands = 0;
-}
-
-std::string ORL_49::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ORL A, R1";
-}
-
-void ORL_49::Execute() const
-{
-  alu.SetA(alu.GetA() | alu.GetR1());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ORL_4A::ORL_4A(Alu &a) : Instruction(a)
-{
-  opcode = 0x4A;
-  operands = 0;
-}
-
-std::string ORL_4A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ORL A, R2";
-}
-
-void ORL_4A::Execute() const
-{
-  alu.SetA(alu.GetA() | alu.GetR2());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ORL_4B::ORL_4B(Alu &a) : Instruction(a)
-{
-  opcode = 0x4B;
-  operands = 0;
-}
-
-std::string ORL_4B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ORL A, R3";
-}
-
-void ORL_4B::Execute() const
-{
-  alu.SetA(alu.GetA() | alu.GetR3());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ORL_4C::ORL_4C(Alu &a) : Instruction(a)
-{
-  opcode = 0x4C;
-  operands = 0;
-}
-
-std::string ORL_4C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ORL A, R4";
-}
-
-void ORL_4C::Execute() const
-{
-  alu.SetA(alu.GetA() | alu.GetR4());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ORL_4D::ORL_4D(Alu &a) : Instruction(a)
-{
-  opcode = 0x4D;
-  operands = 0;
-}
-
-std::string ORL_4D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ORL A, R5";
-}
-
-void ORL_4D::Execute() const
-{
-  alu.SetA(alu.GetA() | alu.GetR5());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ORL_4E::ORL_4E(Alu &a) : Instruction(a)
-{
-  opcode = 0x4E;
-  operands = 0;
-}
-
-std::string ORL_4E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ORL A, R6";
-}
-
-void ORL_4E::Execute() const
-{
-  alu.SetA(alu.GetA() | alu.GetR6());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ORL_4F::ORL_4F(Alu &a) : Instruction(a)
-{
-  opcode = 0x4F;
-  operands = 0;
-}
-
-std::string ORL_4F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ORL A, R7";
-}
-
-void ORL_4F::Execute() const
-{
-  alu.SetA(alu.GetA() | alu.GetR7());
+  alu.SetA(alu.GetA() | alu.GetReg(reg));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

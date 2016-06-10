@@ -7,7 +7,7 @@ Sfr::Sfr(std::string n): name(n)
 {
 }
 
-void Sfr::OnWrite(std::uint8_t d)
+void Sfr::Write(std::uint8_t d)
 {
   std::cout << name << " write " << (int) d << std::endl;
   data = d;

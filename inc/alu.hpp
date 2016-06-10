@@ -33,8 +33,11 @@ class Alu
     void SetA(std::uint8_t data);
     std::uint16_t GetDP();
     void RegisterSfr(std::uint8_t page, Sfr *sfr, std::uint8_t address);
+    void RegisterSfrBitAddressable(std::uint8_t page, Sfr *sfr, std::uint8_t address);
     void RegisterSfr(std::uint8_t page, Sfr *sfr);
+    void RegisterSfrBitAddressable(std::uint8_t page, Sfr *sfr);
     std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
+    std::map<std::uint8_t, Sfr*> bitAddressableSfr;
     std::uint8_t GetReg(std::uint8_t reg);
     std::uint8_t GetR0();
     std::uint8_t GetR1();
@@ -61,8 +64,14 @@ class Alu
     void ClrAC();
     void SetOV();
     void ClrOV();
+
+    // Handles byte access to IRAM as well as SFR
     std::uint8_t Read(std::uint8_t address);
     void Write(std::uint8_t address, std::uint8_t value);
+
+    // Handles bit access to bit-addressable IRAM as well as SFR
+    bool ReadBit(std::uint8_t address);
+    void WriteBit(std::uint8_t address, bool value);
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;
@@ -84,6 +93,7 @@ class Alu
     Sfr *sfrDPL;
     Sfr *sfrDPH;
     Sfr *sfrIP;
+    Sfr *sfrIE;
     Sfr *sfrSFRPAGE;
     Sfr *sfrB;
     Sfr *sfrACC;

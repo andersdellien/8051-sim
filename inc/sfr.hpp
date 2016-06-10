@@ -8,7 +8,7 @@ class Sfr
 {
   public:
     Sfr(std::string name);
-    virtual void OnWrite(std::uint8_t data);
+    virtual void Write(std::uint8_t data);
     virtual std::uint8_t Read();
     std::uint8_t data;
   private:

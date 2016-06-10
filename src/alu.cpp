@@ -504,6 +504,7 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   sfrDPL = new Sfr("DPL");
   sfrDPH = new Sfr("DPH");
   sfrIP = new Sfr("IP");
+  sfrIE = new Sfr("IE");
   sfrSFRPAGE = new Sfr("SFRPAGE");
   sfrB = new Sfr("B");
   sfrACC = new Sfr("ACC");
@@ -512,8 +513,9 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   RegisterSfr(0x83, sfrDPH);
   RegisterSfr(0xb8, sfrIP);
   RegisterSfr(0xa7, sfrSFRPAGE);
-  RegisterSfr(0xf0, sfrB);
-  RegisterSfr(0xe0, sfrACC);
+  RegisterSfrBitAddressable(0xf0, sfrB);
+  RegisterSfrBitAddressable(0xa8, sfrIE);
+  RegisterSfrBitAddressable(0xe0, sfrACC);
 }
 
 std::string Alu::Disassemble(std::uint16_t address)
@@ -774,10 +776,23 @@ void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr, std::uint8_t page)
   specialFunctionRegisters[page][address] = sfr;
 }
 
+void Alu::RegisterSfrBitAddressable(std::uint8_t address, Sfr *sfr, std::uint8_t page)
+{
+  specialFunctionRegisters[page][address] = sfr;
+  bitAddressableSfr[address] = sfr;
+}
+
 void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr)
 {
   RegisterSfr(address, sfr, 0x00);
   RegisterSfr(address, sfr, 0x0f);
+}
+
+void Alu::RegisterSfrBitAddressable(std::uint8_t address, Sfr *sfr)
+{
+  RegisterSfr(address, sfr, 0x00);
+  RegisterSfr(address, sfr, 0x0f);
+  bitAddressableSfr[address] = sfr;
 }
 
 void Alu::Write(std::uint8_t address, std::uint8_t data)
@@ -788,7 +803,7 @@ void Alu::Write(std::uint8_t address, std::uint8_t data)
   }
   else if (specialFunctionRegisters[sfrSFRPAGE->data].find(address) != specialFunctionRegisters[sfrSFRPAGE->data].end())
   {
-    specialFunctionRegisters[sfrSFRPAGE->data][address]->OnWrite(data);
+    specialFunctionRegisters[sfrSFRPAGE->data][address]->Write(data);
   }
   else
   {
@@ -812,3 +827,45 @@ std::uint8_t Alu::Read(std::uint8_t address)
   }
 }
 
+bool Alu::ReadBit(std::uint8_t address)
+{
+  std::uint8_t bit = 1 << address % 8;
+
+  if (address < 0x80)
+  {
+    std::uint8_t byteAddr = 0x20 + address / 8;
+    return iram[byteAddr] & bit;
+  }
+  else if (bitAddressableSfr.find(address & 0xf8) != bitAddressableSfr.end())
+  {
+    return bitAddressableSfr[address & 0xf8]->Read() & bit;
+  }
+  else
+  {
+    throw new IllegalAddressException();
+  }
+}
+
+void Alu::WriteBit(std::uint8_t address, bool value)
+{
+  std::uint8_t bit = 0;
+
+  if (value)
+  {
+    bit = 1 << address % 8;
+  }
+
+  if (address < 0x80)
+  {
+    std::uint8_t byteAddr = 0x20 + address / 8;
+    iram[byteAddr] |= bit;
+  }
+  else if (bitAddressableSfr.find(address & 0xf8) != bitAddressableSfr.end())
+  {
+    bitAddressableSfr[address & 0xf8]->Write(bitAddressableSfr[address & 0xf8]->Read() | bit);
+  }
+  else
+  {
+    throw new IllegalAddressException();
+  }
+}

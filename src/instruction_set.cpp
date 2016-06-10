@@ -1116,6 +1116,12 @@ std::string CLR_C3::Disassemble(const Memory& memory, std::uint16_t address) con
   return "CLR C";
 }
 
+void CLR_C3::Execute() const
+{
+  alu.ClrC();
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 CLR_E4::CLR_E4(Alu &a) : Instruction(a)
 {
   opcode = 0xE4;

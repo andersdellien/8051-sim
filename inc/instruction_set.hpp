@@ -1380,6 +1380,7 @@ class CLR_C3: public Instruction
   public:
     CLR_C3(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class SWAP_C4: public Instruction

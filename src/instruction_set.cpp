@@ -3159,6 +3159,24 @@ void AndARegister::Execute() const
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
+XorARegister::XorARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+{
+}
+
+std::string XorARegister::Disassemble(const Memory& memory, std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "XRL A, R";
+  ss << (int) reg;
+  return ss.str();
+}
+
+void XorARegister::Execute() const
+{
+  alu.SetA(alu.GetA() ^ alu.GetReg(reg));
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 POP_D0::POP_D0(Alu &a) : Instruction(a)
 {
   opcode = 0xD0;
@@ -3746,94 +3764,6 @@ XRL_67::XRL_67(Alu &a) : Instruction(a)
 std::string XRL_67::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   return "XRL A, @R1";
-}
-
-XRL_68::XRL_68(Alu &a) : Instruction(a)
-{
-  opcode = 0x68;
-  operands = 0;
-}
-
-std::string XRL_68::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "XRL A, R0";
-}
-
-XRL_69::XRL_69(Alu &a) : Instruction(a)
-{
-  opcode = 0x69;
-  operands = 0;
-}
-
-std::string XRL_69::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "XRL A, R1";
-}
-
-XRL_6A::XRL_6A(Alu &a) : Instruction(a)
-{
-  opcode = 0x6A;
-  operands = 0;
-}
-
-std::string XRL_6A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "XRL A, R2";
-}
-
-XRL_6B::XRL_6B(Alu &a) : Instruction(a)
-{
-  opcode = 0x6B;
-  operands = 0;
-}
-
-std::string XRL_6B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "XRL A, R3";
-}
-
-XRL_6C::XRL_6C(Alu &a) : Instruction(a)
-{
-  opcode = 0x6C;
-  operands = 0;
-}
-
-std::string XRL_6C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "XRL A, R4";
-}
-
-XRL_6D::XRL_6D(Alu &a) : Instruction(a)
-{
-  opcode = 0x6D;
-  operands = 0;
-}
-
-std::string XRL_6D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "XRL A, R5";
-}
-
-XRL_6E::XRL_6E(Alu &a) : Instruction(a)
-{
-  opcode = 0x6E;
-  operands = 0;
-}
-
-std::string XRL_6E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "XRL A, R6";
-}
-
-XRL_6F::XRL_6F(Alu &a) : Instruction(a)
-{
-  opcode = 0x6F;
-  operands = 0;
-}
-
-std::string XRL_6F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "XRL A, R7";
 }
 
 XRL_62::XRL_62(Alu &a) : Instruction(a)

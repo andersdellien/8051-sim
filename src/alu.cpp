@@ -451,22 +451,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[xrl_66->GetOpcode()] = xrl_66;
   XRL_67 *xrl_67 = new XRL_67(*this);
   instructionSet[xrl_67->GetOpcode()] = xrl_67;
-  XRL_68 *xrl_68 = new XRL_68(*this);
-  instructionSet[xrl_68->GetOpcode()] = xrl_68;
-  XRL_69 *xrl_69 = new XRL_69(*this);
-  instructionSet[xrl_69->GetOpcode()] = xrl_69;
-  XRL_6A *xrl_6a = new XRL_6A(*this);
-  instructionSet[xrl_6a->GetOpcode()] = xrl_6a;
-  XRL_6B *xrl_6b = new XRL_6B(*this);
-  instructionSet[xrl_6b->GetOpcode()] = xrl_6b;
-  XRL_6C *xrl_6c = new XRL_6C(*this);
-  instructionSet[xrl_6c->GetOpcode()] = xrl_6c;
-  XRL_6D *xrl_6d = new XRL_6D(*this);
-  instructionSet[xrl_6d->GetOpcode()] = xrl_6d;
-  XRL_6E *xrl_6e = new XRL_6E(*this);
-  instructionSet[xrl_6e->GetOpcode()] = xrl_6e;
-  XRL_6F *xrl_6f = new XRL_6F(*this);
-  instructionSet[xrl_6f->GetOpcode()] = xrl_6f;
+
+  instructionSet[0x68] = new XorARegister(*this, 0x68, 0);
+  instructionSet[0x69] = new XorARegister(*this, 0x69, 1);
+  instructionSet[0x6a] = new XorARegister(*this, 0x6a, 2);
+  instructionSet[0x6b] = new XorARegister(*this, 0x6b, 3);
+  instructionSet[0x6c] = new XorARegister(*this, 0x6c, 4);
+  instructionSet[0x6d] = new XorARegister(*this, 0x6d, 5);
+  instructionSet[0x6e] = new XorARegister(*this, 0x6e, 6);
+  instructionSet[0x6f] = new XorARegister(*this, 0x6f, 7);
+
   XRL_62 *xrl_62 = new XRL_62(*this);
   instructionSet[xrl_62->GetOpcode()] = xrl_62;
   XRL_64 *xrl_64 = new XRL_64(*this);

@@ -422,6 +422,16 @@ class AndARegister: public Instruction
     std::uint8_t reg;
 };
 
+class XorARegister: public Instruction
+{
+  public:
+    XorARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
+  private:
+    std::uint8_t reg;
+};
+
 class JNC_50: public Instruction
 {
   public:

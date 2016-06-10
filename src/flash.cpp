@@ -25,6 +25,7 @@ void Flash::SetAlu(Alu &a)
 {
   a.RegisterSfr(0xb7, new Sfr("FLSCL"), 0x00);
   a.RegisterSfr(0xb6, new Sfr("FLKEY"));
+  a.RegisterSfr(0xe5, new Sfr("FLWR"));
 }
 
 void Flash::ParseHex(std::string fileName)

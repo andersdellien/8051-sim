@@ -156,12 +156,20 @@ int main(int argc, char **argv)
         address += 1 + alu.GetOperands(address);
       }
     }
-    else if (tokens[0] == "flash")
+    else if (tokens[0] == "flash" || tokens[0] == "iram")
     {
       std::uint16_t address = stoi(tokens[1], nullptr, 16);
       std::uint16_t length = stoi(tokens[2], nullptr, 16);
       bool newline = false;
-      Memory *mem = &flash;
+      Memory *mem;
+      if (tokens[0] == "flash")
+      {
+        mem = &flash;
+      }
+      else
+      {
+        mem = &alu.iram;
+      }
       for (int i = 0; i < length; i++)
       {
         const int itemsPerLine = 16;

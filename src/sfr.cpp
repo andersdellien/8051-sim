@@ -47,7 +47,10 @@ void SfrBitAddressable::WriteBit(std::uint8_t bit, bool value)
   }
 
   data &= ~bitShifted;
-  data |= bitShifted;
+  if (value)
+  {
+    data |= bitShifted;
+  }
 }
 
 bool SfrBitAddressable::ReadBit(std::uint8_t bit)

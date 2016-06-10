@@ -753,12 +753,13 @@ void Alu::WriteBit(std::uint8_t address, bool value)
     std::uint8_t byteAddr = 0x20 + address / 8;
     std::uint8_t bit = 0;
 
+    bit = 1 << address % 8;
+
+    iram.Set(byteAddr, iram.Get(byteAddr) & ~bit);
     if (value)
     {
-      bit = 1 << address % 8;
+      iram.Set(byteAddr, iram.Get(byteAddr) | bit);
     }
-
-    iram.Set(byteAddr, iram.Get(byteAddr) | bit);
   }
   else if (bitAddressableSfr.find(address & 0xf8) != bitAddressableSfr.end())
   {

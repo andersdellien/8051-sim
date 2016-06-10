@@ -554,142 +554,6 @@ std::string ANL_57::Disassemble(const Memory& memory, std::uint16_t address) con
   return "ANL A, @R1";
 }
 
-ANL_58::ANL_58(Alu &a) : Instruction(a)
-{
-  opcode = 0x58;
-  operands = 0;
-}
-
-std::string ANL_58::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ANL A, R0";
-}
-
-void ANL_58::Execute() const
-{
-  alu.SetA(alu.GetR0() & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ANL_59::ANL_59(Alu &a) : Instruction(a)
-{
-  opcode = 0x59;
-  operands = 0;
-}
-
-std::string ANL_59::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ANL A, R1";
-}
-
-void ANL_59::Execute() const
-{
-  alu.SetA(alu.GetR1() & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ANL_5A::ANL_5A(Alu &a) : Instruction(a)
-{
-  opcode = 0x5A;
-  operands = 0;
-}
-
-std::string ANL_5A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ANL A, R2";
-}
-
-void ANL_5A::Execute() const
-{
-  alu.SetA(alu.GetR0() & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ANL_5B::ANL_5B(Alu &a) : Instruction(a)
-{
-  opcode = 0x5B;
-  operands = 0;
-}
-
-std::string ANL_5B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ANL A, R3";
-}
-
-void ANL_5B::Execute() const
-{
-  alu.SetA(alu.GetR3() & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ANL_5C::ANL_5C(Alu &a) : Instruction(a)
-{
-  opcode = 0x5C;
-  operands = 0;
-}
-
-std::string ANL_5C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ANL A, R4";
-}
-
-void ANL_5C::Execute() const
-{
-  alu.SetA(alu.GetR4() & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ANL_5D::ANL_5D(Alu &a) : Instruction(a)
-{
-  opcode = 0x5D;
-  operands = 0;
-}
-
-std::string ANL_5D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ANL A, R5";
-}
-
-void ANL_5D::Execute() const
-{
-  alu.SetA(alu.GetR5() & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ANL_5E::ANL_5E(Alu &a) : Instruction(a)
-{
-  opcode = 0x5E;
-  operands = 0;
-}
-
-std::string ANL_5E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ANL A, R6";
-}
-
-void ANL_5E::Execute() const
-{
-  alu.SetA(alu.GetR6() & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-ANL_5F::ANL_5F(Alu &a) : Instruction(a)
-{
-  opcode = 0x5F;
-  operands = 0;
-}
-
-std::string ANL_5F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ANL A, R7";
-}
-
-void ANL_5F::Execute() const
-{
-  alu.SetA(alu.GetR7() & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
 ANL_82::ANL_82(Alu &a) : Instruction(a)
 {
   opcode = 0x82;
@@ -3274,6 +3138,24 @@ std::string OrARegister::Disassemble(const Memory& memory, std::uint16_t address
 void OrARegister::Execute() const
 {
   alu.SetA(alu.GetA() | alu.GetReg(reg));
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
+AndARegister::AndARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+{
+}
+
+std::string AndARegister::Disassemble(const Memory& memory, std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "ANL A, R";
+  ss << (int) reg;
+  return ss.str();
+}
+
+void AndARegister::Execute() const
+{
+  alu.SetA(alu.GetA() & alu.GetReg(reg));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

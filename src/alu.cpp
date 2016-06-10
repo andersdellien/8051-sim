@@ -88,22 +88,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[anl_56->GetOpcode()] = anl_56;
   ANL_57 *anl_57 = new ANL_57(*this);
   instructionSet[anl_57->GetOpcode()] = anl_57;
-  ANL_58 *anl_58 = new ANL_58(*this);
-  instructionSet[anl_58->GetOpcode()] = anl_58;
-  ANL_59 *anl_59 = new ANL_59(*this);
-  instructionSet[anl_59->GetOpcode()] = anl_59;
-  ANL_5A *anl_5a = new ANL_5A(*this);
-  instructionSet[anl_5a->GetOpcode()] = anl_5a;
-  ANL_5B *anl_5b = new ANL_5B(*this);
-  instructionSet[anl_5b->GetOpcode()] = anl_5b;
-  ANL_5C *anl_5c = new ANL_5C(*this);
-  instructionSet[anl_5c->GetOpcode()] = anl_5c;
-  ANL_5D *anl_5d = new ANL_5D(*this);
-  instructionSet[anl_5d->GetOpcode()] = anl_5d;
-  ANL_5E *anl_5e = new ANL_5E(*this);
-  instructionSet[anl_5e->GetOpcode()] = anl_5e;
-  ANL_5F *anl_5f = new ANL_5F(*this);
-  instructionSet[anl_5f->GetOpcode()] = anl_5f;
+
+  instructionSet[0x58] = new AndARegister(*this, 0x58, 0);
+  instructionSet[0x59] = new AndARegister(*this, 0x59, 1);
+  instructionSet[0x5a] = new AndARegister(*this, 0x5a, 2);
+  instructionSet[0x5b] = new AndARegister(*this, 0x5b, 3);
+  instructionSet[0x5c] = new AndARegister(*this, 0x5c, 4);
+  instructionSet[0x5d] = new AndARegister(*this, 0x5d, 5);
+  instructionSet[0x5e] = new AndARegister(*this, 0x5e, 6);
+  instructionSet[0x5f] = new AndARegister(*this, 0x5f, 7);
+
   ANL_82 *anl_82 = new ANL_82(*this);
   instructionSet[anl_82->GetOpcode()] = anl_82;
   ANL_B0 *anl_b0 = new ANL_B0(*this);

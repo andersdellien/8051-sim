@@ -1252,142 +1252,6 @@ std::string DEC_17::Disassemble(const Memory& memory, std::uint16_t address) con
   return "DEC @R1";
 }
 
-DEC_18::DEC_18(Alu &a) : Instruction(a)
-{
-  opcode = 0x18;
-  operands = 0;
-}
-
-std::string DEC_18::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "DEC R0";
-}
-
-void DEC_18::Execute() const
-{
-  alu.SetR0(alu.GetR0() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-DEC_19::DEC_19(Alu &a) : Instruction(a)
-{
-  opcode = 0x19;
-  operands = 0;
-}
-
-std::string DEC_19::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "DEC R1";
-}
-
-void DEC_19::Execute() const
-{
-  alu.SetR1(alu.GetR1() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-DEC_1A::DEC_1A(Alu &a) : Instruction(a)
-{
-  opcode = 0x1A;
-  operands = 0;
-}
-
-std::string DEC_1A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "DEC R2";
-}
-
-void DEC_1A::Execute() const
-{
-  alu.SetR2(alu.GetR2() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-DEC_1B::DEC_1B(Alu &a) : Instruction(a)
-{
-  opcode = 0x1B;
-  operands = 0;
-}
-
-std::string DEC_1B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "DEC R3";
-}
-
-void DEC_1B::Execute() const
-{
-  alu.SetR3(alu.GetR3() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-DEC_1C::DEC_1C(Alu &a) : Instruction(a)
-{
-  opcode = 0x1C;
-  operands = 0;
-}
-
-std::string DEC_1C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "DEC R4";
-}
-
-void DEC_1C::Execute() const
-{
-  alu.SetR4(alu.GetR4() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-DEC_1D::DEC_1D(Alu &a) : Instruction(a)
-{
-  opcode = 0x1D;
-  operands = 0;
-}
-
-std::string DEC_1D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "DEC R5";
-}
-
-void DEC_1D::Execute() const
-{
-  alu.SetR5(alu.GetR5() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-DEC_1E::DEC_1E(Alu &a) : Instruction(a)
-{
-  opcode = 0x1E;
-  operands = 0;
-}
-
-std::string DEC_1E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "DEC R6";
-}
-
-void DEC_1E::Execute() const
-{
-  alu.SetR6(alu.GetR6() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-DEC_1F::DEC_1F(Alu &a) : Instruction(a)
-{
-  opcode = 0x1F;
-  operands = 0;
-}
-
-std::string DEC_1F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "DEC R7";
-}
-
-void DEC_1F::Execute() const
-{
-  alu.SetR7(alu.GetR7() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
 DIV_84::DIV_84(Alu &a) : Instruction(a)
 {
   opcode = 0x84;
@@ -1721,6 +1585,23 @@ std::string IncRegister::Disassemble(const Memory& memory, std::uint16_t address
 void IncRegister::Execute() const
 {
   alu.SetReg(reg, alu.GetReg(reg) + 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
+DecRegister::DecRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode), reg(r)
+{
+}
+
+std::string DecRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "DEC R" << (int) reg;
+  return ss.str();
+}
+
+void DecRegister::Execute() const
+{
+  alu.SetReg(reg, alu.GetReg(reg) - 1);
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

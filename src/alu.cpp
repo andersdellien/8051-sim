@@ -154,22 +154,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[dec_16->GetOpcode()] = dec_16;
   DEC_17 *dec_17 = new DEC_17(*this);
   instructionSet[dec_17->GetOpcode()] = dec_17;
-  DEC_18 *dec_18 = new DEC_18(*this);
-  instructionSet[dec_18->GetOpcode()] = dec_18;
-  DEC_19 *dec_19 = new DEC_19(*this);
-  instructionSet[dec_19->GetOpcode()] = dec_19;
-  DEC_1A *dec_1a = new DEC_1A(*this);
-  instructionSet[dec_1a->GetOpcode()] = dec_1a;
-  DEC_1B *dec_1b = new DEC_1B(*this);
-  instructionSet[dec_1b->GetOpcode()] = dec_1b;
-  DEC_1C *dec_1c = new DEC_1C(*this);
-  instructionSet[dec_1c->GetOpcode()] = dec_1c;
-  DEC_1D *dec_1d = new DEC_1D(*this);
-  instructionSet[dec_1d->GetOpcode()] = dec_1d;
-  DEC_1E *dec_1e = new DEC_1E(*this);
-  instructionSet[dec_1e->GetOpcode()] = dec_1e;
-  DEC_1F *dec_1f = new DEC_1F(*this);
-  instructionSet[dec_1f->GetOpcode()] = dec_1f;
+
+  instructionSet[0x18] = new DecRegister(*this, 0x18, 0);
+  instructionSet[0x19] = new DecRegister(*this, 0x19, 1);
+  instructionSet[0x1a] = new DecRegister(*this, 0x1a, 2);
+  instructionSet[0x1b] = new DecRegister(*this, 0x1b, 3);
+  instructionSet[0x1c] = new DecRegister(*this, 0x1c, 4);
+  instructionSet[0x1d] = new DecRegister(*this, 0x1d, 5);
+  instructionSet[0x1e] = new DecRegister(*this, 0x1e, 6);
+  instructionSet[0x1f] = new DecRegister(*this, 0x1f, 7);
+
   DIV_84 *div_84 = new DIV_84(*this);
   instructionSet[div_84->GetOpcode()] = div_84;
   DJNZ_D5 *djnz_d5 = new DJNZ_D5(*this);

@@ -73,6 +73,16 @@ class IncRegister: public Instruction
     std::uint8_t reg;
 };
 
+class DecRegister: public Instruction
+{
+  public:
+    DecRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
+  private:
+    std::uint8_t reg;
+};
+
 class JBC_10: public Instruction
 {
   public:

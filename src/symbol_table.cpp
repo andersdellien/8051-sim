@@ -86,6 +86,12 @@ void SymbolTable::LookupAddress(const std::uint16_t address, std::string &symbol
   }
 }
 
+void SymbolTable::RegisterSymbol(std::uint16_t address, std::string name)
+{
+  addressMap[address] = name;
+  symbolMap[name] = address;
+}
+
 SymbolTable *SymbolTable::GetInstance()
 {
   return &symbolTable;

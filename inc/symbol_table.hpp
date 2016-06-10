@@ -14,7 +14,8 @@ class SymbolTable
     void ParseFile(const std::string &fileName);
     void LookupSymbol(const std::string &symbolName, std::uint16_t &address, bool &found);
     void LookupAddress(const std::uint16_t address, std::string &symbolName, bool &found);
-   static SymbolTable *GetInstance();
+    static SymbolTable *GetInstance();
+    void RegisterSymbol(std::uint16_t address, std::string name);
 };
 
 #endif

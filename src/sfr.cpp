@@ -3,9 +3,11 @@
 #include <iostream>
 #include "sfr.hpp"
 #include "alu.hpp"
+#include "symbol_table.hpp"
 
-Sfr::Sfr(std::string n, Alu &a): name(n), alu(a)
+Sfr::Sfr(std::string n, Alu &a, std::uint8_t addr): name(n), alu(a), address(addr)
 {
+  SymbolTable::GetInstance()->RegisterSymbol(address, name);
 }
 
 void Sfr::Write(std::uint8_t d)

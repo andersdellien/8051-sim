@@ -23,9 +23,9 @@ Flash::Flash(std::uint16_t s) : Memory(s)
 
 void Flash::SetAlu(Alu &a)
 {
-  a.RegisterSfr(0xb7, new Sfr("FLSCL", a), 0x00);
-  a.RegisterSfr(0xb6, new Sfr("FLKEY", a));
-  a.RegisterSfr(0xe5, new Sfr("FLWR", a));
+  a.RegisterSfr(0xb7, new Sfr("FLSCL", a, 0xb7), 0x00);
+  a.RegisterSfr(0xb6, new Sfr("FLKEY", a, 0xb6));
+  a.RegisterSfr(0xe5, new Sfr("FLWR", a, 0xe5));
 }
 
 void Flash::ParseHex(std::string fileName)

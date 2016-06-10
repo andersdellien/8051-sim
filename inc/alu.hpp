@@ -65,7 +65,6 @@ class Alu
     void Write(std::uint8_t address, std::uint8_t value);
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
-    std::uint8_t a;
     std::uint16_t pc;
     std::uint16_t dptr;
     std::uint8_t sp;

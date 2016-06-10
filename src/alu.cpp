@@ -546,7 +546,7 @@ std::uint8_t Alu::GetOperands(std::uint16_t address)
 
 void Alu::Reset()
 {
-  a = 0;
+  SetA(0);
   pc = 0;
   sfrSP->data = 7;
   sfrSFRPAGE->data = 0;
@@ -599,12 +599,12 @@ std::uint16_t Alu::GetDP()
 
 void Alu::SetA(std::uint8_t a)
 {
-  this->a = a;
+  sfrACC->data = a;
 }
 
 std::uint8_t Alu::GetA()
 {
-  return a;
+  return sfrACC->data;
 }
 
 std::uint8_t Alu::GetReg(std::uint8_t reg)

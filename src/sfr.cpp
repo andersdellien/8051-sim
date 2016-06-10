@@ -10,6 +10,11 @@ Sfr::Sfr(std::string n, Alu &a, std::uint8_t addr): name(n), alu(a), address(add
   SymbolTable::GetInstance()->RegisterSymbol(address, name);
 }
 
+std::string Sfr::GetName() const
+{
+  return name;
+}
+
 void Sfr::Write(std::uint8_t d)
 {
   if (alu.GetTraceSfr())

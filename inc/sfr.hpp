@@ -13,6 +13,7 @@ class Sfr
     virtual void Write(std::uint8_t data);
     virtual std::uint8_t Read();
     std::uint8_t data;
+    std::string GetName() const;
   protected:
     std::string name;
     Alu &alu;

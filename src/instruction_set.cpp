@@ -709,7 +709,7 @@ std::string CLR_C2::Disassemble(const Memory& memory, std::uint16_t address) con
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "CLR ";
-  ss << std::setw(2) << (int) memory.Get(address+1);
+  ss << alu.GetBitAddressName((int) memory.Get(address+1));
   return ss.str();
 }
 
@@ -1430,7 +1430,7 @@ std::string MOV_A2::Disassemble(const Memory& memory, std::uint16_t address) con
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV C, ";
-  PrintAddress(ss, memory.Get(address+1));
+  ss << alu.GetBitAddressName(memory.Get(address+1));
   return ss.str();
 }
 
@@ -1812,7 +1812,7 @@ std::string MOV_92::Disassemble(const Memory& memory, std::uint16_t address) con
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", C";
+  ss << alu.GetBitAddressName((int) memory.Get(address+1)) << ", C";
   return ss.str();
 }
 
@@ -2893,7 +2893,7 @@ std::string SETB_D2::Disassemble(const Memory& memory, std::uint16_t address) co
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SETB ";
-  ss << (int) memory.Get(address+1);
+  ss << alu.GetBitAddressName((int) memory.Get(address+1));
   return ss.str();
 }
 

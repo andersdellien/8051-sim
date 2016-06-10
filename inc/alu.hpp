@@ -68,6 +68,8 @@ class Alu
     // Handles bit access to bit-addressable IRAM as well as SFR
     bool ReadBit(std::uint8_t address);
     void WriteBit(std::uint8_t address, bool value);
+    // Get readable name of bit address
+    std::string GetBitAddressName(std::uint8_t address);
 
     bool GetTraceSfr();
     void SetTraceSfr(bool val);

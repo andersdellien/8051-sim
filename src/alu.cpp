@@ -1,3 +1,4 @@
+#include <sstream>
 #include <iostream>
 #include <string>
 #include "flash.hpp"
@@ -769,6 +770,24 @@ void Alu::WriteBit(std::uint8_t address, bool value)
   }
 }
 
+std::string Alu::GetBitAddressName(std::uint8_t address)
+{
+  std::stringstream ss;
+  std::uint8_t bit = address % 8;
+
+  if (bitAddressableSfr.find(address & 0xf8) != bitAddressableSfr.end())
+  {
+    ss << bitAddressableSfr[address & 0xf8]->GetName();
+  }
+  else
+  {
+    ss << std::hex << 0x20 + (int) (address) / 8;
+  }
+  ss << "." << (int) bit;
+  return ss.str();
+}
+
+
 bool Alu::GetTraceSfr()
 {
   return traceSfr;
@@ -778,3 +797,4 @@ void Alu::SetTraceSfr(bool value)
 {
   traceSfr = value;
 }
+

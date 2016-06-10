@@ -30,11 +30,9 @@ class Alu
     void SetA(std::uint8_t data);
     std::uint16_t GetDP();
     void RegisterSfr(std::uint8_t page, Sfr *sfr, std::uint8_t address);
-    void RegisterSfrBitAddressable(std::uint8_t page, Sfr *sfr, std::uint8_t address);
     void RegisterSfr(std::uint8_t page, Sfr *sfr);
-    void RegisterSfrBitAddressable(std::uint8_t page, Sfr *sfr);
     std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
-    std::map<std::uint8_t, Sfr*> bitAddressableSfr;
+    std::map<std::uint8_t, SfrBitAddressable*> bitAddressableSfr;
     std::uint8_t GetReg(std::uint8_t reg);
     void SetReg(std::uint8_t reg, std::uint8_t value);
     std::uint8_t GetR0();

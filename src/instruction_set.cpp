@@ -2275,10 +2275,8 @@ std::string MOV_A2::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_A2::Execute(void) const
 {
   std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
-  std::uint8_t byteAddr = 0x20 + bitAddr / 8;
-  std::uint8_t bit = 1 << byteAddr % 8;
 
-  if (alu.Read(byteAddr) & bit)
+  if (alu.ReadBit(bitAddr))
   {
     alu.SetC();
   }
@@ -2659,17 +2657,8 @@ std::string MOV_92::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_92::Execute(void) const
 {
   std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
-  std::uint8_t byteAddr = 0x20 + bitAddr / 8;
-  std::uint8_t bit = 1 << byteAddr % 8;
 
-  if (alu.GetC())
-  {
-    alu.Write(byteAddr, alu.Read(byteAddr) | bit);
-  }
-  else
-  {
-    alu.Write(byteAddr, alu.Read(byteAddr) & ~bit);
-  }
+  alu.WriteBit(bitAddr, alu.GetC());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

@@ -2,10 +2,27 @@
 #include "system.hpp"
 #include "sfr.hpp"
 
+class CLKSEL: public Sfr
+{
+  public:
+    CLKSEL(std::string name);
+    std::uint8_t Read();
+};
+
+CLKSEL::CLKSEL(std::string name) : Sfr(name)
+{
+}
+
+std::uint8_t CLKSEL::Read()
+{
+  // Let's always assume the clock is valid
+  return data | 0x80;
+}
+
 System::System(Alu &a)
 {
   a.RegisterSfr(0x87, new Sfr("PCON"));
-  a.RegisterSfr(0xa9, new Sfr("CLKSEL"));
+  a.RegisterSfr(0xa9, new CLKSEL("CLKSEL"));
   a.RegisterSfr(0xb2, new Sfr("OSCICN"), 0x00);
   a.RegisterSfr(0xef, new Sfr("RSTSRC"), 0x00);
   a.RegisterSfr(0xd1, new Sfr("REF0CN"), 0x00);

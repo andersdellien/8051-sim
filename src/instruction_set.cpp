@@ -3851,6 +3851,44 @@ void SJMP_80::Execute() const
   alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
 }
 
+SubtractionHelper::SubtractionHelper(Alu &alu, std::uint8_t opcode): Instruction(alu, opcode)
+{
+}
+
+void SubtractionHelper::Helper(std::uint8_t operand) const
+{
+  if (operand > alu.GetA())
+  {
+    alu.SetC();
+  }
+  else
+  {
+    alu.ClrC();
+  }
+
+  if ((operand & 0xf) > (alu.GetA() & 0xf))
+  {
+    alu.SetAC();
+  }
+  else
+  {
+    alu.ClrAC();
+  }
+
+  std::int16_t signedResult = (int8_t) alu.GetA() - (int8_t) operand;
+  if (signedResult > 127 || signedResult < -128)
+  {
+    alu.SetOV();
+  }
+  else
+  {
+    alu.ClrOV();
+  }
+
+  alu.SetA(alu.GetA() - operand);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 SUBB_94::SUBB_94(Alu &a) : Instruction(a)
 {
   opcode = 0x94;
@@ -3866,9 +3904,8 @@ std::string SUBB_94::Disassemble(const Memory& memory, std::uint16_t address) co
   return ss.str();
 }
 
-SUBB_95::SUBB_95(Alu &a) : Instruction(a)
+SUBB_95::SUBB_95(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode)
 {
-  opcode = 0x95;
   operands = 1;
 }
 
@@ -3879,6 +3916,13 @@ std::string SUBB_95::Disassemble(const Memory& memory, std::uint16_t address) co
   ss << "SUBB A, ";
   ss << (int) memory.Get(address+1);
   return ss.str();
+}
+
+void SUBB_95::Execute() const
+{
+  std::uint8_t operand = alu.Read(alu.flash.Get(alu.GetPC() + 1));
+
+  Helper(operand);
 }
 
 SUBB_96::SUBB_96(Alu &a) : Instruction(a)

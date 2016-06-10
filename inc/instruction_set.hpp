@@ -1022,6 +1022,14 @@ class MOVC_93: public Instruction
     void Execute() const;
 };
 
+class SubtractionHelper: public Instruction
+{
+  public:
+    SubtractionHelper(Alu& alu, std::uint8_t opcode);
+  protected:
+    void Helper(std::uint8_t operand) const;
+};
+
 class SUBB_94: public Instruction
 {
   public:
@@ -1029,11 +1037,12 @@ class SUBB_94: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class SUBB_95: public Instruction
+class SUBB_95: public SubtractionHelper
 {
   public:
-    SUBB_95(Alu&);
+    SUBB_95(Alu&, std::uint8_t opcode);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class SUBB_96: public Instruction

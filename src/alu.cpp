@@ -427,8 +427,9 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[sjmp_80->GetOpcode()] = sjmp_80;
   SUBB_94 *subb_94 = new SUBB_94(*this);
   instructionSet[subb_94->GetOpcode()] = subb_94;
-  SUBB_95 *subb_95 = new SUBB_95(*this);
-  instructionSet[subb_95->GetOpcode()] = subb_95;
+
+  instructionSet[0x95] = new SUBB_95(*this, 0x95);
+
   SUBB_96 *subb_96 = new SUBB_96(*this);
   instructionSet[subb_96->GetOpcode()] = subb_96;
   SUBB_97 *subb_97 = new SUBB_97(*this);

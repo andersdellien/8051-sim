@@ -4388,3 +4388,12 @@ std::string XRL_63::Disassemble(const Memory& memory, std::uint16_t address) con
   ss << (int) memory.Get(address+1) << ", #" << (int) memory.Get(address+2);
   return ss.str();
 }
+
+void XRL_63::Execute() const
+{
+  std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
+  std::uint8_t data = alu.flash.Get(alu.GetPC() + 2);
+
+  alu.Write(addr, data | alu.Read(addr));
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}

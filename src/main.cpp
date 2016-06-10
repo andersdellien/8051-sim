@@ -117,24 +117,30 @@ int main(int argc, char **argv)
       std::cout << "R7:" << std::setw(2) << (int) alu.GetR7();
       std::cout << std::endl;
     }
-    else if (tokens[0] == "step")
+    else if (tokens[0] == "step" || tokens[0] == "go")
     {
       int limit = 1;
+      bool go = tokens[0] == "go";
       if (tokens.size() > 1)
       {
         limit = stoi(tokens[1], nullptr, 16);
       }
-      for (int i = 0; i < limit; i++)
+      for (int i = 0; go || (i < limit); i++)
       {
         alu.Step();
+        bool hitBreak = false;
         if (breakpoints.find(alu.GetPC()) != breakpoints.end())
         {
           std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
-          break;
+          hitBreak = true;
         }
-        if (traceInstruction.find(alu.flash.Get(alu.GetPC())) != traceInstruction.end() || i == limit - 1)
+        if (traceInstruction.find(alu.flash.Get(alu.GetPC())) != traceInstruction.end() || !go || hitBreak)
         {
           std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
+        }
+        if (hitBreak)
+        {
+          break;
         }
       }
     }

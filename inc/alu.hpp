@@ -9,9 +9,6 @@
 
 class Instruction;
 
-class SfrSp;
-class SfrDpl;
-
 class Alu
 {
   friend class SfrSp;
@@ -72,6 +69,9 @@ class Alu
     // Handles bit access to bit-addressable IRAM as well as SFR
     bool ReadBit(std::uint8_t address);
     void WriteBit(std::uint8_t address, bool value);
+
+    bool GetTraceSfr();
+    void SetTraceSfr(bool val);
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;
@@ -97,6 +97,7 @@ class Alu
     Sfr *sfrSFRPAGE;
     Sfr *sfrB;
     Sfr *sfrACC;
+    bool traceSfr;
 };
 
 #endif

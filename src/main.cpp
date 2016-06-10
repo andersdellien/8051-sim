@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <set>
 #include "flash.hpp"
 #include "memory.hpp"
 #include "alu.hpp"
@@ -31,6 +32,7 @@ int main(int argc, char **argv)
   Uart uart(alu);
   Adc adc(alu);
   Timer timer(alu);
+  std::set<std::uint8_t> traceInstruction;
 
   flash.SetAlu(alu);
   alu.Reset();
@@ -45,10 +47,40 @@ int main(int argc, char **argv)
     {
       tokens.push_back(token);
     }    
-    if (tokens[0] == "reset")
+    if (tokens[0] == "trace")
+    {
+      if (tokens[1] == "sfr")
+      {
+        if (tokens[2] == "on")
+        {
+          alu.SetTraceSfr(true);
+        }
+        else if (tokens[2] == "off")
+        {
+          alu.SetTraceSfr(false);
+        }
+      }
+      else if (tokens[1] == "all")
+      {
+        for (std::uint16_t i = 0x00; i <= 0x255; i++)
+        {
+          traceInstruction.insert((uint8_t) i);
+        }
+      }
+      else if (tokens[1] == "none")
+      {
+        traceInstruction.clear();
+      }
+      else
+      {
+        traceInstruction.insert(stoi(tokens[1], nullptr, 16));
+      }
+    }
+    else if (tokens[0] == "reset")
     {
       alu.Reset();
-    } else if (tokens[0] == "reg")
+    }
+    else if (tokens[0] == "reg")
     {
       std::cout << std::hex << "PC:" << std::setw(4) << (int) alu.GetPC();
       std::cout << " SP:" << std::setw(2) << (int) alu.GetSP();
@@ -72,7 +104,10 @@ int main(int argc, char **argv)
       }
       for (int i = 0; i < limit; i++)
       {
-        std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
+        if (traceInstruction.find(alu.flash.Get(alu.GetPC())) != traceInstruction.end())
+        {
+          std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
+        }
         alu.Step();
       }
     }

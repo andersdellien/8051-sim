@@ -4,6 +4,6 @@
 
 Vreg::Vreg(Alu &a)
 {
-  a.RegisterSfr(0xc9, new Sfr("REG0CN"), 0x00);
+  a.RegisterSfr(0xc9, new Sfr("REG0CN", a), 0x00);
 }
 

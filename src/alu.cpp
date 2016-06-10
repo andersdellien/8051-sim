@@ -500,14 +500,14 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
   instructionSet[xrl_65->GetOpcode()] = xrl_65;
   XRL_63 *xrl_63 = new XRL_63(*this);
   instructionSet[xrl_63->GetOpcode()] = xrl_63;
-  sfrSP = new Sfr("SP");
-  sfrDPL = new Sfr("DPL");
-  sfrDPH = new Sfr("DPH");
-  sfrIP = new Sfr("IP");
-  sfrIE = new Sfr("IE");
-  sfrSFRPAGE = new Sfr("SFRPAGE");
-  sfrB = new Sfr("B");
-  sfrACC = new Sfr("ACC");
+  sfrSP = new Sfr("SP", *this);
+  sfrDPL = new Sfr("DPL", *this);
+  sfrDPH = new Sfr("DPH", *this);
+  sfrIP = new Sfr("IP", *this);
+  sfrIE = new Sfr("IE", *this);
+  sfrSFRPAGE = new Sfr("SFRPAGE", *this);
+  sfrB = new Sfr("B", *this);
+  sfrACC = new Sfr("ACC", *this);
   RegisterSfr(0x81, sfrSP);
   RegisterSfr(0x82, sfrDPL);
   RegisterSfr(0x83, sfrDPH);
@@ -868,4 +868,14 @@ void Alu::WriteBit(std::uint8_t address, bool value)
   {
     throw new IllegalAddressException();
   }
+}
+
+bool Alu::GetTraceSfr()
+{
+  return traceSfr;
+}
+
+void Alu::SetTraceSfr(bool value)
+{
+  traceSfr = value;
 }

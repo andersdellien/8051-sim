@@ -4,6 +4,6 @@
 
 Uart::Uart(Alu &a)
 {
-  a.RegisterSfr(0x98, new Sfr("SCON0"), 0x00);
+  a.RegisterSfr(0x98, new Sfr("SCON0", a), 0x00);
 }
 

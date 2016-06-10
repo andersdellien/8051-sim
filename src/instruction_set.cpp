@@ -528,7 +528,7 @@ std::string ANL_55::Disassemble(const Memory& memory, std::uint16_t address) con
 void ANL_55::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-  alu.SetA(alu.iram[address] & alu.GetA());
+  alu.SetA(alu.iram.Get(address) & alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2085,8 +2085,8 @@ void LCALL_12::Execute() const
   std::uint8_t high = alu.flash.Get(alu.GetPC() + 1);
   std::uint8_t low = alu.flash.Get(alu.GetPC() + 2);
 
-  alu.iram[sp + 1] = (alu.GetPC() + 3) % 256;
-  alu.iram[sp + 2] = (alu.GetPC() + 3) / 256;
+  alu.iram.Set(sp + 1, (alu.GetPC() + 3) % 256);
+  alu.iram.Set(sp + 2, (alu.GetPC() + 3) / 256);
   alu.SetSP(sp + 2);
 
   alu.SetPC(low + 256 * high);
@@ -2911,7 +2911,7 @@ std::string MovIndirect::Disassemble(const Memory& memory, std::uint16_t address
 
 void MovIndirect::Execute() const
 {
-  alu.iram[alu.GetReg(reg)] = alu.GetA();
+  alu.iram.Set(alu.GetReg(reg), alu.GetA());
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -2932,7 +2932,7 @@ std::string MovIndirectFromMem::Disassemble(const Memory& memory, std::uint16_t 
 
 void MovIndirectFromMem::Execute() const
 {
-  alu.iram[alu.GetReg(reg)] = alu.iram[alu.flash.Get(alu.GetPC() + 1)];
+  alu.iram.Set(alu.GetReg(reg), alu.iram.Get(alu.flash.Get(alu.GetPC() + 1)));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3661,7 +3661,7 @@ std::string POP_D0::Disassemble(const Memory& memory, std::uint16_t address) con
 
 void POP_D0::Execute() const
 {
-  alu.iram[alu.flash.Get(alu.GetPC() + 1)] = alu.iram[alu.GetSP()];
+  alu.iram.Set(alu.flash.Get(alu.GetPC() + 1), alu.iram.Get(alu.GetSP()));
   alu.SetSP(alu.GetSP() - 1);
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
@@ -3684,7 +3684,7 @@ std::string PUSH_C0::Disassemble(const Memory& memory, std::uint16_t address) co
 void PUSH_C0::Execute() const
 {
   alu.SetSP(alu.GetSP() + 1);
-  alu.iram[alu.GetSP()] = alu.iram[alu.flash.Get(alu.GetPC() + 1)];
+  alu.iram.Set(alu.GetSP(), alu.iram.Get(alu.flash.Get(alu.GetPC() + 1)));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -3704,8 +3704,8 @@ std::string RET_22::Disassemble(const Memory& memory, std::uint16_t address) con
 void RET_22::Execute() const
 {
   std::uint8_t sp = alu.GetSP();
-  std::uint8_t high = alu.iram[sp];
-  std::uint8_t low = alu.iram[sp-1];
+  std::uint8_t high = alu.iram.Get(sp);
+  std::uint8_t low = alu.iram.Get(sp-1);
 
   alu.SetPC(low + high * 256);
   alu.SetSP(sp - 2);

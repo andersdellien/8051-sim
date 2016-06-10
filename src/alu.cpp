@@ -6,9 +6,8 @@
 #include "exceptions.hpp"
 #include "sfr.hpp"
 
-Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x)
+Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(iramSize)
 {
-  iram = new std::uint8_t[iramSize];
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
   ACALL_11 *acall_11 = new ACALL_11(*this);
@@ -552,22 +551,10 @@ void Alu::Reset()
   pc = 0;
   sfrSP->data = 7;
   sfrSFRPAGE->data = 0;
-  r0 = &iram[0];
-  r1 = &iram[1];
-  r2 = &iram[2];
-  r3 = &iram[3];
-  r4 = &iram[4];
-  r5 = &iram[5];
-  r6 = &iram[6];
-  r7 = &iram[7];
-  *r0 = 0;
-  *r1 = 0;
-  *r2 = 0;
-  *r3 = 0;
-  *r4 = 0;
-  *r5 = 0;
-  *r6 = 0;
-  *r7 = 0;
+  for (int i = 0; i < 8; i++)
+  {
+     SetReg(i, 0);
+  }
 }
 
 void Alu::Step()
@@ -611,119 +598,92 @@ std::uint8_t Alu::GetA()
 
 std::uint8_t Alu::GetReg(std::uint8_t reg)
 {
-  if (reg == 0)
-  {
-    return GetR0();
-  }
-  else if (reg == 1)
-  {
-    return GetR1();
-  }
-  else if (reg == 2)
-  {
-    return GetR2();
-  }
-  else if (reg == 3)
-  {
-    return GetR3();
-  }
-  else if (reg == 4)
-  {
-    return GetR4();
-  }
-  else if (reg == 5)
-  {
-    return GetR5();
-  }
-  else if (reg == 6)
-  {
-    return GetR6();
-  }
-  else if (reg == 7)
-  {
-    return GetR7();
-  }
-  return 0;
+  return iram.Get(reg);
+}
+
+void Alu::SetReg(std::uint8_t reg, std::uint8_t value)
+{
+  return iram.Set(reg, value);
 }
 
 std::uint8_t Alu::GetR0()
 {
-  return *r0;
+  return iram.Get(0);
 }
 
 std::uint8_t Alu::GetR1()
 {
-  return *r1;
+  return iram.Get(1);
 }
 
 std::uint8_t Alu::GetR2()
 {
-  return *r2;
+  return iram.Get(2);
 }
 
 std::uint8_t Alu::GetR3()
 {
-  return *r3;
+  return iram.Get(3);
 }
 
 std::uint8_t Alu::GetR4()
 {
-  return *r4;
+  return iram.Get(4);
 }
 
 std::uint8_t Alu::GetR5()
 {
-  return *r5;
+  return iram.Get(5);
 }
 
 std::uint8_t Alu::GetR6()
 {
-  return *r6;
+  return iram.Get(6);
 }
 
 std::uint8_t Alu::GetR7()
 {
-  return *r7;
+  return iram.Get(7);
 }
 
 void Alu::SetR0(std::uint8_t val)
 {
-  *r0 = val;
+  iram.Set(0, val);
 }
 
 void Alu::SetR1(std::uint8_t val)
 {
-  *r1 = val;
+  iram.Set(1, val);
 }
 
 void Alu::SetR2(std::uint8_t val)
 {
-  *r2 = val;
+  iram.Set(2, val);
 }
 
 void Alu::SetR3(std::uint8_t val)
 {
-  *r3 = val;
+  iram.Set(3, val);
 }
 
 void Alu::SetR4(std::uint8_t val)
 {
-  *r4 = val;
+  iram.Set(4, val);
 }
 
 void Alu::SetR5(std::uint8_t val)
 {
-  *r5 = val;
+  iram.Set(5, val);
 }
 
 void Alu::SetR6(std::uint8_t val)
 {
-  *r6 = val;
+  iram.Set(6, val);
 }
 
 void Alu::SetR7(std::uint8_t val)
 {
-  *r7 = val;
+  iram.Set(7, val);
 }
 
 void Alu::SetDPTR(std::uint16_t val)
@@ -799,7 +759,7 @@ void Alu::Write(std::uint8_t address, std::uint8_t data)
 {
   if (address < 0x80)
   {
-    iram[address] = data;
+    iram.Set(address, data);
   }
   else if (specialFunctionRegisters[sfrSFRPAGE->data].find(address) != specialFunctionRegisters[sfrSFRPAGE->data].end())
   {
@@ -815,7 +775,7 @@ std::uint8_t Alu::Read(std::uint8_t address)
 {
   if (address < 0x80)
   {
-    return iram[address];
+    return iram.Get(address);
   }
   else if (specialFunctionRegisters[sfrSFRPAGE->data].find(address) != specialFunctionRegisters[sfrSFRPAGE->data].end())
   {
@@ -834,7 +794,7 @@ bool Alu::ReadBit(std::uint8_t address)
   if (address < 0x80)
   {
     std::uint8_t byteAddr = 0x20 + address / 8;
-    return iram[byteAddr] & bit;
+    return iram.Get(byteAddr) & bit;
   }
   else if (bitAddressableSfr.find(address & 0xf8) != bitAddressableSfr.end())
   {
@@ -858,7 +818,7 @@ void Alu::WriteBit(std::uint8_t address, bool value)
   if (address < 0x80)
   {
     std::uint8_t byteAddr = 0x20 + address / 8;
-    iram[byteAddr] |= bit;
+    iram.Set(byteAddr, iram.Get(byteAddr) | bit);
   }
   else if (bitAddressableSfr.find(address & 0xf8) != bitAddressableSfr.end())
   {

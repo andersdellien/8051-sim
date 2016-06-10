@@ -16,7 +16,7 @@ class Alu
   public:
     Flash &flash;
     Memory &xram;
-    std::uint8_t *iram;
+    Memory iram;
     std::string Disassemble(std::uint16_t address);
     std::uint8_t GetOperands(std::uint16_t address);
     Alu(Flash &f, Memory &x, std::uint16_t iramSize);
@@ -36,6 +36,7 @@ class Alu
     std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
     std::map<std::uint8_t, Sfr*> bitAddressableSfr;
     std::uint8_t GetReg(std::uint8_t reg);
+    void SetReg(std::uint8_t reg, std::uint8_t value);
     std::uint8_t GetR0();
     std::uint8_t GetR1();
     std::uint8_t GetR2();
@@ -72,20 +73,13 @@ class Alu
 
     bool GetTraceSfr();
     void SetTraceSfr(bool val);
+
+    Memory *GetIRam() const;
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;
     std::uint16_t dptr;
-    std::uint8_t sp;
     std::uint16_t dp;
-    std::uint8_t *r0;
-    std::uint8_t *r1;
-    std::uint8_t *r2;
-    std::uint8_t *r3;
-    std::uint8_t *r4;
-    std::uint8_t *r5;
-    std::uint8_t *r6;
-    std::uint8_t *r7;
     bool c;
     bool ac;
     bool ov;

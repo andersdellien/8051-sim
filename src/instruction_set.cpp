@@ -896,245 +896,27 @@ std::string DJNZ_D5::Disassemble(const Memory& memory, std::uint16_t address) co
   return ss.str();
 }
 
-DJNZ_D8::DJNZ_D8(Alu &a) : Instruction(a)
+DJNZRegister::DJNZRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
 {
-  opcode = 0xD8;
   operands = 1;
 }
 
-std::string DJNZ_D8::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DJNZRegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R0, ";
+  ss << "DJNZ R" << (int) reg << ", ";
   ss << (int) memory.Get(address+1);
   return ss.str();
 }
 
-void DJNZ_D8::Execute() const
+void DJNZRegister::Execute() const
 {
   std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR0(alu.GetR0() - 1);
+  alu.SetReg(reg, alu.GetReg(reg) - 1);
 
-  if (alu.GetR0())
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-}
-
-DJNZ_D9::DJNZ_D9(Alu &a) : Instruction(a)
-{
-  opcode = 0xD9;
-  operands = 1;
-}
-
-std::string DJNZ_D9::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R1, ";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void DJNZ_D9::Execute() const
-{
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR1(alu.GetR1() - 1);
-
-  if (alu.GetR1())
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-}
-
-DJNZ_DA::DJNZ_DA(Alu &a) : Instruction(a)
-{
-  opcode = 0xDA;
-  operands = 1;
-}
-
-std::string DJNZ_DA::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R2, ";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void DJNZ_DA::Execute() const
-{
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR2(alu.GetR2() - 1);
-
-  if (alu.GetR2())
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-}
-
-DJNZ_DB::DJNZ_DB(Alu &a) : Instruction(a)
-{
-  opcode = 0xDB;
-  operands = 1;
-}
-
-std::string DJNZ_DB::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R3, ";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void DJNZ_DB::Execute() const
-{
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR3(alu.GetR3() - 1);
-
-  if (alu.GetR3())
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-}
-
-DJNZ_DC::DJNZ_DC(Alu &a) : Instruction(a)
-{
-  opcode = 0xDC;
-  operands = 1;
-}
-
-std::string DJNZ_DC::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R4, ";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void DJNZ_DC::Execute() const
-{
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR4(alu.GetR4() - 1);
-
-  if (alu.GetR4())
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-}
-
-DJNZ_DD::DJNZ_DD(Alu &a) : Instruction(a)
-{
-  opcode = 0xDD;
-  operands = 1;
-}
-
-std::string DJNZ_DD::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R5, ";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void DJNZ_DD::Execute() const
-{
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR5(alu.GetR5() - 1);
-
-  if (alu.GetR5())
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-}
-
-DJNZ_DE::DJNZ_DE(Alu &a) : Instruction(a)
-{
-  opcode = 0xDE;
-  operands = 1;
-}
-
-std::string DJNZ_DE::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R6, r";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void DJNZ_DE::Execute() const
-{
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR6(alu.GetR6() - 1);
-
-  if (alu.GetR6())
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands);
-  }
-}
-
-DJNZ_DF::DJNZ_DF(Alu &a) : Instruction(a)
-{
-  opcode = 0xDF;
-  operands = 1;
-}
-
-std::string DJNZ_DF::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R7, ";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void DJNZ_DF::Execute() const
-{
-  std::int8_t reladdr = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR7(alu.GetR7() - 1);
-
-  if (alu.GetR7())
+  if (alu.GetReg(reg))
   {
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
   }

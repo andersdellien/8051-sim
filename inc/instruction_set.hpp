@@ -1306,68 +1306,14 @@ class XCHD_D7: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class DJNZ_D8: public Instruction
+class DJNZRegister: public Instruction
 {
   public:
-    DJNZ_D8(Alu&);
+    DJNZRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
-};
-
-class DJNZ_D9: public Instruction
-{
-  public:
-    DJNZ_D9(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class DJNZ_DA: public Instruction
-{
-  public:
-    DJNZ_DA(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class DJNZ_DB: public Instruction
-{
-  public:
-    DJNZ_DB(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class DJNZ_DC: public Instruction
-{
-  public:
-    DJNZ_DC(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class DJNZ_DD: public Instruction
-{
-  public:
-    DJNZ_DD(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class DJNZ_DE: public Instruction
-{
-  public:
-    DJNZ_DE(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class DJNZ_DF: public Instruction
-{
-  public:
-    DJNZ_DF(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class MOVX_E0: public Instruction

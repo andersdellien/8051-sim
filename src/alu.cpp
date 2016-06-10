@@ -156,22 +156,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[div_84->GetOpcode()] = div_84;
   DJNZ_D5 *djnz_d5 = new DJNZ_D5(*this);
   instructionSet[djnz_d5->GetOpcode()] = djnz_d5;
-  DJNZ_D8 *djnz_d8 = new DJNZ_D8(*this);
-  instructionSet[djnz_d8->GetOpcode()] = djnz_d8;
-  DJNZ_D9 *djnz_d9 = new DJNZ_D9(*this);
-  instructionSet[djnz_d9->GetOpcode()] = djnz_d9;
-  DJNZ_DA *djnz_da = new DJNZ_DA(*this);
-  instructionSet[djnz_da->GetOpcode()] = djnz_da;
-  DJNZ_DB *djnz_db = new DJNZ_DB(*this);
-  instructionSet[djnz_db->GetOpcode()] = djnz_db;
-  DJNZ_DC *djnz_dc = new DJNZ_DC(*this);
-  instructionSet[djnz_dc->GetOpcode()] = djnz_dc;
-  DJNZ_DD *djnz_dd = new DJNZ_DD(*this);
-  instructionSet[djnz_dd->GetOpcode()] = djnz_dd;
-  DJNZ_DE *djnz_de = new DJNZ_DE(*this);
-  instructionSet[djnz_de->GetOpcode()] = djnz_de;
-  DJNZ_DF *djnz_df = new DJNZ_DF(*this);
-  instructionSet[djnz_df->GetOpcode()] = djnz_df;
+
+  instructionSet[0xd8] = new DJNZRegister(*this, 0xd8, 0);
+  instructionSet[0xd9] = new DJNZRegister(*this, 0xd9, 1);
+  instructionSet[0xda] = new DJNZRegister(*this, 0xda, 2);
+  instructionSet[0xdb] = new DJNZRegister(*this, 0xdb, 3);
+  instructionSet[0xdc] = new DJNZRegister(*this, 0xdc, 4);
+  instructionSet[0xdd] = new DJNZRegister(*this, 0xdd, 5);
+  instructionSet[0xde] = new DJNZRegister(*this, 0xde, 6);
+  instructionSet[0xdf] = new DJNZRegister(*this, 0xdf, 7);
+
   INC_5 *inc_5 = new INC_5(*this);
   instructionSet[inc_5->GetOpcode()] = inc_5;
   INC_4 *inc_4 = new INC_4(*this);

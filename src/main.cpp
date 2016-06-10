@@ -33,6 +33,7 @@ int main(int argc, char **argv)
   Adc adc(alu);
   Timer timer(alu);
   std::set<std::uint8_t> traceInstruction;
+  std::set<std::uint16_t> breakpoints;
 
   flash.SetAlu(alu);
   alu.Reset();
@@ -47,7 +48,27 @@ int main(int argc, char **argv)
     {
       tokens.push_back(token);
     }    
-    if (tokens[0] == "trace")
+    if (tokens[0] == "break")
+    {
+      if (tokens[1] == "list")
+      {
+        for (std::set<std::uint16_t>::iterator i = breakpoints.begin();
+             i != breakpoints.end();
+             i++)
+        {
+          std::cout << std::hex << *i << std::endl;
+        }
+      }
+      else if (tokens[1] == "clear")
+      {
+        breakpoints.clear();
+      }
+      else if (tokens[1] == "set")
+      {
+        breakpoints.insert(stoi(tokens[2], nullptr, 16));
+      }
+    }
+    else if (tokens[0] == "trace")
     {
       if (tokens[1] == "sfr")
       {
@@ -104,11 +125,16 @@ int main(int argc, char **argv)
       }
       for (int i = 0; i < limit; i++)
       {
-        if (traceInstruction.find(alu.flash.Get(alu.GetPC())) != traceInstruction.end())
+        alu.Step();
+        if (breakpoints.find(alu.GetPC()) != breakpoints.end())
+        {
+          std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
+          break;
+        }
+        if (traceInstruction.find(alu.flash.Get(alu.GetPC())) != traceInstruction.end() || i == limit - 1)
         {
           std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
         }
-        alu.Step();
       }
     }
     else if (tokens[0] == "loadsym")

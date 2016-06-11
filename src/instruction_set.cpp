@@ -260,26 +260,24 @@ void AddMemory::Execute() const
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
-ADD_26::ADD_26(Alu &a) : Instruction(a)
+AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : AdditionHelper(a, r, o)
 {
-  opcode = 0x26;
   operands = 0;
 }
 
-std::string ADD_26::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AddIndirectRegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
-  return "ADD A, @R0";
+  std::stringstream ss;
+  ss << "ADD A, @R" << (int) reg;
+  return ss.str();
 }
 
-ADD_27::ADD_27(Alu &a) : Instruction(a)
+void AddIndirectRegister::Execute() const
 {
-  opcode = 0x27;
-  operands = 0;
-}
+  std::uint16_t data = alu.Read(alu.GetReg(reg));
 
-std::string ADD_27::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "ADD A, @R1";
+  Helper(data);
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 AddRegister::AddRegister(Alu &a, std::uint8_t r, std::uint8_t o, bool c) : AdditionHelper(a, r, o), carry(c)

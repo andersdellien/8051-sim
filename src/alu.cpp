@@ -30,12 +30,8 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
 
   instructionSet[0x24] = new AddImmediate(*this, 0x24, false);
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);
-
-  ADD_26 *add_26 = new ADD_26(*this);
-  instructionSet[add_26->GetOpcode()] = add_26;
-  ADD_27 *add_27 = new ADD_27(*this);
-  instructionSet[add_27->GetOpcode()] = add_27;
-
+  instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, 0);
+  instructionSet[0x27] = new AddIndirectRegister(*this, 0x27, 1);
   instructionSet[0x28] = new AddRegister(*this, 0, 0x28, false);
   instructionSet[0x29] = new AddRegister(*this, 1, 0x29, false);
   instructionSet[0x2a] = new AddRegister(*this, 2, 0x2a, false);

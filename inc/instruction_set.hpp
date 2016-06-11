@@ -244,6 +244,7 @@ class AdditionHelper: public Instruction
   protected:
     void Helper(std::uint16_t operand) const;
     bool carry;
+    std::uint8_t reg;
 };
 
 // 0x24 and 0x34
@@ -264,18 +265,13 @@ class AddMemory: public AdditionHelper
     void Execute() const;
 };
 
-class ADD_26: public Instruction
+// 0x26 and 0x27
+class AddIndirectRegister: public AdditionHelper
 {
   public:
-    ADD_26(Alu&);
+    AddIndirectRegister(Alu&, uint8_t reg, std::uint8_t opcode);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class ADD_27: public Instruction
-{
-  public:
-    ADD_27(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 /* Instructions 0x28 - 0x2f ADD A, R{n}*/
@@ -287,7 +283,6 @@ class AddRegister: public AdditionHelper
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
   private:
-    std::uint8_t reg;
     bool carry;
 };
 

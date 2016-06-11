@@ -696,6 +696,10 @@ void CJNERegister::Execute() const
   {
     alu.SetC();
   }
+  else
+  {
+    alu.ClrC();
+  }
 }
 
 CLR_C2::CLR_C2(Alu &a) : Instruction(a)

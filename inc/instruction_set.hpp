@@ -1307,18 +1307,14 @@ class MOV_E5: public Instruction
     void Execute() const;
 };
 
-class MOV_E6: public Instruction
+class MovIndirectRegister: public Instruction
 {
   public:
-    MOV_E6(Alu&);
+    MovIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class MOV_E7: public Instruction
-{
-  public:
-    MOV_E7(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class MOV_E8: public Instruction

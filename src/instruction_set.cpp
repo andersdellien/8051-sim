@@ -1948,26 +1948,22 @@ void MovIndirectFromMem::Execute() const
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
-MOV_E6::MOV_E6(Alu &a) : Instruction(a)
+MovIndirectRegister::MovIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : Instruction(a, o), reg(r)
 {
-  opcode = 0xE6;
   operands = 0;
 }
 
-std::string MOV_E6::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovIndirectRegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
-  return "MOV A, @R0";
+  std::stringstream ss;
+  ss << "MOV A, @R" << (int) reg;
+  return ss.str();
 }
 
-MOV_E7::MOV_E7(Alu &a) : Instruction(a)
+void MovIndirectRegister::Execute() const
 {
-  opcode = 0xE7;
-  operands = 0;
-}
-
-std::string MOV_E7::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  return "MOV A, @R1";
+  alu.SetA(alu.Read(alu.GetReg(reg)));
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_E8::MOV_E8(Alu &a) : Instruction(a)

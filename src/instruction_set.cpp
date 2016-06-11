@@ -964,6 +964,12 @@ std::string INC_4::Disassemble(const Memory& memory, std::uint16_t address) cons
   return "INC A";
 }
 
+void INC_4::Execute() const
+{
+  alu.SetA(alu.GetA() + 1);
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 INC_6::INC_6(Alu &a) : Instruction(a)
 {
   opcode = 6;

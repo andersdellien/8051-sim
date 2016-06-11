@@ -125,20 +125,23 @@ int main(int argc, char **argv)
       {
         limit = stoi(tokens[1], nullptr, 16);
       }
+      int breakCount = 0;
       for (int i = 0; go || (i < limit); i++)
       {
         alu.Step();
-        bool hitBreak = false;
         if (breakpoints.find(alu.GetPC()) != breakpoints.end())
         {
-          std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
-          hitBreak = true;
+          breakCount++;
+          if (breakCount == limit)
+          {
+            std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
+          }
         }
-        if (traceInstruction.find(alu.flash.Get(alu.GetPC())) != traceInstruction.end() || !go || hitBreak)
+        if (traceInstruction.find(alu.flash.Get(alu.GetPC())) != traceInstruction.end() || !go || (go && breakCount == limit))
         {
           std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
         }
-        if (hitBreak)
+        if (go && breakCount == limit)
         {
           break;
         }

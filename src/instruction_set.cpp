@@ -1449,171 +1449,22 @@ void MOV_A2::Execute(void) const
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
-MOV_78::MOV_78(Alu &a) : Instruction(a)
+MovRegisterImmediate::MovRegisterImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
 {
-  opcode = 0x78;
   operands = 1;
 }
 
-std::string MOV_78::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovRegisterImmediate::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "MOV R0, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
+  ss << "MOV R" << (int) reg << ", #";
+  ss << std::setw(2) << std::hex << (int) memory.Get(address+1);
   return ss.str();
 }
 
-void MOV_78::Execute() const
+void MovRegisterImmediate::Execute() const
 {
-  alu.SetR0(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_79::MOV_79(Alu &a) : Instruction(a)
-{
-  opcode = 0x79;
-  operands = 1;
-}
-
-std::string MOV_79::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "MOV R1, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void MOV_79::Execute() const
-{
-  alu.SetR1(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_7A::MOV_7A(Alu &a) : Instruction(a)
-{
-  opcode = 0x7A;
-  operands = 1;
-}
-
-std::string MOV_7A::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "MOV R2, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void MOV_7A::Execute() const
-{
-  alu.SetR2(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_7B::MOV_7B(Alu &a) : Instruction(a)
-{
-  opcode = 0x7B;
-  operands = 1;
-}
-
-std::string MOV_7B::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "MOV R3, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void MOV_7B::Execute() const
-{
-  alu.SetR3(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_7C::MOV_7C(Alu &a) : Instruction(a)
-{
-  opcode = 0x7C;
-  operands = 1;
-}
-
-std::string MOV_7C::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "MOV R4, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void MOV_7C::Execute() const
-{
-  alu.SetR4(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_7D::MOV_7D(Alu &a) : Instruction(a)
-{
-  opcode = 0x7D;
-  operands = 1;
-}
-
-std::string MOV_7D::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "MOV R5, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void MOV_7D::Execute() const
-{
-  alu.SetR5(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_7E::MOV_7E(Alu &a) : Instruction(a)
-{
-  opcode = 0x7E;
-  operands = 1;
-}
-
-std::string MOV_7E::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "MOV R6, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void MOV_7E::Execute() const
-{
-  alu.SetR6(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_7F::MOV_7F(Alu &a) : Instruction(a)
-{
-  opcode = 0x7F;
-  operands = 1;
-}
-
-std::string MOV_7F::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "MOV R7, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
-  return ss.str();
-}
-
-void MOV_7F::Execute() const
-{
-  alu.SetR7(alu.flash.Get(alu.GetPC() + 1));
+  alu.SetReg(reg, alu.flash.Get(alu.GetPC() + 1));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 

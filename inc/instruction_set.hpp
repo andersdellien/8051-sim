@@ -730,68 +730,14 @@ class MOV_77: public Instruction
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
 };
 
-class MOV_78: public Instruction
+class MovRegisterImmediate: public Instruction
 {
   public:
-    MOV_78(Alu&);
+    MovRegisterImmediate(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
     void Execute() const;
-};
-
-class MOV_79: public Instruction
-{
-  public:
-    MOV_79(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_7A: public Instruction
-{
-  public:
-    MOV_7A(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_7B: public Instruction
-{
-  public:
-    MOV_7B(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_7C: public Instruction
-{
-  public:
-    MOV_7C(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_7D: public Instruction
-{
-  public:
-    MOV_7D(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_7E: public Instruction
-{
-  public:
-    MOV_7E(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_7F: public Instruction
-{
-  public:
-    MOV_7F(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class SJMP_80: public Instruction

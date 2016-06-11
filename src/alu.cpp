@@ -225,22 +225,16 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[mov_e5->GetOpcode()] = mov_e5;
   MOV_A2 *mov_a2 = new MOV_A2(*this);
   instructionSet[mov_a2->GetOpcode()] = mov_a2;
-  MOV_78 *mov_78 = new MOV_78(*this);
-  instructionSet[mov_78->GetOpcode()] = mov_78;
-  MOV_79 *mov_79 = new MOV_79(*this);
-  instructionSet[mov_79->GetOpcode()] = mov_79;
-  MOV_7A *mov_7a = new MOV_7A(*this);
-  instructionSet[mov_7a->GetOpcode()] = mov_7a;
-  MOV_7B *mov_7b = new MOV_7B(*this);
-  instructionSet[mov_7b->GetOpcode()] = mov_7b;
-  MOV_7C *mov_7c = new MOV_7C(*this);
-  instructionSet[mov_7c->GetOpcode()] = mov_7c;
-  MOV_7D *mov_7d = new MOV_7D(*this);
-  instructionSet[mov_7d->GetOpcode()] = mov_7d;
-  MOV_7E *mov_7e = new MOV_7E(*this);
-  instructionSet[mov_7e->GetOpcode()] = mov_7e;
-  MOV_7F *mov_7f = new MOV_7F(*this);
-  instructionSet[mov_7f->GetOpcode()] = mov_7f;
+
+  instructionSet[0x78] = new MovRegisterImmediate(*this, 0x78, 0);
+  instructionSet[0x79] = new MovRegisterImmediate(*this, 0x79, 1);
+  instructionSet[0x7a] = new MovRegisterImmediate(*this, 0x7a, 2);
+  instructionSet[0x7b] = new MovRegisterImmediate(*this, 0x7b, 3);
+  instructionSet[0x7c] = new MovRegisterImmediate(*this, 0x7c, 4);
+  instructionSet[0x7d] = new MovRegisterImmediate(*this, 0x7d, 5);
+  instructionSet[0x7e] = new MovRegisterImmediate(*this, 0x7e, 6);
+  instructionSet[0x7f] = new MovRegisterImmediate(*this, 0x7f, 7);
+
   MOV_A8 *mov_a8 = new MOV_A8(*this);
   instructionSet[mov_a8->GetOpcode()] = mov_a8;
   MOV_A9 *mov_a9 = new MOV_A9(*this);

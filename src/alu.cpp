@@ -249,10 +249,10 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[mov_af->GetOpcode()] = mov_af;
   MOV_92 *mov_92 = new MOV_92(*this);
   instructionSet[mov_92->GetOpcode()] = mov_92;
-  MOV_86 *mov_86 = new MOV_86(*this);
-  instructionSet[mov_86->GetOpcode()] = mov_86;
-  MOV_87 *mov_87 = new MOV_87(*this);
-  instructionSet[mov_87->GetOpcode()] = mov_87;
+
+  instructionSet[0x86] = new MovMemoryIndirectRegister(*this, 0x86, 0);
+  instructionSet[0x87] = new MovMemoryIndirectRegister(*this, 0x87, 1);
+
   MOV_88 *mov_88 = new MOV_88(*this);
   instructionSet[mov_88->GetOpcode()] = mov_88;
   MOV_89 *mov_89 = new MOV_89(*this);

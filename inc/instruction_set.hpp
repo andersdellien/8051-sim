@@ -782,18 +782,14 @@ class MOV_85: public Instruction
     void Execute() const;
 };
 
-class MOV_86: public Instruction
+class MovMemoryIndirectRegister: public Instruction
 {
   public:
-    MOV_86(Alu&);
+    MovMemoryIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
-};
-
-class MOV_87: public Instruction
-{
-  public:
-    MOV_87(Alu&);
-    std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
+  private:
+    std::uint8_t reg;
 };
 
 class MOV_88: public Instruction

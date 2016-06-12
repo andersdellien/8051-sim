@@ -1684,34 +1684,24 @@ void MOV_92::Execute(void) const
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
-MOV_86::MOV_86(Alu &a) : Instruction(a)
+MovMemoryIndirectRegister::MovMemoryIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
 {
-  opcode = 0x86;
   operands = 1;
 }
 
-std::string MOV_86::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovMemoryIndirectRegister::Disassemble(const Memory& memory, std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", @R0";
+  ss << std::setfill('0') << std::setw(2) << std::hex;
+  ss << (int) memory.Get(address+1) << ", @R" << (int) reg;
   return ss.str();
 }
 
-MOV_87::MOV_87(Alu &a) : Instruction(a)
+void MovMemoryIndirectRegister::Execute() const
 {
-  opcode = 0x87;
-  operands = 1;
-}
-
-std::string MOV_87::Disassemble(const Memory& memory, std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", @R1";
-  return ss.str();
+  alu.Write(alu.flash.Get(alu.GetPC() + 1), alu.Read(alu.GetReg(reg)));
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 MOV_88::MOV_88(Alu &a) : Instruction(a)

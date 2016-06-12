@@ -763,6 +763,7 @@ class MOVC_83: public Instruction
   public:
     MOVC_83(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DIV_84: public Instruction

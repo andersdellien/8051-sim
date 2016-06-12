@@ -2266,6 +2266,12 @@ std::string MOVC_83::Disassemble(const Memory& memory, std::uint16_t address) co
   return "MOVC A, @A+PC";
 }
 
+void MOVC_83::Execute() const
+{
+  alu.SetA(alu.flash.Get(alu.GetA() + 1 + alu.GetPC()));
+  alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
 MOVX_F0::MOVX_F0(Alu &a) : Instruction(a)
 {
   opcode = 0xF0;

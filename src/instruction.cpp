@@ -1,6 +1,10 @@
 #include <cstdint>
 #include "instruction.hpp"
 
+Instruction::Instruction(Alu& a, std::uint8_t o, std::uint8_t r) : alu(a), opcode(o), reg(r)
+{
+}
+
 Instruction::Instruction(Alu& a, std::uint8_t o) : alu(a), opcode(o)
 {
 }
@@ -21,4 +25,9 @@ std::uint8_t Instruction::GetOperands() const
 
 void Instruction::Execute() const
 {
+}
+
+void Instruction::IncPC() const
+{
+  alu.SetPC(alu.GetPC() + 1 + operands);
 }

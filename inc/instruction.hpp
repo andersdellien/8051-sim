@@ -12,13 +12,16 @@ class Instruction
     int operands;
     std::uint8_t opcode;
     Alu &alu;
+    std::uint8_t reg;
   public:
+    Instruction(Alu&, std::uint8_t opcode, std::uint8_t reg);
     Instruction(Alu&, std::uint8_t opcode);
     Instruction(Alu&);
-    virtual std::string Disassemble(const Memory& memory, std::uint16_t address) const = 0;
+    virtual std::string Disassemble(std::uint16_t address) const = 0;
     virtual void Execute() const;
     std::uint8_t GetOperands() const;
     std::uint8_t GetOpcode() const;
+    void IncPC() const;
 };
 
 #endif

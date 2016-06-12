@@ -44,7 +44,7 @@ INC_7::INC_7(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string INC_7::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string INC_7::Disassemble(std::uint16_t address) const
 {
   return "INC @R0";
 }
@@ -55,12 +55,12 @@ ACALL_11::ACALL_11(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ACALL_11::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ACALL_11::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -70,12 +70,12 @@ ACALL_31::ACALL_31(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ACALL_31::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ACALL_31::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 ACALL_51::ACALL_51(Alu &a) : Instruction(a)
@@ -84,12 +84,12 @@ ACALL_51::ACALL_51(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ACALL_51::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ACALL_51::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -99,12 +99,12 @@ ACALL_71::ACALL_71(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ACALL_71::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ACALL_71::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -114,12 +114,12 @@ ACALL_91::ACALL_91(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ACALL_91::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ACALL_91::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -129,12 +129,12 @@ ACALL_B1::ACALL_B1(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ACALL_B1::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ACALL_B1::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -144,12 +144,12 @@ ACALL_D1::ACALL_D1(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ACALL_D1::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ACALL_D1::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -159,12 +159,12 @@ ACALL_F1::ACALL_F1(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ACALL_F1::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ACALL_F1::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -174,19 +174,18 @@ AddImmediate::AddImmediate(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper
   operands = 1;
 }
 
-std::string AddImmediate::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AddImmediate::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ADD A, #";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
 void AddImmediate::Execute() const
 {
   Helper(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, bool c): Instruction(alu, opcode), carry(c)
@@ -232,6 +231,7 @@ void AdditionHelper::Helper(std::uint16_t data) const
   }
 
   alu.SetA(data + alu.GetA());
+  IncPC();
 }
 
 /* 0x25 and 0x35 */
@@ -240,7 +240,7 @@ AddMemory::AddMemory(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, op
   operands = 1;
 }
 
-std::string AddMemory::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AddMemory::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
@@ -250,14 +250,13 @@ std::string AddMemory::Disassemble(const Memory& memory, std::uint16_t address) 
     ss << "C";
   }
   ss << ",";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
 void AddMemory::Execute() const
 {
   Helper(alu.Read(alu.flash.Get(alu.GetPC() + 1)));
-  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : AdditionHelper(a, r, o)
@@ -265,7 +264,7 @@ AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r)
   operands = 0;
 }
 
-std::string AddIndirectRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AddIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "ADD A, @R" << (int) reg;
@@ -277,7 +276,6 @@ void AddIndirectRegister::Execute() const
   std::uint16_t data = alu.Read(alu.GetReg(reg));
 
   Helper(data);
-  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 AddRegister::AddRegister(Alu &a, std::uint8_t r, std::uint8_t o, bool c) : AdditionHelper(a, r, o), carry(c)
@@ -285,7 +283,7 @@ AddRegister::AddRegister(Alu &a, std::uint8_t r, std::uint8_t o, bool c) : Addit
   operands = 0;
 }
 
-std::string AddRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AddRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "ADD";
@@ -302,7 +300,6 @@ void AddRegister::Execute() const
   std::uint16_t data = alu.GetReg(reg);
 
   Helper(data);
-  alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
 ADDC_36::ADDC_36(Alu &a) : Instruction(a)
@@ -311,7 +308,7 @@ ADDC_36::ADDC_36(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ADDC_36::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ADDC_36::Disassemble(std::uint16_t address) const
 {
   return "ADDC A, @R0";
 }
@@ -322,7 +319,7 @@ ADDC_37::ADDC_37(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ADDC_37::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ADDC_37::Disassemble(std::uint16_t address) const
 {
   return "ADDC A, @R1";
 }
@@ -333,12 +330,12 @@ AJMP_1::AJMP_1(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string AJMP_1::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AJMP_1::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -348,12 +345,12 @@ AJMP_21::AJMP_21(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string AJMP_21::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AJMP_21::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -363,12 +360,12 @@ AJMP_41::AJMP_41(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string AJMP_41::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AJMP_41::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -378,12 +375,12 @@ AJMP_61::AJMP_61(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string AJMP_61::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AJMP_61::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -393,12 +390,12 @@ AJMP_81::AJMP_81(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string AJMP_81::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AJMP_81::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -408,12 +405,12 @@ AJMP_A1::AJMP_A1(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string AJMP_A1::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AJMP_A1::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -423,12 +420,12 @@ AJMP_C1::AJMP_C1(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string AJMP_C1::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AJMP_C1::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -438,12 +435,12 @@ AJMP_E1::AJMP_E1(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string AJMP_E1::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AJMP_E1::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -453,12 +450,12 @@ ANL_52::ANL_52(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ANL_52::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ANL_52::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ANL ";
-  ss << (int) memory.Get(address+1) << ", A";
+  ss << (int) alu.flash.Get(address+1) << ", A";
   return ss.str();
 }
 
@@ -468,12 +465,12 @@ ANL_53::ANL_53(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string ANL_53::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ANL_53::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ANL ";
-  ss << (int) memory.Get(address+1) << " ,#" << (int) memory.Get(address+2);
+  ss << (int) alu.flash.Get(address+1) << " ,#" << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -483,7 +480,7 @@ void ANL_53::Execute() const
   std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
 
   alu.Write(addr, alu.Read(addr) & operand);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 ANL_54::ANL_54(Alu &a) : Instruction(a)
@@ -492,12 +489,12 @@ ANL_54::ANL_54(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ANL_54::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ANL_54::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "ANL A, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -505,7 +502,7 @@ void ANL_54::Execute() const
 {
   std::uint8_t operand = alu.flash.Get(alu.GetPC() + 1);
   alu.SetA(operand & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 ANL_55::ANL_55(Alu &a) : Instruction(a)
@@ -514,12 +511,12 @@ ANL_55::ANL_55(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ANL_55::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ANL_55::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "ANL A,";
-  ss << std::setw(2) << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -527,7 +524,7 @@ void ANL_55::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
   alu.SetA(alu.iram.Get(address) & alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 ANL_56::ANL_56(Alu &a) : Instruction(a)
@@ -536,7 +533,7 @@ ANL_56::ANL_56(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ANL_56::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ANL_56::Disassemble(std::uint16_t address) const
 {
   return "ANL A, @R0";
 }
@@ -547,7 +544,7 @@ ANL_57::ANL_57(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ANL_57::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ANL_57::Disassemble(std::uint16_t address) const
 {
   return "ANL A, @R1";
 }
@@ -558,12 +555,12 @@ ANL_82::ANL_82(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ANL_82::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ANL_82::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ANL C, ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -573,12 +570,12 @@ ANL_B0::ANL_B0(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ANL_B0::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ANL_B0::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ANL C, ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -588,12 +585,12 @@ CJNE_B4::CJNE_B4(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string CJNE_B4::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CJNE_B4::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "CJNE A, #";
-  ss << (int) memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << (int) alu.flash.Get(address+1) << ", " << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -603,12 +600,12 @@ CJNE_B5::CJNE_B5(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string CJNE_B5::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CJNE_B5::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "CJNE A, ";
-  ss << (int) memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << (int) alu.flash.Get(address+1) << ", " << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -623,12 +620,16 @@ void CJNE_B5::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 
   if (alu.GetA() < alu.Read(addr))
   {
     alu.SetC();
+  }
+  else
+  {
+    alu.ClrC();
   }
 }
 
@@ -638,12 +639,12 @@ CJNE_B6::CJNE_B6(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string CJNE_B6::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CJNE_B6::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "CJNE @R0, #";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
+  ss << std::setw(2) << (int) alu.flash.Get(address+1) << ", " << std::setw(2) << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -653,12 +654,12 @@ CJNE_B7::CJNE_B7(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string CJNE_B7::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CJNE_B7::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "CJNE @R1, #";
-  ss << (int) memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << (int) alu.flash.Get(address+1) << ", " << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -667,12 +668,12 @@ CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instru
   operands = 2;
 }
 
-std::string CJNERegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CJNERegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "CJNE R" << (int) reg << ", #";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
+  ss << std::setw(2) << (int) alu.flash.Get(address+1) << ", " << std::setw(2) << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -687,7 +688,7 @@ void CJNERegister::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 
   if (alu.GetReg(reg) < operand)
@@ -706,12 +707,12 @@ CLR_C2::CLR_C2(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string CLR_C2::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CLR_C2::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "CLR ";
-  ss << alu.GetBitAddressName((int) memory.Get(address+1));
+  ss << alu.GetBitAddressName((int) alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -729,7 +730,7 @@ CLR_C3::CLR_C3(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string CLR_C3::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CLR_C3::Disassemble(std::uint16_t address) const
 {
   return "CLR C";
 }
@@ -737,7 +738,7 @@ std::string CLR_C3::Disassemble(const Memory& memory, std::uint16_t address) con
 void CLR_C3::Execute() const
 {
   alu.ClrC();
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 CLR_E4::CLR_E4(Alu &a) : Instruction(a)
@@ -746,7 +747,7 @@ CLR_E4::CLR_E4(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string CLR_E4::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CLR_E4::Disassemble(std::uint16_t address) const
 {
   return "CLR A";
 }
@@ -754,7 +755,7 @@ std::string CLR_E4::Disassemble(const Memory& memory, std::uint16_t address) con
 void CLR_E4::Execute(void) const
 {
   alu.SetA(0);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 CPL_F4::CPL_F4(Alu &a) : Instruction(a)
@@ -763,7 +764,7 @@ CPL_F4::CPL_F4(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string CPL_F4::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CPL_F4::Disassemble(std::uint16_t address) const
 {
   return "CPL A";
 }
@@ -774,7 +775,7 @@ CPL_B3::CPL_B3(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string CPL_B3::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CPL_B3::Disassemble(std::uint16_t address) const
 {
   return "CPL C";
 }
@@ -789,7 +790,7 @@ void CPL_B3::Execute() const
   {
     alu.SetC();
   }
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 CPL_B2::CPL_B2(Alu &a) : Instruction(a)
@@ -798,12 +799,12 @@ CPL_B2::CPL_B2(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string CPL_B2::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string CPL_B2::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "CPL ";
-  ss << memory.Get(address+1);
+  ss << alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -813,7 +814,7 @@ DA_D4::DA_D4(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string DA_D4::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DA_D4::Disassemble(std::uint16_t address) const
 {
   return "DA";
 }
@@ -824,12 +825,12 @@ DEC_15::DEC_15(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string DEC_15::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DEC_15::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "DEC ";
-  ss << memory.Get(address+1);
+  ss << alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -839,7 +840,7 @@ DEC_14::DEC_14(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string DEC_14::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DEC_14::Disassemble(std::uint16_t address) const
 {
   return "DEC A";
 }
@@ -847,7 +848,7 @@ std::string DEC_14::Disassemble(const Memory& memory, std::uint16_t address) con
 void DEC_14::Execute() const
 {
   alu.SetA(alu.GetA() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 DEC_16::DEC_16(Alu &a) : Instruction(a)
@@ -856,7 +857,7 @@ DEC_16::DEC_16(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string DEC_16::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DEC_16::Disassemble(std::uint16_t address) const
 {
   return "DEC @R0";
 }
@@ -867,7 +868,7 @@ DEC_17::DEC_17(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string DEC_17::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DEC_17::Disassemble(std::uint16_t address) const
 {
   return "DEC @R1";
 }
@@ -878,7 +879,7 @@ DIV_84::DIV_84(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string DIV_84::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DIV_84::Disassemble(std::uint16_t address) const
 {
   return "DIV AB";
 }
@@ -889,26 +890,26 @@ DJNZ_D5::DJNZ_D5(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string DJNZ_D5::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DJNZ_D5::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "DJNZ ";
-  ss << memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << alu.flash.Get(address+1) << ", " << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
-DJNZRegister::DJNZRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+DJNZRegister::DJNZRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
 }
 
-std::string DJNZRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DJNZRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "DJNZ R" << (int) reg << ", ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -924,7 +925,7 @@ void DJNZRegister::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 }
 
@@ -934,12 +935,12 @@ INC_5::INC_5(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string INC_5::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string INC_5::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "INC ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -948,7 +949,7 @@ void INC_5::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.Write(address, alu.Read(address) + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 INC_4::INC_4(Alu &a) : Instruction(a)
@@ -957,7 +958,7 @@ INC_4::INC_4(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string INC_4::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string INC_4::Disassemble(std::uint16_t address) const
 {
   return "INC A";
 }
@@ -965,7 +966,7 @@ std::string INC_4::Disassemble(const Memory& memory, std::uint16_t address) cons
 void INC_4::Execute() const
 {
   alu.SetA(alu.GetA() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 INC_6::INC_6(Alu &a) : Instruction(a)
@@ -974,16 +975,16 @@ INC_6::INC_6(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string INC_6::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string INC_6::Disassemble(std::uint16_t address) const
 {
   return "INC @R0";
 }
 
-IncRegister::IncRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode), reg(r)
+IncRegister::IncRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
 {
 }
 
-std::string IncRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string IncRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "INC R" << (int) reg;
@@ -993,14 +994,14 @@ std::string IncRegister::Disassemble(const Memory& memory, std::uint16_t address
 void IncRegister::Execute() const
 {
   alu.SetReg(reg, alu.GetReg(reg) + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-DecRegister::DecRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode), reg(r)
+DecRegister::DecRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
 {
 }
 
-std::string DecRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string DecRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "DEC R" << (int) reg;
@@ -1010,7 +1011,7 @@ std::string DecRegister::Disassemble(const Memory& memory, std::uint16_t address
 void DecRegister::Execute() const
 {
   alu.SetReg(reg, alu.GetReg(reg) - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 INC_A3::INC_A3(Alu &a) : Instruction(a)
@@ -1019,7 +1020,7 @@ INC_A3::INC_A3(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string INC_A3::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string INC_A3::Disassemble(std::uint16_t address) const
 {
   return "INC DPTR";
 }
@@ -1027,7 +1028,7 @@ std::string INC_A3::Disassemble(const Memory& memory, std::uint16_t address) con
 void INC_A3::Execute() const
 {
   alu.SetDPTR(alu.GetDPTR() + 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 JB_20::JB_20(Alu &a) : Instruction(a)
@@ -1036,12 +1037,12 @@ JB_20::JB_20(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string JB_20::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string JB_20::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JB ";
-  ss << (int) memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << (int) alu.flash.Get(address+1) << ", " << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -1056,7 +1057,7 @@ void JB_20::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 }
 
@@ -1066,12 +1067,12 @@ JBC_10::JBC_10(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string JBC_10::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string JBC_10::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JBC ";
-  ss << (int) memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << (int) alu.flash.Get(address+1) << ", " << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -1081,12 +1082,12 @@ JC_40::JC_40(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string JC_40::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string JC_40::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JC ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -1099,7 +1100,7 @@ void JC_40::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 }
 
@@ -1109,7 +1110,7 @@ JMP_73::JMP_73(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string JMP_73::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string JMP_73::Disassemble(std::uint16_t address) const
 {
   return "JMP @A+DPTR";
 }
@@ -1125,12 +1126,12 @@ JNB_30::JNB_30(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string JNB_30::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string JNB_30::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JNB ";
-  ss << (int) memory.Get(address+1) << ", " << (int) memory.Get(address+2);
+  ss << (int) alu.flash.Get(address+1) << ", " << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -1145,7 +1146,7 @@ void JNB_30::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 }
 
@@ -1155,12 +1156,12 @@ JNC_50::JNC_50(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string JNC_50::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string JNC_50::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JNC ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -1173,7 +1174,7 @@ void JNC_50::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 }
 
@@ -1183,12 +1184,12 @@ JNZ_70::JNZ_70(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string JNZ_70::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string JNZ_70::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JNZ ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -1201,7 +1202,7 @@ void JNZ_70::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 }
 
@@ -1211,12 +1212,12 @@ JZ_60::JZ_60(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string JZ_60::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string JZ_60::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JZ ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -1229,7 +1230,7 @@ void JZ_60::Execute() const
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands);
+    IncPC();
   }
 }
 
@@ -1239,12 +1240,12 @@ LCALL_12::LCALL_12(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string LCALL_12::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string LCALL_12::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "LCALL ";
-  PrintAddress(ss, (uint16_t) (memory.Get(address + 1) * 256 + memory.Get(address + 2)));
+  PrintAddress(ss, (uint16_t) (alu.flash.Get(address + 1) * 256 + alu.flash.Get(address + 2)));
   return ss.str();
 }
 
@@ -1269,12 +1270,12 @@ LJMP_2::LJMP_2(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string LJMP_2::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string LJMP_2::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "LJMP ";
-  PrintAddress(ss, (uint16_t) (memory.Get(address + 1) * 256 + memory.Get(address + 2)));
+  PrintAddress(ss, (uint16_t) (alu.flash.Get(address + 1) * 256 + alu.flash.Get(address + 2)));
   return ss.str();
 }
 
@@ -1289,13 +1290,13 @@ MOV_90::MOV_90(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string MOV_90::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_90::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "MOV DPTR, #";
-  ss << std::setw(2) << (int) memory.Get(address+1);
-  ss << std::setw(2) << (int) memory.Get(address+2);
+  ss << std::setw(2) << (int) alu.flash.Get(address+1);
+  ss << std::setw(2) << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -1311,14 +1312,14 @@ MOV_75::MOV_75(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string MOV_75::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_75::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
 
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  PrintAddress(ss, memory.Get(address+1));
-  ss << ", #" << std::setw(2) << (int) memory.Get(address+2);
+  PrintAddress(ss, alu.flash.Get(address+1));
+  ss << ", #" << std::setw(2) << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -1328,7 +1329,7 @@ void MOV_75::Execute() const
   std::uint8_t data = alu.flash.Get(alu.GetPC() + 2);
 
   alu.Write(address, data);
-  alu.SetPC(alu.GetPC() + operands + 1);
+  IncPC();
 }
 
 MOV_85::MOV_85(Alu &a) : Instruction(a)
@@ -1337,12 +1338,12 @@ MOV_85::MOV_85(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string MOV_85::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_85::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << std::setw(2) << (int) memory.Get(address+1) << ", " << std::setw(2) << (int) memory.Get(address+2);
+  ss << std::setw(2) << (int) alu.flash.Get(address+1) << ", " << std::setw(2) << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -1351,26 +1352,26 @@ void MOV_85::Execute() const
   std::uint8_t data = alu.Read(alu.flash.Get(alu.GetPC() + 1));
 
   alu.Write(alu.flash.Get(alu.GetPC() + 2), data);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-MovRegisterIndirectImmediate::MovRegisterIndirectImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+MovRegisterIndirectImmediate::MovRegisterIndirectImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
 }
 
-std::string MovRegisterIndirectImmediate::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovRegisterIndirectImmediate::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV @R" << (int) reg << ", #";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
 void MovRegisterIndirectImmediate::Execute() const
 {
   alu.Write(alu.GetReg(reg), alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_74::MOV_74(Alu &a) : Instruction(a)
@@ -1379,19 +1380,19 @@ MOV_74::MOV_74(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_74::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_74::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV A, #";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
 void MOV_74::Execute() const
 {
   alu.SetA(alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_E5::MOV_E5(Alu &a) : Instruction(a)
@@ -1400,12 +1401,12 @@ MOV_E5::MOV_E5(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_E5::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_E5::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV A, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1414,7 +1415,7 @@ void MOV_E5::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetA(alu.Read(address));
-  alu.SetPC(alu.GetPC() + operands + 1);
+  IncPC();
 }
 
 MOV_A2::MOV_A2(Alu &a) : Instruction(a)
@@ -1423,12 +1424,12 @@ MOV_A2::MOV_A2(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_A2::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_A2::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV C, ";
-  ss << alu.GetBitAddressName(memory.Get(address+1));
+  ss << alu.GetBitAddressName(alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1444,26 +1445,26 @@ void MOV_A2::Execute(void) const
   {
     alu.ClrC();
   }
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-MovRegisterImmediate::MovRegisterImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+MovRegisterImmediate::MovRegisterImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
 }
 
-std::string MovRegisterImmediate::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovRegisterImmediate::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV R" << (int) reg << ", #";
-  ss << std::setw(2) << std::hex << (int) memory.Get(address+1);
+  ss << std::setw(2) << std::hex << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
 void MovRegisterImmediate::Execute() const
 {
   alu.SetReg(reg, alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_A8::MOV_A8(Alu &a) : Instruction(a)
@@ -1472,12 +1473,12 @@ MOV_A8::MOV_A8(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_A8::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_A8::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV R0, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1486,7 +1487,7 @@ void MOV_A8::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetR0(alu.Read(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_A9::MOV_A9(Alu &a) : Instruction(a)
@@ -1495,12 +1496,12 @@ MOV_A9::MOV_A9(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_A9::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_A9::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV R1, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1509,7 +1510,7 @@ void MOV_A9::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetR1(alu.Read(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_AA::MOV_AA(Alu &a) : Instruction(a)
@@ -1518,12 +1519,12 @@ MOV_AA::MOV_AA(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_AA::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_AA::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV R2, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1532,7 +1533,7 @@ void MOV_AA::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetR2(alu.Read(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_AB::MOV_AB(Alu &a) : Instruction(a)
@@ -1541,12 +1542,12 @@ MOV_AB::MOV_AB(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_AB::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_AB::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV R3, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1555,7 +1556,7 @@ void MOV_AB::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetR3(alu.Read(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_AC::MOV_AC(Alu &a) : Instruction(a)
@@ -1564,12 +1565,12 @@ MOV_AC::MOV_AC(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_AC::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_AC::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV R4, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1578,7 +1579,7 @@ void MOV_AC::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetR4(alu.Read(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_AD::MOV_AD(Alu &a) : Instruction(a)
@@ -1587,12 +1588,12 @@ MOV_AD::MOV_AD(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_AD::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_AD::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV R5, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1601,7 +1602,7 @@ void MOV_AD::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetR5(alu.Read(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_AE::MOV_AE(Alu &a) : Instruction(a)
@@ -1610,12 +1611,12 @@ MOV_AE::MOV_AE(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_AE::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_AE::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV R6, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1624,7 +1625,7 @@ void MOV_AE::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetR6(alu.Read(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_AF::MOV_AF(Alu &a) : Instruction(a)
@@ -1633,12 +1634,12 @@ MOV_AF::MOV_AF(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_AF::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_AF::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV R7, ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -1647,7 +1648,7 @@ void MOV_AF::Execute() const
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetR7(alu.Read(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_92::MOV_92(Alu &a) : Instruction(a)
@@ -1656,12 +1657,12 @@ MOV_92::MOV_92(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_92::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_92::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << alu.GetBitAddressName((int) memory.Get(address+1)) << ", C";
+  ss << alu.GetBitAddressName((int) alu.flash.Get(address+1)) << ", C";
   return ss.str();
 }
 
@@ -1670,27 +1671,27 @@ void MOV_92::Execute(void) const
   std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
 
   alu.WriteBit(bitAddr, alu.GetC());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-MovMemoryIndirectRegister::MovMemoryIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+MovMemoryIndirectRegister::MovMemoryIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
 }
 
-std::string MovMemoryIndirectRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovMemoryIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV ";
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << (int) memory.Get(address+1) << ", @R" << (int) reg;
+  ss << (int) alu.flash.Get(address+1) << ", @R" << (int) reg;
   return ss.str();
 }
 
 void MovMemoryIndirectRegister::Execute() const
 {
   alu.Write(alu.flash.Get(alu.GetPC() + 1), alu.Read(alu.GetReg(reg)));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_88::MOV_88(Alu &a) : Instruction(a)
@@ -1699,19 +1700,19 @@ MOV_88::MOV_88(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_88::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_88::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", R0";
+  ss << (int) alu.flash.Get(address+1) << ", R0";
   return ss.str();
 }
 
 void MOV_88::Execute() const
 {
   alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR0());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_89::MOV_89(Alu &a) : Instruction(a)
@@ -1720,12 +1721,12 @@ MOV_89::MOV_89(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_89::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_89::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", R1";
+  ss << (int) alu.flash.Get(address+1) << ", R1";
   return ss.str();
 }
 
@@ -1741,19 +1742,19 @@ MOV_8A::MOV_8A(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_8A::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_8A::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", R2";
+  ss << (int) alu.flash.Get(address+1) << ", R2";
   return ss.str();
 }
 
 void MOV_8A::Execute() const
 {
   alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR2());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_8B::MOV_8B(Alu &a) : Instruction(a)
@@ -1762,19 +1763,19 @@ MOV_8B::MOV_8B(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_8B::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_8B::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", R3";
+  ss << (int) alu.flash.Get(address+1) << ", R3";
   return ss.str();
 }
 
 void MOV_8B::Execute() const
 {
   alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR3());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_8C::MOV_8C(Alu &a) : Instruction(a)
@@ -1783,19 +1784,19 @@ MOV_8C::MOV_8C(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_8C::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_8C::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", R4";
+  ss << (int) alu.flash.Get(address+1) << ", R4";
   return ss.str();
 }
 
 void MOV_8C::Execute() const
 {
   alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR4());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_8D::MOV_8D(Alu &a) : Instruction(a)
@@ -1804,19 +1805,19 @@ MOV_8D::MOV_8D(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_8D::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_8D::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", R5";
+  ss << (int) alu.flash.Get(address+1) << ", R5";
   return ss.str();
 }
 
 void MOV_8D::Execute() const
 {
   alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR5());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_8E::MOV_8E(Alu &a) : Instruction(a)
@@ -1825,19 +1826,19 @@ MOV_8E::MOV_8E(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_8E::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_8E::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", R6";
+  ss << (int) alu.flash.Get(address+1) << ", R6";
   return ss.str();
 }
 
 void MOV_8E::Execute() const
 {
   alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR6());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_8F::MOV_8F(Alu &a) : Instruction(a)
@@ -1846,19 +1847,19 @@ MOV_8F::MOV_8F(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_8F::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_8F::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << (int) memory.Get(address+1) << ", R7";
+  ss << (int) alu.flash.Get(address+1) << ", R7";
   return ss.str();
 }
 
 void MOV_8F::Execute() const
 {
   alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR7());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_F5::MOV_F5(Alu &a) : Instruction(a)
@@ -1867,12 +1868,12 @@ MOV_F5::MOV_F5(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string MOV_F5::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_F5::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  PrintAddress(ss, memory.Get(address+1));
+  PrintAddress(ss, alu.flash.Get(address+1));
   ss << ", A";
   return ss.str();
 }
@@ -1882,15 +1883,15 @@ void MOV_F5::Execute() const
   std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
 
   alu.Write(addr, alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-MovIndirect::MovIndirect(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+MovIndirect::MovIndirect(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 0;
 }
 
-std::string MovIndirect::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovIndirect::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV @R";
@@ -1902,15 +1903,15 @@ std::string MovIndirect::Disassemble(const Memory& memory, std::uint16_t address
 void MovIndirect::Execute() const
 {
   alu.iram.Set(alu.GetReg(reg), alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-MovIndirectFromMem::MovIndirectFromMem(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+MovIndirectFromMem::MovIndirectFromMem(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
 }
 
-std::string MovIndirectFromMem::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovIndirectFromMem::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV @R";
@@ -1923,15 +1924,15 @@ std::string MovIndirectFromMem::Disassemble(const Memory& memory, std::uint16_t 
 void MovIndirectFromMem::Execute() const
 {
   alu.iram.Set(alu.GetReg(reg), alu.iram.Get(alu.flash.Get(alu.GetPC() + 1)));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-MovIndirectRegister::MovIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : Instruction(a, o), reg(r)
+MovIndirectRegister::MovIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : Instruction(a, o, r)
 {
   operands = 0;
 }
 
-std::string MovIndirectRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MovIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV A, @R" << (int) reg;
@@ -1941,7 +1942,7 @@ std::string MovIndirectRegister::Disassemble(const Memory& memory, std::uint16_t
 void MovIndirectRegister::Execute() const
 {
   alu.SetA(alu.Read(alu.GetReg(reg)));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_E8::MOV_E8(Alu &a) : Instruction(a)
@@ -1950,7 +1951,7 @@ MOV_E8::MOV_E8(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_E8::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_E8::Disassemble(std::uint16_t address) const
 {
   return "MOV A, R0";
 }
@@ -1958,7 +1959,7 @@ std::string MOV_E8::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_E8::Execute() const
 {
   alu.SetA(alu.GetR0());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_E9::MOV_E9(Alu &a) : Instruction(a)
@@ -1967,7 +1968,7 @@ MOV_E9::MOV_E9(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_E9::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_E9::Disassemble(std::uint16_t address) const
 {
   return "MOV A, R1";
 }
@@ -1975,7 +1976,7 @@ std::string MOV_E9::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_E9::Execute() const
 {
   alu.SetA(alu.GetR1());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_EA::MOV_EA(Alu &a) : Instruction(a)
@@ -1984,7 +1985,7 @@ MOV_EA::MOV_EA(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_EA::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_EA::Disassemble(std::uint16_t address) const
 {
   return "MOV A, R2";
 }
@@ -1992,7 +1993,7 @@ std::string MOV_EA::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_EA::Execute() const
 {
   alu.SetA(alu.GetR2());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_EB::MOV_EB(Alu &a) : Instruction(a)
@@ -2001,7 +2002,7 @@ MOV_EB::MOV_EB(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_EB::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_EB::Disassemble(std::uint16_t address) const
 {
   return "MOV A, R3";
 }
@@ -2009,7 +2010,7 @@ std::string MOV_EB::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_EB::Execute() const
 {
   alu.SetA(alu.GetR3());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_EC::MOV_EC(Alu &a) : Instruction(a)
@@ -2018,7 +2019,7 @@ MOV_EC::MOV_EC(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_EC::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_EC::Disassemble(std::uint16_t address) const
 {
   return "MOV A, R4";
 }
@@ -2026,7 +2027,7 @@ std::string MOV_EC::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_EC::Execute() const
 {
   alu.SetA(alu.GetR4());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_ED::MOV_ED(Alu &a) : Instruction(a)
@@ -2035,7 +2036,7 @@ MOV_ED::MOV_ED(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_ED::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_ED::Disassemble(std::uint16_t address) const
 {
   return "MOV A, R5";
 }
@@ -2043,7 +2044,7 @@ std::string MOV_ED::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_ED::Execute() const
 {
   alu.SetA(alu.GetR5());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_EE::MOV_EE(Alu &a) : Instruction(a)
@@ -2052,7 +2053,7 @@ MOV_EE::MOV_EE(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_EE::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_EE::Disassemble(std::uint16_t address) const
 {
   return "MOV A, R6";
 }
@@ -2060,7 +2061,7 @@ std::string MOV_EE::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_EE::Execute() const
 {
   alu.SetA(alu.GetR6());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_EF::MOV_EF(Alu &a) : Instruction(a)
@@ -2069,7 +2070,7 @@ MOV_EF::MOV_EF(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_EF::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_EF::Disassemble(std::uint16_t address) const
 {
   return "MOV A, R7";
 }
@@ -2077,7 +2078,7 @@ std::string MOV_EF::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_EF::Execute() const
 {
   alu.SetA(alu.GetR7());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_F8::MOV_F8(Alu &a) : Instruction(a)
@@ -2086,7 +2087,7 @@ MOV_F8::MOV_F8(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_F8::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_F8::Disassemble(std::uint16_t address) const
 {
   return "MOV R0, A";
 }
@@ -2103,7 +2104,7 @@ MOV_F9::MOV_F9(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_F9::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_F9::Disassemble(std::uint16_t address) const
 {
   return "MOV R1, A";
 }
@@ -2111,7 +2112,7 @@ std::string MOV_F9::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_F9::Execute() const
 {
   alu.SetR1(alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_FA::MOV_FA(Alu &a) : Instruction(a)
@@ -2120,7 +2121,7 @@ MOV_FA::MOV_FA(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_FA::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_FA::Disassemble(std::uint16_t address) const
 {
   return "MOV R2, A";
 }
@@ -2128,7 +2129,7 @@ std::string MOV_FA::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_FA::Execute() const
 {
   alu.SetR2(alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_FB::MOV_FB(Alu &a) : Instruction(a)
@@ -2137,7 +2138,7 @@ MOV_FB::MOV_FB(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_FB::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_FB::Disassemble(std::uint16_t address) const
 {
   return "MOV R3, A";
 }
@@ -2145,7 +2146,7 @@ std::string MOV_FB::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_FB::Execute() const
 {
   alu.SetR3(alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_FC::MOV_FC(Alu &a) : Instruction(a)
@@ -2154,7 +2155,7 @@ MOV_FC::MOV_FC(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_FC::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_FC::Disassemble(std::uint16_t address) const
 {
   return "MOV R4, A";
 }
@@ -2162,7 +2163,7 @@ std::string MOV_FC::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_FC::Execute() const
 {
   alu.SetR4(alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_FD::MOV_FD(Alu &a) : Instruction(a)
@@ -2171,7 +2172,7 @@ MOV_FD::MOV_FD(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_FD::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_FD::Disassemble(std::uint16_t address) const
 {
   return "MOV R5, A";
 }
@@ -2179,7 +2180,7 @@ std::string MOV_FD::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_FD::Execute() const
 {
   alu.SetR5(alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_FE::MOV_FE(Alu &a) : Instruction(a)
@@ -2188,7 +2189,7 @@ MOV_FE::MOV_FE(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_FE::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_FE::Disassemble(std::uint16_t address) const
 {
   return "MOV R6, A";
 }
@@ -2196,7 +2197,7 @@ std::string MOV_FE::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_FE::Execute() const
 {
   alu.SetR6(alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOV_FF::MOV_FF(Alu &a) : Instruction(a)
@@ -2205,7 +2206,7 @@ MOV_FF::MOV_FF(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOV_FF::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOV_FF::Disassemble(std::uint16_t address) const
 {
   return "MOV R7, A";
 }
@@ -2213,7 +2214,7 @@ std::string MOV_FF::Disassemble(const Memory& memory, std::uint16_t address) con
 void MOV_FF::Execute() const
 {
   alu.SetR7(alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOVC_93::MOVC_93(Alu &a) : Instruction(a)
@@ -2222,7 +2223,7 @@ MOVC_93::MOVC_93(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOVC_93::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOVC_93::Disassemble(std::uint16_t address) const
 {
   return "MOVC A, @A+DPTR";
 }
@@ -2232,7 +2233,7 @@ void MOVC_93::Execute() const
   std::uint16_t address = alu.GetA() + alu.GetDPTR();
 
   alu.SetA(alu.flash.Get(address));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOVC_83::MOVC_83(Alu &a) : Instruction(a)
@@ -2241,7 +2242,7 @@ MOVC_83::MOVC_83(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOVC_83::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOVC_83::Disassemble(std::uint16_t address) const
 {
   return "MOVC A, @A+PC";
 }
@@ -2249,7 +2250,7 @@ std::string MOVC_83::Disassemble(const Memory& memory, std::uint16_t address) co
 void MOVC_83::Execute() const
 {
   alu.SetA(alu.flash.Get(alu.GetA() + 1 + alu.GetPC()));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOVX_F0::MOVX_F0(Alu &a) : Instruction(a)
@@ -2258,7 +2259,7 @@ MOVX_F0::MOVX_F0(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOVX_F0::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOVX_F0::Disassemble(std::uint16_t address) const
 {
   return "MOVX @DPTR, A";
 }
@@ -2266,7 +2267,7 @@ std::string MOVX_F0::Disassemble(const Memory& memory, std::uint16_t address) co
 void MOVX_F0::Execute() const
 {
   alu.xram.Set(alu.GetDPTR(), alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 MOVX_F2::MOVX_F2(Alu &a) : Instruction(a)
@@ -2275,7 +2276,7 @@ MOVX_F2::MOVX_F2(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOVX_F2::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOVX_F2::Disassemble(std::uint16_t address) const
 {
   return "MOVX @R0, A";
 }
@@ -2283,7 +2284,7 @@ std::string MOVX_F2::Disassemble(const Memory& memory, std::uint16_t address) co
 void MOVX_F2::Execute() const
 {
   alu.xram.Set(alu.GetR0(), alu.GetA());
-  alu.SetPC(alu.GetPC() + 1);
+  IncPC();
 }
 
 MOVX_F3::MOVX_F3(Alu &a) : Instruction(a)
@@ -2292,7 +2293,7 @@ MOVX_F3::MOVX_F3(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOVX_F3::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOVX_F3::Disassemble(std::uint16_t address) const
 {
   return "MOVX @R1, A";
 }
@@ -2303,7 +2304,7 @@ MOVX_E0::MOVX_E0(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOVX_E0::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOVX_E0::Disassemble(std::uint16_t address) const
 {
   return "MOVX A, @DPTR";
 }
@@ -2314,7 +2315,7 @@ MOVX_E2::MOVX_E2(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOVX_E2::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOVX_E2::Disassemble(std::uint16_t address) const
 {
   return "MOVX A, @R0";
 }
@@ -2325,7 +2326,7 @@ MOVX_E3::MOVX_E3(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MOVX_E3::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MOVX_E3::Disassemble(std::uint16_t address) const
 {
   return "MOVX A, @R1";
 }
@@ -2336,7 +2337,7 @@ MUL_A4::MUL_A4(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string MUL_A4::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string MUL_A4::Disassemble(std::uint16_t address) const
 {
   return "MUL AB";
 }
@@ -2347,14 +2348,14 @@ NOP::NOP(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string NOP::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string NOP::Disassemble(std::uint16_t address) const
 {
   return "NOP";
 }
 
 void NOP::Execute() const
 {
-  alu.SetPC(alu.GetPC() + 1);
+  IncPC();
 }
 
 ORL_43::ORL_43(Alu &a) : Instruction(a)
@@ -2363,13 +2364,13 @@ ORL_43::ORL_43(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string ORL_43::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ORL_43::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "ORL ";
-  PrintAddress(ss, memory.Get(address + 1));
-  ss << ", #" << std::setw(2) << (int) memory.Get(address+2);
+  PrintAddress(ss, alu.flash.Get(address + 1));
+  ss << ", #" << std::setw(2) << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -2379,7 +2380,7 @@ void ORL_43::Execute() const
   std::uint8_t data = alu.Read(address);
 
   alu.Write(address, data | alu.flash.Get(alu.GetPC() + 2));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 ORL_42::ORL_42(Alu &a) : Instruction(a)
@@ -2388,12 +2389,12 @@ ORL_42::ORL_42(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ORL_42::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ORL_42::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL ";
-  ss << (int) memory.Get(address+1) << ", A";
+  ss << (int) alu.flash.Get(address+1) << ", A";
   return ss.str();
 }
 
@@ -2401,7 +2402,7 @@ void ORL_42::Execute() const
 {
   std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
   alu.Write(addr, alu.GetA() | alu.Read(addr));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 ORL_44::ORL_44(Alu &a) : Instruction(a)
@@ -2410,19 +2411,19 @@ ORL_44::ORL_44(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ORL_44::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ORL_44::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL A, #";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
 void ORL_44::Execute() const
 {
   alu.SetA(alu.GetA() | alu.flash.Get(alu.GetPC() + 1));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 ORL_45::ORL_45(Alu &a) : Instruction(a)
@@ -2431,12 +2432,12 @@ ORL_45::ORL_45(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ORL_45::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ORL_45::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL A, ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -2445,7 +2446,7 @@ void ORL_45::Execute() const
   std::uint8_t addr = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetA(alu.GetA() | alu.flash.Get(addr));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 ORL_72::ORL_72(Alu &a) : Instruction(a)
@@ -2454,12 +2455,12 @@ ORL_72::ORL_72(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ORL_72::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ORL_72::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL C, ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -2469,12 +2470,12 @@ ORL_A0::ORL_A0(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string ORL_A0::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ORL_A0::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL C, ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -2484,7 +2485,7 @@ ORL_46::ORL_46(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ORL_46::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ORL_46::Disassemble(std::uint16_t address) const
 {
   return "ORL A, @R0";
 }
@@ -2495,16 +2496,16 @@ ORL_47::ORL_47(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string ORL_47::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string ORL_47::Disassemble(std::uint16_t address) const
 {
   return "ORL A, @R1";
 }
 
-OrARegister::OrARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+OrARegister::OrARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
 }
 
-std::string OrARegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string OrARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "ORL A, R";
@@ -2515,14 +2516,14 @@ std::string OrARegister::Disassemble(const Memory& memory, std::uint16_t address
 void OrARegister::Execute() const
 {
   alu.SetA(alu.GetA() | alu.GetReg(reg));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-AndARegister::AndARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+AndARegister::AndARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
 }
 
-std::string AndARegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string AndARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "ANL A, R";
@@ -2533,14 +2534,14 @@ std::string AndARegister::Disassemble(const Memory& memory, std::uint16_t addres
 void AndARegister::Execute() const
 {
   alu.SetA(alu.GetA() & alu.GetReg(reg));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
-XorARegister::XorARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+XorARegister::XorARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
 }
 
-std::string XorARegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XorARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "XRL A, R";
@@ -2551,7 +2552,7 @@ std::string XorARegister::Disassemble(const Memory& memory, std::uint16_t addres
 void XorARegister::Execute() const
 {
   alu.SetA(alu.GetA() ^ alu.GetReg(reg));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 POP_D0::POP_D0(Alu &a) : Instruction(a)
@@ -2560,12 +2561,12 @@ POP_D0::POP_D0(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string POP_D0::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string POP_D0::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "POP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -2573,7 +2574,7 @@ void POP_D0::Execute() const
 {
   alu.iram.Set(alu.flash.Get(alu.GetPC() + 1), alu.iram.Get(alu.GetSP()));
   alu.SetSP(alu.GetSP() - 1);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 PUSH_C0::PUSH_C0(Alu &a) : Instruction(a)
@@ -2582,12 +2583,12 @@ PUSH_C0::PUSH_C0(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string PUSH_C0::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string PUSH_C0::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "PUSH ";
-  ss << std::setw(2) << (int) memory.Get(address+1);
+  ss << std::setw(2) << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -2595,7 +2596,7 @@ void PUSH_C0::Execute() const
 {
   alu.SetSP(alu.GetSP() + 1);
   alu.iram.Set(alu.GetSP(), alu.iram.Get(alu.flash.Get(alu.GetPC() + 1)));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 RET_22::RET_22(Alu &a) : Instruction(a)
@@ -2604,7 +2605,7 @@ RET_22::RET_22(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string RET_22::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string RET_22::Disassemble(std::uint16_t address) const
 {
   return "RET";
 }
@@ -2627,7 +2628,7 @@ RETI_32::RETI_32(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string RETI_32::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string RETI_32::Disassemble(std::uint16_t address) const
 {
   return "RETI";
 }
@@ -2638,7 +2639,7 @@ RL_23::RL_23(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string RL_23::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string RL_23::Disassemble(std::uint16_t address) const
 {
   return "RL A";
 }
@@ -2653,7 +2654,7 @@ void RL_23::Execute() const
   }
   result = result & 0xff;
   alu.SetA((uint8_t) result);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 RLC_33::RLC_33(Alu &a) : Instruction(a)
@@ -2662,7 +2663,7 @@ RLC_33::RLC_33(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string RLC_33::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string RLC_33::Disassemble(std::uint16_t address) const
 {
   return "RLC A";
 }
@@ -2687,7 +2688,7 @@ void RLC_33::Execute() const
     result |= 0x01;
   }
   alu.SetA((uint8_t) result);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 RR_3::RR_3(Alu &a) : Instruction(a)
@@ -2696,7 +2697,7 @@ RR_3::RR_3(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string RR_3::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string RR_3::Disassemble(std::uint16_t address) const
 {
   return "RR A";
 }
@@ -2707,7 +2708,7 @@ RRC_13::RRC_13(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string RRC_13::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string RRC_13::Disassemble(std::uint16_t address) const
 {
   return "RRC A";
 }
@@ -2718,7 +2719,7 @@ SETB_D3::SETB_D3(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string SETB_D3::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SETB_D3::Disassemble(std::uint16_t address) const
 {
   return "SETB C";
 }
@@ -2729,12 +2730,12 @@ SETB_D2::SETB_D2(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string SETB_D2::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SETB_D2::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SETB ";
-  ss << alu.GetBitAddressName((int) memory.Get(address+1));
+  ss << alu.GetBitAddressName((int) alu.flash.Get(address+1));
   return ss.str();
 }
 
@@ -2743,7 +2744,7 @@ void SETB_D2::Execute(void) const
   std::uint8_t bitAddr = alu.flash.Get(alu.GetPC() + 1);
 
   alu.WriteBit(bitAddr, true);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 SJMP_80::SJMP_80(Alu &a) : Instruction(a)
@@ -2752,12 +2753,12 @@ SJMP_80::SJMP_80(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string SJMP_80::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SJMP_80::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SJMP ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -2767,7 +2768,7 @@ void SJMP_80::Execute() const
   alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
 }
 
-SubtractionHelper::SubtractionHelper(Alu &alu, std::uint8_t opcode): Instruction(alu, opcode)
+SubtractionHelper::SubtractionHelper(Alu &alu, std::uint8_t opcode, std::uint8_t reg): Instruction(alu, opcode, reg)
 {
 }
 
@@ -2802,7 +2803,7 @@ void SubtractionHelper::Helper(std::uint8_t operand) const
   }
 
   alu.SetA(alu.GetA() - operand);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 SUBB_94::SUBB_94(Alu &a) : Instruction(a)
@@ -2811,26 +2812,26 @@ SUBB_94::SUBB_94(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string SUBB_94::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SUBB_94::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SUBB A, #";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
-SUBB_95::SUBB_95(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode)
+SUBB_95::SUBB_95(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode, 0)
 {
   operands = 1;
 }
 
-std::string SUBB_95::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SUBB_95::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SUBB A, ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -2847,7 +2848,7 @@ SUBB_96::SUBB_96(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string SUBB_96::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SUBB_96::Disassemble(std::uint16_t address) const
 {
   return "SUBB A, @R0";
 }
@@ -2858,17 +2859,17 @@ SUBB_97::SUBB_97(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string SUBB_97::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SUBB_97::Disassemble(std::uint16_t address) const
 {
   return "SUBB A, @R0";
 }
 
-SubARegister::SubARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : SubtractionHelper(a, opcode), reg(r)
+SubARegister::SubARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : SubtractionHelper(a, opcode, r)
 {
   operands = 0;
 }
 
-std::string SubARegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SubARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "SUBB A, R";
@@ -2887,7 +2888,7 @@ SWAP_C4::SWAP_C4(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string SWAP_C4::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string SWAP_C4::Disassemble(std::uint16_t address) const
 {
   return "SWAP A";
 }
@@ -2898,12 +2899,12 @@ XCH_C5::XCH_C5(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string XCH_C5::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XCH_C5::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XCH A, ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -2914,7 +2915,7 @@ void XCH_C5::Execute() const
 
   alu.SetA(alu.Read(addr));
   alu.Write(addr, temp);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 XCH_C6::XCH_C6(Alu &a) : Instruction(a)
@@ -2923,7 +2924,7 @@ XCH_C6::XCH_C6(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string XCH_C6::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XCH_C6::Disassemble(std::uint16_t address) const
 {
   return "XCH A, @R0";
 }
@@ -2934,17 +2935,17 @@ XCH_C7::XCH_C7(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string XCH_C7::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XCH_C7::Disassemble(std::uint16_t address) const
 {
   return "XCH A, @R1";
 }
 
-XCHRegister::XCHRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+XCHRegister::XCHRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 0;
 }
 
-std::string XCHRegister::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XCHRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "XCH A, R" << (int) reg;
@@ -2957,7 +2958,7 @@ void XCHRegister::Execute() const
 
   alu.SetReg(reg, alu.GetA());
   alu.SetA(temp);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 XCHD_D6::XCHD_D6(Alu &a) : Instruction(a)
@@ -2966,7 +2967,7 @@ XCHD_D6::XCHD_D6(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string XCHD_D6::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XCHD_D6::Disassemble(std::uint16_t address) const
 {
   return "XCHD A, @R0";
 }
@@ -2977,7 +2978,7 @@ XCHD_D7::XCHD_D7(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string XCHD_D7::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XCHD_D7::Disassemble(std::uint16_t address) const
 {
   return "XCHD A, @R1";
 }
@@ -2988,7 +2989,7 @@ XRL_66::XRL_66(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string XRL_66::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XRL_66::Disassemble(std::uint16_t address) const
 {
   return "XRL A, @R0";
 }
@@ -2999,7 +3000,7 @@ XRL_67::XRL_67(Alu &a) : Instruction(a)
   operands = 0;
 }
 
-std::string XRL_67::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XRL_67::Disassemble(std::uint16_t address) const
 {
   return "XRL A, @R1";
 }
@@ -3010,12 +3011,12 @@ XRL_62::XRL_62(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string XRL_62::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XRL_62::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL ";
-  ss << (int) memory.Get(address+1) << ", A";
+  ss << (int) alu.flash.Get(address+1) << ", A";
   return ss.str();
 }
 
@@ -3025,12 +3026,12 @@ XRL_64::XRL_64(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string XRL_64::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XRL_64::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL A, #";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -3039,7 +3040,7 @@ void XRL_64::Execute() const
   std::uint8_t data = alu.flash.Get(alu.GetPC() + 1);
 
   alu.SetA(alu.GetA() | data);
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }
 
 XRL_65::XRL_65(Alu &a) : Instruction(a)
@@ -3048,12 +3049,12 @@ XRL_65::XRL_65(Alu &a) : Instruction(a)
   operands = 1;
 }
 
-std::string XRL_65::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XRL_65::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL A, ";
-  ss << (int) memory.Get(address+1);
+  ss << (int) alu.flash.Get(address+1);
   return ss.str();
 }
 
@@ -3063,12 +3064,12 @@ XRL_63::XRL_63(Alu &a) : Instruction(a)
   operands = 2;
 }
 
-std::string XRL_63::Disassemble(const Memory& memory, std::uint16_t address) const
+std::string XRL_63::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL ";
-  ss << (int) memory.Get(address+1) << ", #" << (int) memory.Get(address+2);
+  ss << (int) alu.flash.Get(address+1) << ", #" << (int) alu.flash.Get(address+2);
   return ss.str();
 }
 
@@ -3078,5 +3079,5 @@ void XRL_63::Execute() const
   std::uint8_t data = alu.flash.Get(alu.GetPC() + 2);
 
   alu.Write(addr, data | alu.Read(addr));
-  alu.SetPC(alu.GetPC() + 1 + operands);
+  IncPC();
 }

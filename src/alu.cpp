@@ -466,7 +466,7 @@ std::string Alu::Disassemble(std::uint16_t address)
   }
   else
   {
-    return instructionSet[opcode]->Disassemble(flash, address);
+    return instructionSet[opcode]->Disassemble(address);
   }
 }
 

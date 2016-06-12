@@ -663,7 +663,7 @@ std::string CJNE_B7::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode), reg(r)
+CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 2;
 }

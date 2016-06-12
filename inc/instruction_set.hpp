@@ -399,8 +399,6 @@ class OrARegister: public Instruction
     OrARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-  private:
-    std::uint8_t reg;
 };
 
 class AndARegister: public Instruction
@@ -719,8 +717,6 @@ class MovRegisterImmediate: public Instruction
     MovRegisterImmediate(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-  private:
-    std::uint8_t reg;
 };
 
 class SJMP_80: public Instruction
@@ -774,8 +770,6 @@ class MovMemoryIndirectRegister: public Instruction
     MovMemoryIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-  private:
-    std::uint8_t reg;
 };
 
 class MOV_88: public Instruction
@@ -917,8 +911,6 @@ class SubARegister: public SubtractionHelper
     SubARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-  private:
-    std::uint8_t reg;
 };
 
 class ORL_A0: public Instruction
@@ -1100,8 +1092,6 @@ class CJNERegister: public Instruction
     CJNERegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-  private:
-    std::uint8_t reg;
 };
 
 class PUSH_C0: public Instruction
@@ -1170,8 +1160,6 @@ class XCHRegister: public Instruction
     XCHRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-  private:
-    std::uint8_t reg;
 };
 
 class POP_D0: public Instruction

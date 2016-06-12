@@ -1106,16 +1106,17 @@ void JC_40::Execute() const
 JMP_73::JMP_73(Alu &a) : Instruction(a)
 {
   opcode = 0x73;
-  operands = 1;
+  operands = 0;
 }
 
 std::string JMP_73::Disassemble(const Memory& memory, std::uint16_t address) const
 {
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "JMP ";
-  ss << (int) memory.Get(address+1);
-  return ss.str();
+  return "JMP @A+DPTR";
+}
+
+void JMP_73::Execute() const
+{
+  alu.SetPC(alu.GetDPTR() + alu.GetA());
 }
 
 JNB_30::JNB_30(Alu &a) : Instruction(a)

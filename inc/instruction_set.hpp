@@ -694,6 +694,7 @@ class JMP_73: public Instruction
   public:
     JMP_73(Alu&);
     std::string Disassemble(const Memory& memory, std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_74: public Instruction

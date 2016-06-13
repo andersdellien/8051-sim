@@ -17,8 +17,8 @@ class Block
 {
   public:
     Block(Alu *alu);
-    void Reset();
-    void Tick();
+    virtual void Reset();
+    virtual void Tick();
   private:
     std::map<std::string, Sfr*> SfrRegisters;
     Alu *alu;

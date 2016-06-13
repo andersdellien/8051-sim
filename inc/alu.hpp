@@ -7,6 +7,7 @@
 #include "block.hpp"
 #include "flash.hpp"
 #include "sfr.hpp"
+#include "uc.hpp"
 
 class Instruction;
 
@@ -77,6 +78,8 @@ class Alu : public Block
 
     Memory *GetIRam() const;
     void SetFlash(Flash *flash);
+    void Tick();
+    void RegisterCallback(UcCallbacks *cb);
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;
@@ -92,6 +95,8 @@ class Alu : public Block
     Sfr *sfrB;
     Sfr *sfrACC;
     bool traceSfr;
+    int tickCount;
+    UcCallbacks *callbacks;
 };
 
 #endif

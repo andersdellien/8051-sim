@@ -16,12 +16,14 @@
 #include "uart.hpp"
 #include "adc.hpp"
 #include "timer.hpp"
+#include "uc.hpp"
 
-class CommandHandler
+class CommandHandler: public UcCallbacks
 {
   public:
     CommandHandler();
     void CommandLoop();
+    void OnInstructionExecuted();
   private:
     Memory xram;
     Alu *alu;
@@ -36,6 +38,7 @@ class CommandHandler
     Timer *timer;
     std::set<std::uint8_t> traceInstruction;
     std::set<std::uint16_t> breakpoints;
+    bool instructionExecuted;
 };
 
 CommandHandler::CommandHandler(): xram(nullptr, 1024)
@@ -50,6 +53,12 @@ CommandHandler::CommandHandler(): xram(nullptr, 1024)
   uart = new Uart(alu);
   adc = new Adc(alu);
   timer = new Timer(alu);
+  alu->RegisterCallback(this);
+}
+
+void CommandHandler::OnInstructionExecuted()
+{
+  instructionExecuted = true;
 }
 
 void CommandHandler::CommandLoop()
@@ -139,8 +148,9 @@ void CommandHandler::CommandLoop()
     }
     else if (tokens[0] == "step" || tokens[0] == "go")
     {
-      int limit = 1;
+      int limit = 1;      
       bool go = tokens[0] == "go";
+
       if (tokens.size() > 1)
       {
         limit = stoi(tokens[1], nullptr, 16);
@@ -148,7 +158,11 @@ void CommandHandler::CommandLoop()
       int breakCount = 0;
       for (int i = 0; go || (i < limit); i++)
       {
-        alu->Step();
+        instructionExecuted = false;
+        while (!instructionExecuted)
+        {
+          alu->Tick();
+        }
         if (breakpoints.find(alu->GetPC()) != breakpoints.end())
         {
           breakCount++;

@@ -5,3 +5,11 @@ class Alu;
 Block::Block(Alu *a) : alu(a)
 {
 }
+
+void Block::Tick()
+{
+}
+
+void Block::Reset()
+{
+}

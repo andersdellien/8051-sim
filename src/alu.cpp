@@ -8,7 +8,7 @@
 #include "exceptions.hpp"
 #include "sfr.hpp"
 
-Alu::Alu(Block *block, Memory &x, std::uint16_t iramSize): Block(nullptr), xram(x), iram(nullptr, iramSize)
+Alu::Alu(Block *block, Memory &x, std::uint16_t iramSize): Block(nullptr), xram(x), iram(nullptr, iramSize), callbacks(nullptr)
 {
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
@@ -761,4 +761,23 @@ void Alu::SetTraceSfr(bool value)
 void Alu::SetFlash(Flash *f)
 {
   flash = f;
+}
+
+void Alu::Tick()
+{
+  tickCount++;
+  if (tickCount >= instructionSet[flash->Get(pc)]->cycles)
+  {
+    tickCount = 0;
+    instructionSet[flash->Get(pc)]->Execute();  
+    if (callbacks)
+    {
+      callbacks->OnInstructionExecuted();
+    }
+  }  
+}
+
+void Alu::RegisterCallback(UcCallbacks *c)
+{
+  callbacks = c;
 }

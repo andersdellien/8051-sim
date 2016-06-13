@@ -24,6 +24,7 @@ class CommandHandler: public UcCallbacks
     CommandHandler();
     void CommandLoop();
     void OnInstructionExecuted();
+    void Reset();
   private:
     Memory xram;
     Alu *alu;
@@ -39,20 +40,31 @@ class CommandHandler: public UcCallbacks
     std::set<std::uint8_t> traceInstruction;
     std::set<std::uint16_t> breakpoints;
     bool instructionExecuted;
+    std::set<Block*> blocks;
 };
 
 CommandHandler::CommandHandler(): xram(nullptr, 1024)
 {
   alu = new Alu(nullptr, xram, 256);
+  blocks.insert(alu);
   flash = new Flash(alu, 8192);
+  blocks.insert(flash);
   port0 = new Port0(alu);
+  blocks.insert(port0);
   port1 = new Port1(alu);
+  blocks.insert(port1);
   port2 = new Port2(alu);
+  blocks.insert(port2);
   pca = new Pca(alu);
+  blocks.insert(pca);
   system = new System(alu);
+  blocks.insert(system);
   uart = new Uart(alu);
+  blocks.insert(uart);
   adc = new Adc(alu);
+  blocks.insert(adc);
   timer = new Timer(alu);
+  blocks.insert(timer);
   alu->RegisterCallback(this);
 }
 
@@ -61,11 +73,19 @@ void CommandHandler::OnInstructionExecuted()
   instructionExecuted = true;
 }
 
+void CommandHandler::Reset()
+{
+  for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
+  {
+    (*i)->Reset();
+  }
+}
+
 void CommandHandler::CommandLoop()
 {
 
   alu->SetFlash(flash);
-  alu->Reset();
+  Reset();
   while (1)
   {
     std::string line;
@@ -128,7 +148,7 @@ void CommandHandler::CommandLoop()
     }
     else if (tokens[0] == "reset")
     {
-      alu->Reset();
+      Reset();
     }
     else if (tokens[0] == "reg")
     {

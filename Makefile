@@ -6,7 +6,7 @@ CPP_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(addprefix $(OBJ_DIR)/,$(notdir $(CPP_FILES:.cpp=.o)))
 
 LD_FLAGS :=
-CC_FLAGS := -I $(INCLUDE_DIR)
+CC_FLAGS := -I $(INCLUDE_DIR) -g
 
 EXE_FILE := 8051-sim
 

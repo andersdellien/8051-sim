@@ -1467,187 +1467,24 @@ void MovRegisterImmediate::Execute() const
   IncPC();
 }
 
-MOV_A8::MOV_A8(Alu &a) : Instruction(a)
+MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
 {
-  opcode = 0xA8;
   operands = 1;
 }
 
-std::string MOV_A8::Disassemble(std::uint16_t address) const
+std::string MovRegisterAddress::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV R0, ";
+  ss << "MOV R" << (int) reg << ", ";
   PrintAddress(ss, alu.flash.Get(address+1));
   return ss.str();
 }
 
-void MOV_A8::Execute() const
+void MovRegisterAddress::Execute() const
 {
   std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
 
-  alu.SetR0(alu.Read(address));
-  IncPC();
-}
-
-MOV_A9::MOV_A9(Alu &a) : Instruction(a)
-{
-  opcode = 0xA9;
-  operands = 1;
-}
-
-std::string MOV_A9::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV R1, ";
-  PrintAddress(ss, alu.flash.Get(address+1));
-  return ss.str();
-}
-
-void MOV_A9::Execute() const
-{
-  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR1(alu.Read(address));
-  IncPC();
-}
-
-MOV_AA::MOV_AA(Alu &a) : Instruction(a)
-{
-  opcode = 0xAA;
-  operands = 1;
-}
-
-std::string MOV_AA::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV R2, ";
-  PrintAddress(ss, alu.flash.Get(address+1));
-  return ss.str();
-}
-
-void MOV_AA::Execute() const
-{
-  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR2(alu.Read(address));
-  IncPC();
-}
-
-MOV_AB::MOV_AB(Alu &a) : Instruction(a)
-{
-  opcode = 0xAB;
-  operands = 1;
-}
-
-std::string MOV_AB::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV R3, ";
-  PrintAddress(ss, alu.flash.Get(address+1));
-  return ss.str();
-}
-
-void MOV_AB::Execute() const
-{
-  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR3(alu.Read(address));
-  IncPC();
-}
-
-MOV_AC::MOV_AC(Alu &a) : Instruction(a)
-{
-  opcode = 0xAC;
-  operands = 1;
-}
-
-std::string MOV_AC::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV R4, ";
-  PrintAddress(ss, alu.flash.Get(address+1));
-  return ss.str();
-}
-
-void MOV_AC::Execute() const
-{
-  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR4(alu.Read(address));
-  IncPC();
-}
-
-MOV_AD::MOV_AD(Alu &a) : Instruction(a)
-{
-  opcode = 0xAD;
-  operands = 1;
-}
-
-std::string MOV_AD::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV R5, ";
-  PrintAddress(ss, alu.flash.Get(address+1));
-  return ss.str();
-}
-
-void MOV_AD::Execute() const
-{
-  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR5(alu.Read(address));
-  IncPC();
-}
-
-MOV_AE::MOV_AE(Alu &a) : Instruction(a)
-{
-  opcode = 0xAE;
-  operands = 1;
-}
-
-std::string MOV_AE::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV R6, ";
-  PrintAddress(ss, alu.flash.Get(address+1));
-  return ss.str();
-}
-
-void MOV_AE::Execute() const
-{
-  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR6(alu.Read(address));
-  IncPC();
-}
-
-MOV_AF::MOV_AF(Alu &a) : Instruction(a)
-{
-  opcode = 0xAF;
-  operands = 1;
-}
-
-std::string MOV_AF::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV R7, ";
-  PrintAddress(ss, alu.flash.Get(address+1));
-  return ss.str();
-}
-
-void MOV_AF::Execute() const
-{
-  std::uint8_t address = alu.flash.Get(alu.GetPC() + 1);
-
-  alu.SetR7(alu.Read(address));
+  alu.SetReg(reg, alu.Read(address));
   IncPC();
 }
 

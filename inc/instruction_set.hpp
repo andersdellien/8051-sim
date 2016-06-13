@@ -908,66 +908,10 @@ class MOV_A7: public Instruction
     std::string Disassemble(std::uint16_t address) const;
 };
 
-class MOV_A8: public Instruction
+class MovRegisterAddress: public Instruction
 {
   public:
-    MOV_A8(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_A9: public Instruction
-{
-  public:
-    MOV_A9(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_AA: public Instruction
-{
-  public:
-    MOV_AA(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_AB: public Instruction
-{
-  public:
-    MOV_AB(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_AC: public Instruction
-{
-  public:
-    MOV_AC(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_AD: public Instruction
-{
-  public:
-    MOV_AD(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_AE: public Instruction
-{
-  public:
-    MOV_AE(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_AF: public Instruction
-{
-  public:
-    MOV_AF(Alu&);
+    MovRegisterAddress(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

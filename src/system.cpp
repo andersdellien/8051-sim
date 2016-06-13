@@ -31,5 +31,6 @@ System::System(Alu &a)
   a.RegisterSfr(0xad, new Sfr("RTC0DAT", a, 0xad), 0x00);
   a.RegisterSfr(0xac, new Sfr("RTC0ADR", a, 0xac), 0x00);
   a.RegisterSfr(0xb5, new Sfr("PMU0CF", a, 0xb5), 0x00);
+  a.RegisterSfr(0xc9, new Sfr("REG0CN", a, 0xc9), 0x00);
 }
 

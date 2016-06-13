@@ -12,7 +12,6 @@
 #include "port1.hpp"
 #include "port2.hpp"
 #include "pca.hpp"
-#include "vreg.hpp"
 #include "system.hpp"
 #include "uart.hpp"
 #include "adc.hpp"
@@ -27,7 +26,6 @@ int main(int argc, char **argv)
   Port1 port1(alu);
   Port2 port2(alu);
   Pca pca(alu);
-  Vreg vreg(alu);
   System system(alu);
   Uart uart(alu);
   Adc adc(alu);

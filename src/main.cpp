@@ -17,21 +17,43 @@
 #include "adc.hpp"
 #include "timer.hpp"
 
-int main(int argc, char **argv)
+class CommandHandler
 {
-  Memory xram(nullptr, 1024);
-  Alu *alu = new Alu(nullptr, xram, 256);
-  Flash *flash = new Flash(alu, 8192);
-  Port0 *port0 = new Port0(alu);
-  Port1 *port1 = new Port1(alu);
-  Port2 *port2 = new Port2(alu);
-  Pca *pca = new Pca(alu);
-  System *system = new System(alu);
-  Uart *uart = new Uart(alu);
-  Adc *adc = new Adc(alu);
-  Timer *timer = new Timer(alu);
-  std::set<std::uint8_t> traceInstruction;
-  std::set<std::uint16_t> breakpoints;
+  public:
+    CommandHandler();
+    void CommandLoop();
+  private:
+    Memory xram;
+    Alu *alu;
+    Flash *flash;
+    Port0 *port0;
+    Port1 *port1;
+    Port2 *port2;
+    Pca *pca;
+    System *system;
+    Uart *uart;
+    Adc *adc;
+    Timer *timer;
+    std::set<std::uint8_t> traceInstruction;
+    std::set<std::uint16_t> breakpoints;
+};
+
+CommandHandler::CommandHandler(): xram(nullptr, 1024)
+{
+  alu = new Alu(nullptr, xram, 256);
+  flash = new Flash(alu, 8192);
+  port0 = new Port0(alu);
+  port1 = new Port1(alu);
+  port2 = new Port2(alu);
+  pca = new Pca(alu);
+  system = new System(alu);
+  uart = new Uart(alu);
+  adc = new Adc(alu);
+  timer = new Timer(alu);
+}
+
+void CommandHandler::CommandLoop()
+{
 
   alu->SetFlash(flash);
   alu->Reset();
@@ -203,4 +225,11 @@ int main(int argc, char **argv)
       }
     }
   }
+}
+
+int main(int argc, char **argv)
+{
+  CommandHandler commandHandler;
+
+  commandHandler.CommandLoop();
 }

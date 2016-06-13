@@ -22,6 +22,7 @@ class Instruction
     std::uint8_t GetOperands() const;
     std::uint8_t GetOpcode() const;
     void IncPC() const;
+    std::uint8_t cycles;
 };
 
 #endif

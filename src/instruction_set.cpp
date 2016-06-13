@@ -42,6 +42,7 @@ INC_7::INC_7(Alu &a) : Instruction(a)
 {
   opcode = 7;
   operands = 0;
+  cycles = 1;
 }
 
 std::string INC_7::Disassemble(std::uint16_t address) const
@@ -53,6 +54,7 @@ ACALL_11::ACALL_11(Alu &a) : Instruction(a)
 {
   opcode = 0x11;
   operands = 1;
+  cycles = 2;
 }
 
 std::string ACALL_11::Disassemble(std::uint16_t address) const
@@ -68,6 +70,7 @@ ACALL_31::ACALL_31(Alu &a) : Instruction(a)
 {
   opcode = 0x31;
   operands = 0;
+  cycles = 2;
 }
 
 std::string ACALL_31::Disassemble(std::uint16_t address) const
@@ -82,6 +85,7 @@ ACALL_51::ACALL_51(Alu &a) : Instruction(a)
 {
   opcode = 0x51;
   operands = 0;
+  cycles = 2;
 }
 
 std::string ACALL_51::Disassemble(std::uint16_t address) const
@@ -97,6 +101,7 @@ ACALL_71::ACALL_71(Alu &a) : Instruction(a)
 {
   opcode = 0x71;
   operands = 0;
+  cycles = 2;
 }
 
 std::string ACALL_71::Disassemble(std::uint16_t address) const
@@ -112,6 +117,7 @@ ACALL_91::ACALL_91(Alu &a) : Instruction(a)
 {
   opcode = 0x91;
   operands = 0;
+  cycles = 2;
 }
 
 std::string ACALL_91::Disassemble(std::uint16_t address) const
@@ -127,6 +133,7 @@ ACALL_B1::ACALL_B1(Alu &a) : Instruction(a)
 {
   opcode = 0xB1;
   operands = 0;
+  cycles = 2;
 }
 
 std::string ACALL_B1::Disassemble(std::uint16_t address) const
@@ -142,6 +149,7 @@ ACALL_D1::ACALL_D1(Alu &a) : Instruction(a)
 {
   opcode = 0xD1;
   operands = 0;
+  cycles = 2;
 }
 
 std::string ACALL_D1::Disassemble(std::uint16_t address) const
@@ -157,6 +165,7 @@ ACALL_F1::ACALL_F1(Alu &a) : Instruction(a)
 {
   opcode = 0xF1;
   operands = 0;
+  cycles = 2;
 }
 
 std::string ACALL_F1::Disassemble(std::uint16_t address) const
@@ -190,6 +199,7 @@ void AddImmediate::Execute() const
 
 AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, bool c): Instruction(alu, opcode), carry(c)
 {
+  cycles = 1;
 }
 
 void AdditionHelper::Helper(std::uint16_t data) const
@@ -306,6 +316,7 @@ ADDC_36::ADDC_36(Alu &a) : Instruction(a)
 {
   opcode = 0x36;
   operands = 0;
+  cycles = 1;
 }
 
 std::string ADDC_36::Disassemble(std::uint16_t address) const
@@ -317,6 +328,7 @@ ADDC_37::ADDC_37(Alu &a) : Instruction(a)
 {
   opcode = 0x37;
   operands = 0;
+  cycles = 1;
 }
 
 std::string ADDC_37::Disassemble(std::uint16_t address) const
@@ -328,6 +340,7 @@ AJMP_1::AJMP_1(Alu &a) : Instruction(a)
 {
   opcode = 1;
   operands = 1;
+  cycles = 2;
 }
 
 std::string AJMP_1::Disassemble(std::uint16_t address) const
@@ -343,6 +356,7 @@ AJMP_21::AJMP_21(Alu &a) : Instruction(a)
 {
   opcode = 0x21;
   operands = 1;
+  cycles = 2;
 }
 
 std::string AJMP_21::Disassemble(std::uint16_t address) const
@@ -358,6 +372,7 @@ AJMP_41::AJMP_41(Alu &a) : Instruction(a)
 {
   opcode = 0x41;
   operands = 1;
+  cycles = 2;
 }
 
 std::string AJMP_41::Disassemble(std::uint16_t address) const
@@ -373,6 +388,7 @@ AJMP_61::AJMP_61(Alu &a) : Instruction(a)
 {
   opcode = 0x61;
   operands = 1;
+  cycles = 2;
 }
 
 std::string AJMP_61::Disassemble(std::uint16_t address) const
@@ -388,6 +404,7 @@ AJMP_81::AJMP_81(Alu &a) : Instruction(a)
 {
   opcode = 0x81;
   operands = 1;
+  cycles = 2;
 }
 
 std::string AJMP_81::Disassemble(std::uint16_t address) const
@@ -403,6 +420,7 @@ AJMP_A1::AJMP_A1(Alu &a) : Instruction(a)
 {
   opcode = 0xA1;
   operands = 1;
+  cycles = 2;
 }
 
 std::string AJMP_A1::Disassemble(std::uint16_t address) const
@@ -418,6 +436,7 @@ AJMP_C1::AJMP_C1(Alu &a) : Instruction(a)
 {
   opcode = 0xC1;
   operands = 1;
+  cycles = 2;
 }
 
 std::string AJMP_C1::Disassemble(std::uint16_t address) const
@@ -433,6 +452,7 @@ AJMP_E1::AJMP_E1(Alu &a) : Instruction(a)
 {
   opcode = 0xE1;
   operands = 1;
+  cycles = 2;
 }
 
 std::string AJMP_E1::Disassemble(std::uint16_t address) const
@@ -448,6 +468,7 @@ ANL_52::ANL_52(Alu &a) : Instruction(a)
 {
   opcode = 0x52;
   operands = 1;
+  cycles = 1;
 }
 
 std::string ANL_52::Disassemble(std::uint16_t address) const
@@ -487,6 +508,7 @@ ANL_54::ANL_54(Alu &a) : Instruction(a)
 {
   opcode = 0x54;
   operands = 1;
+  cycles = 1;
 }
 
 std::string ANL_54::Disassemble(std::uint16_t address) const
@@ -509,6 +531,7 @@ ANL_55::ANL_55(Alu &a) : Instruction(a)
 {
   opcode = 0x55;
   operands = 1;
+  cycles = 1;
 }
 
 std::string ANL_55::Disassemble(std::uint16_t address) const
@@ -531,6 +554,7 @@ ANL_56::ANL_56(Alu &a) : Instruction(a)
 {
   opcode = 0x56;
   operands = 0;
+  cycles = 1;
 }
 
 std::string ANL_56::Disassemble(std::uint16_t address) const
@@ -542,6 +566,7 @@ ANL_57::ANL_57(Alu &a) : Instruction(a)
 {
   opcode = 0x57;
   operands = 0;
+  cycles = 1;
 }
 
 std::string ANL_57::Disassemble(std::uint16_t address) const
@@ -553,6 +578,7 @@ ANL_82::ANL_82(Alu &a) : Instruction(a)
 {
   opcode = 0x82;
   operands = 1;
+  cycles = 1;
 }
 
 std::string ANL_82::Disassemble(std::uint16_t address) const
@@ -568,6 +594,7 @@ ANL_B0::ANL_B0(Alu &a) : Instruction(a)
 {
   opcode = 0xB0;
   operands = 1;
+  cycles = 1;
 }
 
 std::string ANL_B0::Disassemble(std::uint16_t address) const
@@ -583,6 +610,7 @@ CJNE_B4::CJNE_B4(Alu &a) : Instruction(a)
 {
   opcode = 0xB4;
   operands = 2;
+  cycles = 2;
 }
 
 std::string CJNE_B4::Disassemble(std::uint16_t address) const
@@ -598,6 +626,7 @@ CJNE_B5::CJNE_B5(Alu &a) : Instruction(a)
 {
   opcode = 0xB5;
   operands = 2;
+  cycles = 2;
 }
 
 std::string CJNE_B5::Disassemble(std::uint16_t address) const
@@ -637,6 +666,7 @@ CJNE_B6::CJNE_B6(Alu &a) : Instruction(a)
 {
   opcode = 0xB6;
   operands = 2;
+  cycles = 2;
 }
 
 std::string CJNE_B6::Disassemble(std::uint16_t address) const
@@ -652,6 +682,7 @@ CJNE_B7::CJNE_B7(Alu &a) : Instruction(a)
 {
   opcode = 0xB7;
   operands = 2;
+  cycles = 2;
 }
 
 std::string CJNE_B7::Disassemble(std::uint16_t address) const
@@ -666,6 +697,7 @@ std::string CJNE_B7::Disassemble(std::uint16_t address) const
 CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 2;
+  cycles = 2;
 }
 
 std::string CJNERegister::Disassemble(std::uint16_t address) const
@@ -705,6 +737,7 @@ CLR_C2::CLR_C2(Alu &a) : Instruction(a)
 {
   opcode = 0xC2;
   operands = 1;
+  cycles = 1;
 }
 
 std::string CLR_C2::Disassemble(std::uint16_t address) const
@@ -728,6 +761,7 @@ CLR_C3::CLR_C3(Alu &a) : Instruction(a)
 {
   opcode = 0xC3;
   operands = 0;
+  cycles = 1;
 }
 
 std::string CLR_C3::Disassemble(std::uint16_t address) const
@@ -745,6 +779,7 @@ CLR_E4::CLR_E4(Alu &a) : Instruction(a)
 {
   opcode = 0xE4;
   operands = 0;
+  cycles = 1;
 }
 
 std::string CLR_E4::Disassemble(std::uint16_t address) const
@@ -762,6 +797,7 @@ CPL_F4::CPL_F4(Alu &a) : Instruction(a)
 {
   opcode = 0xF4;
   operands = 0;
+  cycles = 1;
 }
 
 std::string CPL_F4::Disassemble(std::uint16_t address) const
@@ -773,6 +809,7 @@ CPL_B3::CPL_B3(Alu &a) : Instruction(a)
 {
   opcode = 0xB3;
   operands = 0;
+  cycles = 1;
 }
 
 std::string CPL_B3::Disassemble(std::uint16_t address) const
@@ -797,6 +834,7 @@ CPL_B2::CPL_B2(Alu &a) : Instruction(a)
 {
   opcode = 0xB2;
   operands = 1;
+  cycles = 1;
 }
 
 std::string CPL_B2::Disassemble(std::uint16_t address) const
@@ -812,6 +850,7 @@ DA_D4::DA_D4(Alu &a) : Instruction(a)
 {
   opcode = 0xD4;
   operands = 0;
+  cycles = 1;
 }
 
 std::string DA_D4::Disassemble(std::uint16_t address) const
@@ -823,6 +862,7 @@ DEC_15::DEC_15(Alu &a) : Instruction(a)
 {
   opcode = 0x15;
   operands = 1;
+  cycles = 1;
 }
 
 std::string DEC_15::Disassemble(std::uint16_t address) const
@@ -838,6 +878,7 @@ DEC_14::DEC_14(Alu &a) : Instruction(a)
 {
   opcode = 0x14;
   operands = 0;
+  cycles = 1;
 }
 
 std::string DEC_14::Disassemble(std::uint16_t address) const
@@ -855,6 +896,7 @@ DEC_16::DEC_16(Alu &a) : Instruction(a)
 {
   opcode = 0x16;
   operands = 0;
+  cycles = 1;
 }
 
 std::string DEC_16::Disassemble(std::uint16_t address) const
@@ -866,6 +908,7 @@ DEC_17::DEC_17(Alu &a) : Instruction(a)
 {
   opcode = 0x17;
   operands = 0;
+  cycles = 1;
 }
 
 std::string DEC_17::Disassemble(std::uint16_t address) const
@@ -877,6 +920,7 @@ DIV_84::DIV_84(Alu &a) : Instruction(a)
 {
   opcode = 0x84;
   operands = 0;
+  cycles = 4;
 }
 
 std::string DIV_84::Disassemble(std::uint16_t address) const
@@ -888,6 +932,7 @@ DJNZ_D5::DJNZ_D5(Alu &a) : Instruction(a)
 {
   opcode = 0xD5;
   operands = 2;
+  
 }
 
 std::string DJNZ_D5::Disassemble(std::uint16_t address) const
@@ -902,6 +947,7 @@ std::string DJNZ_D5::Disassemble(std::uint16_t address) const
 DJNZRegister::DJNZRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
+  cycles = 2;
 }
 
 std::string DJNZRegister::Disassemble(std::uint16_t address) const
@@ -933,6 +979,7 @@ INC_5::INC_5(Alu &a) : Instruction(a)
 {
   opcode = 5;
   operands = 1;
+  cycles = 1;
 }
 
 std::string INC_5::Disassemble(std::uint16_t address) const
@@ -956,6 +1003,7 @@ INC_4::INC_4(Alu &a) : Instruction(a)
 {
   opcode = 4;
   operands = 0;
+  cycles = 1;
 }
 
 std::string INC_4::Disassemble(std::uint16_t address) const
@@ -973,6 +1021,7 @@ INC_6::INC_6(Alu &a) : Instruction(a)
 {
   opcode = 6;
   operands = 0;
+  cycles = 1;
 }
 
 std::string INC_6::Disassemble(std::uint16_t address) const
@@ -982,6 +1031,7 @@ std::string INC_6::Disassemble(std::uint16_t address) const
 
 IncRegister::IncRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
 {
+  cycles = 1;
 }
 
 std::string IncRegister::Disassemble(std::uint16_t address) const
@@ -999,6 +1049,7 @@ void IncRegister::Execute() const
 
 DecRegister::DecRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
 {
+  cycles = 1;
 }
 
 std::string DecRegister::Disassemble(std::uint16_t address) const
@@ -1018,6 +1069,7 @@ INC_A3::INC_A3(Alu &a) : Instruction(a)
 {
   opcode = 0xA3;
   operands = 0;
+  cycles = 1;
 }
 
 std::string INC_A3::Disassemble(std::uint16_t address) const
@@ -1035,6 +1087,7 @@ JB_20::JB_20(Alu &a) : Instruction(a)
 {
   opcode = 0x20;
   operands = 2;
+  cycles = 2;
 }
 
 std::string JB_20::Disassemble(std::uint16_t address) const
@@ -1065,6 +1118,7 @@ JBC_10::JBC_10(Alu &a) : Instruction(a)
 {
   opcode = 0x10;
   operands = 2;
+  cycles = 2;
 }
 
 std::string JBC_10::Disassemble(std::uint16_t address) const
@@ -1080,6 +1134,7 @@ JC_40::JC_40(Alu &a) : Instruction(a)
 {
   opcode = 0x40;
   operands = 1;
+  cycles = 2;
 }
 
 std::string JC_40::Disassemble(std::uint16_t address) const
@@ -1154,6 +1209,7 @@ JNC_50::JNC_50(Alu &a) : Instruction(a)
 {
   opcode = 0x50;
   operands = 1;
+  cycles = 2;
 }
 
 std::string JNC_50::Disassemble(std::uint16_t address) const
@@ -1182,6 +1238,7 @@ JNZ_70::JNZ_70(Alu &a) : Instruction(a)
 {
   opcode = 0x70;
   operands = 1;
+  cycles = 2;
 }
 
 std::string JNZ_70::Disassemble(std::uint16_t address) const
@@ -1210,6 +1267,7 @@ JZ_60::JZ_60(Alu &a) : Instruction(a)
 {
   opcode = 0x60;
   operands = 1;
+  cycles = 2;
 }
 
 std::string JZ_60::Disassemble(std::uint16_t address) const
@@ -1238,6 +1296,7 @@ LCALL_12::LCALL_12(Alu &a) : Instruction(a)
 {
   opcode = 0x12;
   operands = 2;
+  cycles = 2;
 }
 
 std::string LCALL_12::Disassemble(std::uint16_t address) const
@@ -1268,6 +1327,7 @@ LJMP_2::LJMP_2(Alu &a) : Instruction(a)
 {
   opcode = 0x2;
   operands = 2;
+  cycles = 2;
 }
 
 std::string LJMP_2::Disassemble(std::uint16_t address) const
@@ -1288,6 +1348,7 @@ MOV_90::MOV_90(Alu &a) : Instruction(a)
 {
   opcode = 0x90;
   operands = 2;
+  cycles = 1;
 }
 
 std::string MOV_90::Disassemble(std::uint16_t address) const
@@ -1310,6 +1371,7 @@ MOV_75::MOV_75(Alu &a) : Instruction(a)
 {
   opcode = 0x75;
   operands = 2;
+  cycles = 2;
 }
 
 std::string MOV_75::Disassemble(std::uint16_t address) const
@@ -1336,6 +1398,7 @@ MOV_85::MOV_85(Alu &a) : Instruction(a)
 {
   opcode = 0x85;
   operands = 2;
+  cycles = 2;
 }
 
 std::string MOV_85::Disassemble(std::uint16_t address) const
@@ -1358,6 +1421,7 @@ void MOV_85::Execute() const
 MovRegisterIndirectImmediate::MovRegisterIndirectImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
+  cycles = 2;
 }
 
 std::string MovRegisterIndirectImmediate::Disassemble(std::uint16_t address) const
@@ -1378,6 +1442,7 @@ MOV_74::MOV_74(Alu &a) : Instruction(a)
 {
   opcode = 0x74;
   operands = 1;
+  cycles = 1;
 }
 
 std::string MOV_74::Disassemble(std::uint16_t address) const
@@ -1399,6 +1464,7 @@ MOV_E5::MOV_E5(Alu &a) : Instruction(a)
 {
   opcode = 0xE5;
   operands = 1;
+  cycles = 1;
 }
 
 std::string MOV_E5::Disassemble(std::uint16_t address) const
@@ -1422,6 +1488,7 @@ MOV_A2::MOV_A2(Alu &a) : Instruction(a)
 {
   opcode = 0xA2;
   operands = 1;
+  cycles = 1;
 }
 
 std::string MOV_A2::Disassemble(std::uint16_t address) const
@@ -1451,6 +1518,7 @@ void MOV_A2::Execute(void) const
 MovRegisterImmediate::MovRegisterImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
+  cycles = 1;
 }
 
 std::string MovRegisterImmediate::Disassemble(std::uint16_t address) const
@@ -1470,6 +1538,7 @@ void MovRegisterImmediate::Execute() const
 MovRegisterA::MovRegisterA(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 0;
+  cycles = 1;
 }
 
 std::string MovRegisterA::Disassemble(std::uint16_t address) const
@@ -1488,6 +1557,7 @@ void MovRegisterA::Execute() const
 MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
 {
   operands = 1;
+  cycles = 2;
 }
 
 std::string MovRegisterAddress::Disassemble(std::uint16_t address) const
@@ -1510,6 +1580,7 @@ MOV_92::MOV_92(Alu &a) : Instruction(a)
 {
   opcode = 0x92;
   operands = 1;
+  cycles = 2;
 }
 
 std::string MOV_92::Disassemble(std::uint16_t address) const
@@ -1532,6 +1603,7 @@ void MOV_92::Execute(void) const
 MovMemoryIndirectRegister::MovMemoryIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
+  cycles = 2;
 }
 
 std::string MovMemoryIndirectRegister::Disassemble(std::uint16_t address) const
@@ -1552,6 +1624,7 @@ void MovMemoryIndirectRegister::Execute() const
 MovAddressRegister::MovAddressRegister(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
 {
   operands = 1;
+  cycles = 2;
 }
 
 std::string MovAddressRegister::Disassemble(std::uint16_t address) const
@@ -1570,6 +1643,7 @@ void MovAddressRegister::Execute() const
 MovARegister::MovARegister(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
 {
   operands = 0;
+  cycles = 1;
 }
 
 std::string MovARegister::Disassemble(std::uint16_t address) const
@@ -1589,6 +1663,7 @@ MOV_F5::MOV_F5(Alu &a) : Instruction(a)
 {
   opcode = 0xF5;
   operands = 1;
+  cycles = 1;
 }
 
 std::string MOV_F5::Disassemble(std::uint16_t address) const
@@ -1612,6 +1687,7 @@ void MOV_F5::Execute() const
 MovIndirect::MovIndirect(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 0;
+  cycles = 1;
 }
 
 std::string MovIndirect::Disassemble(std::uint16_t address) const
@@ -1632,6 +1708,7 @@ void MovIndirect::Execute() const
 MovIndirectFromMem::MovIndirectFromMem(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 1;
+  cycles = 2;
 }
 
 std::string MovIndirectFromMem::Disassemble(std::uint16_t address) const
@@ -1653,6 +1730,7 @@ void MovIndirectFromMem::Execute() const
 MovIndirectRegister::MovIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : Instruction(a, o, r)
 {
   operands = 0;
+  cycles = 1;
 }
 
 std::string MovIndirectRegister::Disassemble(std::uint16_t address) const
@@ -1672,6 +1750,7 @@ MOVC_93::MOVC_93(Alu &a) : Instruction(a)
 {
   opcode = 0x93;
   operands = 0;
+  cycles = 2;
 }
 
 std::string MOVC_93::Disassemble(std::uint16_t address) const
@@ -1691,6 +1770,7 @@ MOVC_83::MOVC_83(Alu &a) : Instruction(a)
 {
   opcode = 0x83;
   operands = 0;
+  cycles = 2;
 }
 
 std::string MOVC_83::Disassemble(std::uint16_t address) const
@@ -1708,6 +1788,7 @@ MOVX_F0::MOVX_F0(Alu &a) : Instruction(a)
 {
   opcode = 0xF0;
   operands = 0;
+  cycles = 2;
 }
 
 std::string MOVX_F0::Disassemble(std::uint16_t address) const
@@ -1725,6 +1806,7 @@ MOVX_F2::MOVX_F2(Alu &a) : Instruction(a)
 {
   opcode = 0xF2;
   operands = 0;
+  cycles = 2;
 }
 
 std::string MOVX_F2::Disassemble(std::uint16_t address) const
@@ -1742,6 +1824,7 @@ MOVX_F3::MOVX_F3(Alu &a) : Instruction(a)
 {
   opcode = 0xF3;
   operands = 0;
+  cycles = 2;
 }
 
 std::string MOVX_F3::Disassemble(std::uint16_t address) const
@@ -1764,6 +1847,7 @@ MOVX_E2::MOVX_E2(Alu &a) : Instruction(a)
 {
   opcode = 0xE2;
   operands = 0;
+  cycles = 2;
 }
 
 std::string MOVX_E2::Disassemble(std::uint16_t address) const
@@ -1786,6 +1870,7 @@ MUL_A4::MUL_A4(Alu &a) : Instruction(a)
 {
   opcode = 0xA4;
   operands = 0;
+  cycles = 4;
 }
 
 std::string MUL_A4::Disassemble(std::uint16_t address) const
@@ -1797,6 +1882,7 @@ NOP::NOP(Alu &a) : Instruction(a)
 {
   opcode = 0;
   operands = 0;
+  cycles = 1;
 }
 
 std::string NOP::Disassemble(std::uint16_t address) const
@@ -1813,6 +1899,7 @@ ORL_43::ORL_43(Alu &a) : Instruction(a)
 {
   opcode = 0x43;
   operands = 2;
+  cycles = 2;
 }
 
 std::string ORL_43::Disassemble(std::uint16_t address) const
@@ -1838,6 +1925,7 @@ ORL_42::ORL_42(Alu &a) : Instruction(a)
 {
   opcode = 0x42;
   operands = 1;
+  cycles = 1;
 }
 
 std::string ORL_42::Disassemble(std::uint16_t address) const
@@ -1860,6 +1948,7 @@ ORL_44::ORL_44(Alu &a) : Instruction(a)
 {
   opcode = 0x44;
   operands = 1;
+  cycles = 1;
 }
 
 std::string ORL_44::Disassemble(std::uint16_t address) const
@@ -1881,6 +1970,7 @@ ORL_45::ORL_45(Alu &a) : Instruction(a)
 {
   opcode = 0x45;
   operands = 1;
+  cycles = 1;
 }
 
 std::string ORL_45::Disassemble(std::uint16_t address) const
@@ -1919,6 +2009,7 @@ ORL_A0::ORL_A0(Alu &a) : Instruction(a)
 {
   opcode = 0xA0;
   operands = 1;
+  cycles = 2;
 }
 
 std::string ORL_A0::Disassemble(std::uint16_t address) const
@@ -1934,6 +2025,7 @@ ORL_46::ORL_46(Alu &a) : Instruction(a)
 {
   opcode = 0x46;
   operands = 0;
+  cycles = 1;
 }
 
 std::string ORL_46::Disassemble(std::uint16_t address) const
@@ -1954,6 +2046,7 @@ std::string ORL_47::Disassemble(std::uint16_t address) const
 
 OrARegister::OrARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
+  cycles = 1;
 }
 
 std::string OrARegister::Disassemble(std::uint16_t address) const
@@ -1972,6 +2065,7 @@ void OrARegister::Execute() const
 
 AndARegister::AndARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
+  cycles = 1;
 }
 
 std::string AndARegister::Disassemble(std::uint16_t address) const
@@ -1990,6 +2084,7 @@ void AndARegister::Execute() const
 
 XorARegister::XorARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
+  cycles = 1;
 }
 
 std::string XorARegister::Disassemble(std::uint16_t address) const
@@ -2010,6 +2105,7 @@ POP_D0::POP_D0(Alu &a) : Instruction(a)
 {
   opcode = 0xD0;
   operands = 1;
+  cycles = 2;
 }
 
 std::string POP_D0::Disassemble(std::uint16_t address) const
@@ -2032,6 +2128,7 @@ PUSH_C0::PUSH_C0(Alu &a) : Instruction(a)
 {
   opcode = 0xC0;
   operands = 1;
+  cycles = 2;
 }
 
 std::string PUSH_C0::Disassemble(std::uint16_t address) const
@@ -2054,6 +2151,7 @@ RET_22::RET_22(Alu &a) : Instruction(a)
 {
   opcode = 0x22;
   operands = 0;
+  cycles = 2;
 }
 
 std::string RET_22::Disassemble(std::uint16_t address) const
@@ -2077,6 +2175,7 @@ RETI_32::RETI_32(Alu &a) : Instruction(a)
 {
   opcode = 0x32;
   operands = 0;
+  cycles = 2;
 }
 
 std::string RETI_32::Disassemble(std::uint16_t address) const
@@ -2088,6 +2187,7 @@ RL_23::RL_23(Alu &a) : Instruction(a)
 {
   opcode = 0x23;
   operands = 0;
+  cycles = 1;
 }
 
 std::string RL_23::Disassemble(std::uint16_t address) const
@@ -2112,6 +2212,7 @@ RLC_33::RLC_33(Alu &a) : Instruction(a)
 {
   opcode = 0x33;
   operands = 0;
+  cycles = 1;
 }
 
 std::string RLC_33::Disassemble(std::uint16_t address) const
@@ -2146,6 +2247,7 @@ RR_3::RR_3(Alu &a) : Instruction(a)
 {
   opcode = 3;
   operands = 0;
+  cycles = 1;
 }
 
 std::string RR_3::Disassemble(std::uint16_t address) const
@@ -2157,6 +2259,7 @@ RRC_13::RRC_13(Alu &a) : Instruction(a)
 {
   opcode = 0x13;
   operands = 0;
+  cycles = 1;
 }
 
 std::string RRC_13::Disassemble(std::uint16_t address) const
@@ -2168,6 +2271,7 @@ SETB_D3::SETB_D3(Alu &a) : Instruction(a)
 {
   opcode = 0xD3;
   operands = 0;
+  cycles = 1;
 }
 
 std::string SETB_D3::Disassemble(std::uint16_t address) const
@@ -2179,6 +2283,7 @@ SETB_D2::SETB_D2(Alu &a) : Instruction(a)
 {
   opcode = 0xD2;
   operands = 1;
+  cycles = 1;
 }
 
 std::string SETB_D2::Disassemble(std::uint16_t address) const
@@ -2202,6 +2307,7 @@ SJMP_80::SJMP_80(Alu &a) : Instruction(a)
 {
   opcode = 0x80;
   operands = 1;
+  cycles = 2;
 }
 
 std::string SJMP_80::Disassemble(std::uint16_t address) const
@@ -2221,6 +2327,7 @@ void SJMP_80::Execute() const
 
 SubtractionHelper::SubtractionHelper(Alu &alu, std::uint8_t opcode, std::uint8_t reg): Instruction(alu, opcode, reg)
 {
+  cycles = 1;
 }
 
 void SubtractionHelper::Helper(std::uint8_t operand) const
@@ -2261,6 +2368,7 @@ SUBB_94::SUBB_94(Alu &a) : Instruction(a)
 {
   opcode = 0x94;
   operands = 1;
+  cycles = 1;
 }
 
 std::string SUBB_94::Disassemble(std::uint16_t address) const
@@ -2337,6 +2445,7 @@ SWAP_C4::SWAP_C4(Alu &a) : Instruction(a)
 {
   opcode = 0xC4;
   operands = 0;
+  cycles = 1;
 }
 
 std::string SWAP_C4::Disassemble(std::uint16_t address) const
@@ -2348,6 +2457,7 @@ XCH_C5::XCH_C5(Alu &a) : Instruction(a)
 {
   opcode = 0xC5;
   operands = 1;
+  cycles = 1;
 }
 
 std::string XCH_C5::Disassemble(std::uint16_t address) const
@@ -2373,6 +2483,7 @@ XCH_C6::XCH_C6(Alu &a) : Instruction(a)
 {
   opcode = 0xC6;
   operands = 0;
+  cycles = 1;
 }
 
 std::string XCH_C6::Disassemble(std::uint16_t address) const
@@ -2394,6 +2505,7 @@ std::string XCH_C7::Disassemble(std::uint16_t address) const
 XCHRegister::XCHRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   operands = 0;
+  cycles = 1;
 }
 
 std::string XCHRegister::Disassemble(std::uint16_t address) const
@@ -2416,6 +2528,7 @@ XCHD_D6::XCHD_D6(Alu &a) : Instruction(a)
 {
   opcode = 0xD6;
   operands = 0;
+  cycles = 1;
 }
 
 std::string XCHD_D6::Disassemble(std::uint16_t address) const
@@ -2427,6 +2540,7 @@ XCHD_D7::XCHD_D7(Alu &a) : Instruction(a)
 {
   opcode = 0xD7;
   operands = 0;
+  cycles = 1;
 }
 
 std::string XCHD_D7::Disassemble(std::uint16_t address) const
@@ -2438,6 +2552,7 @@ XRL_66::XRL_66(Alu &a) : Instruction(a)
 {
   opcode = 0x66;
   operands = 0;
+  cycles = 1;
 }
 
 std::string XRL_66::Disassemble(std::uint16_t address) const
@@ -2460,6 +2575,7 @@ XRL_62::XRL_62(Alu &a) : Instruction(a)
 {
   opcode = 0x62;
   operands = 1;
+  cycles = 1;
 }
 
 std::string XRL_62::Disassemble(std::uint16_t address) const
@@ -2475,6 +2591,7 @@ XRL_64::XRL_64(Alu &a) : Instruction(a)
 {
   opcode = 0x64;
   operands = 1;
+  cycles = 1;
 }
 
 std::string XRL_64::Disassemble(std::uint16_t address) const
@@ -2498,6 +2615,7 @@ XRL_65::XRL_65(Alu &a) : Instruction(a)
 {
   opcode = 0x65;
   operands = 1;
+  cycles = 1;
 }
 
 std::string XRL_65::Disassemble(std::uint16_t address) const
@@ -2513,6 +2631,7 @@ XRL_63::XRL_63(Alu &a) : Instruction(a)
 {
   opcode = 0x63;
   operands = 2;
+  cycles = 2;
 }
 
 std::string XRL_63::Disassemble(std::uint16_t address) const

@@ -19,9 +19,10 @@ class Block
     Block(Alu *alu);
     virtual void Reset();
     virtual void Tick();
-  private:
-    std::map<std::string, Sfr*> SfrRegisters;
+  protected:
+    std::map<std::string, Sfr*> sfrRegisters;
     Alu *alu;
+    void RegisterSfr(Sfr *sfr, std::uint8_t page);
 };
 
 #endif

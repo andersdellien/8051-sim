@@ -10,6 +10,11 @@ Sfr::Sfr(std::string n, Alu *a, std::uint8_t addr): name(n), alu(a), address(add
   SymbolTable::GetInstance()->RegisterSymbol(address, name);
 }
 
+Sfr::Sfr(std::string n, Alu *a, std::uint8_t addr, std::uint8_t r): name(n), alu(a), address(addr), resetValue(r)
+{
+  SymbolTable::GetInstance()->RegisterSymbol(address, name);
+}
+
 std::string Sfr::GetName() const
 {
   return name;
@@ -33,7 +38,16 @@ std::uint8_t Sfr::Read()
   return data;
 }
 
+void Sfr::Reset()
+{
+  data = resetValue;
+}
+
 SfrBitAddressable::SfrBitAddressable(std::string name, Alu *alu, std::uint8_t address) : Sfr(name, alu, address)
+{
+}
+
+SfrBitAddressable::SfrBitAddressable(std::string name, Alu *alu, std::uint8_t address, std::uint8_t resetValue) : Sfr(name, alu, address, resetValue)
 {
 }
 

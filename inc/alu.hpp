@@ -31,8 +31,8 @@ class Alu : public Block
     void SetSP(std::uint8_t sp);
     void SetA(std::uint8_t data);
     std::uint16_t GetDP();
-    void RegisterSfr(std::uint8_t page, Sfr *sfr, std::uint8_t address);
-    void RegisterSfr(std::uint8_t page, Sfr *sfr);
+    void RegisterSfr(std::uint8_t address, Sfr *sfr, std::uint8_t page);
+    void RegisterSfr(std::uint8_t address, Sfr *sfr);
     std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
     std::map<std::uint8_t, SfrBitAddressable*> bitAddressableSfr;
     std::uint8_t GetReg(std::uint8_t reg);

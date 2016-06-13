@@ -1467,6 +1467,24 @@ void MovRegisterImmediate::Execute() const
   IncPC();
 }
 
+MovRegisterA::MovRegisterA(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+{
+  operands = 0;
+}
+
+std::string MovRegisterA::Disassemble(std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "MOV R" << (int) reg << ", A";
+  return ss.str();
+}
+
+void MovRegisterA::Execute() const
+{
+  alu.SetReg(reg, alu.GetA());
+  IncPC();
+}
+
 MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
 {
   operands = 1;
@@ -1647,142 +1665,6 @@ std::string MovIndirectRegister::Disassemble(std::uint16_t address) const
 void MovIndirectRegister::Execute() const
 {
   alu.SetA(alu.Read(alu.GetReg(reg)));
-  IncPC();
-}
-
-MOV_F8::MOV_F8(Alu &a) : Instruction(a)
-{
-  opcode = 0xF8;
-  operands = 0;
-}
-
-std::string MOV_F8::Disassemble(std::uint16_t address) const
-{
-  return "MOV R0, A";
-}
-
-void MOV_F8::Execute() const
-{
-  alu.SetR0(alu.GetA());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_F9::MOV_F9(Alu &a) : Instruction(a)
-{
-  opcode = 0xF9;
-  operands = 0;
-}
-
-std::string MOV_F9::Disassemble(std::uint16_t address) const
-{
-  return "MOV R1, A";
-}
-
-void MOV_F9::Execute() const
-{
-  alu.SetR1(alu.GetA());
-  IncPC();
-}
-
-MOV_FA::MOV_FA(Alu &a) : Instruction(a)
-{
-  opcode = 0xFA;
-  operands = 0;
-}
-
-std::string MOV_FA::Disassemble(std::uint16_t address) const
-{
-  return "MOV R2, A";
-}
-
-void MOV_FA::Execute() const
-{
-  alu.SetR2(alu.GetA());
-  IncPC();
-}
-
-MOV_FB::MOV_FB(Alu &a) : Instruction(a)
-{
-  opcode = 0xFB;
-  operands = 0;
-}
-
-std::string MOV_FB::Disassemble(std::uint16_t address) const
-{
-  return "MOV R3, A";
-}
-
-void MOV_FB::Execute() const
-{
-  alu.SetR3(alu.GetA());
-  IncPC();
-}
-
-MOV_FC::MOV_FC(Alu &a) : Instruction(a)
-{
-  opcode = 0xFC;
-  operands = 0;
-}
-
-std::string MOV_FC::Disassemble(std::uint16_t address) const
-{
-  return "MOV R4, A";
-}
-
-void MOV_FC::Execute() const
-{
-  alu.SetR4(alu.GetA());
-  IncPC();
-}
-
-MOV_FD::MOV_FD(Alu &a) : Instruction(a)
-{
-  opcode = 0xFD;
-  operands = 0;
-}
-
-std::string MOV_FD::Disassemble(std::uint16_t address) const
-{
-  return "MOV R5, A";
-}
-
-void MOV_FD::Execute() const
-{
-  alu.SetR5(alu.GetA());
-  IncPC();
-}
-
-MOV_FE::MOV_FE(Alu &a) : Instruction(a)
-{
-  opcode = 0xFE;
-  operands = 0;
-}
-
-std::string MOV_FE::Disassemble(std::uint16_t address) const
-{
-  return "MOV R6, A";
-}
-
-void MOV_FE::Execute() const
-{
-  alu.SetR6(alu.GetA());
-  IncPC();
-}
-
-MOV_FF::MOV_FF(Alu &a) : Instruction(a)
-{
-  opcode = 0xFF;
-  operands = 0;
-}
-
-std::string MOV_FF::Disassemble(std::uint16_t address) const
-{
-  return "MOV R7, A";
-}
-
-void MOV_FF::Execute() const
-{
-  alu.SetR7(alu.GetA());
   IncPC();
 }
 

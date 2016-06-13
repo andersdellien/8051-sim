@@ -719,6 +719,14 @@ class MovRegisterImmediate: public Instruction
     void Execute() const;
 };
 
+class MovRegisterA: public Instruction
+{
+  public:
+    MovRegisterA(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
+};
+
 class SJMP_80: public Instruction
 {
   public:
@@ -1235,70 +1243,6 @@ class MovIndirectFromMem: public Instruction
 {
   public:
     MovIndirectFromMem(Alu&, std::uint8_t opcode, std::uint8_t reg);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_F8: public Instruction
-{
-  public:
-    MOV_F8(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_F9: public Instruction
-{
-  public:
-    MOV_F9(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_FA: public Instruction
-{
-  public:
-    MOV_FA(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_FB: public Instruction
-{
-  public:
-    MOV_FB(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_FC: public Instruction
-{
-  public:
-    MOV_FC(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_FD: public Instruction
-{
-  public:
-    MOV_FD(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_FE: public Instruction
-{
-  public:
-    MOV_FE(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_FF: public Instruction
-{
-  public:
-    MOV_FF(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

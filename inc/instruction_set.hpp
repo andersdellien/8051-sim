@@ -772,66 +772,10 @@ class MovMemoryIndirectRegister: public Instruction
     void Execute() const;
 };
 
-class MOV_88: public Instruction
+class MovAddressRegister: public Instruction
 {
   public:
-    MOV_88(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_89: public Instruction
-{
-  public:
-    MOV_89(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_8A: public Instruction
-{
-  public:
-    MOV_8A(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_8B: public Instruction
-{
-  public:
-    MOV_8B(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_8C: public Instruction
-{
-  public:
-    MOV_8C(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_8D: public Instruction
-{
-  public:
-    MOV_8D(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_8E: public Instruction
-{
-  public:
-    MOV_8E(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class MOV_8F: public Instruction
-{
-  public:
-    MOV_8F(Alu&);
+    MovAddressRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

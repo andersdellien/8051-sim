@@ -1694,171 +1694,21 @@ void MovMemoryIndirectRegister::Execute() const
   IncPC();
 }
 
-MOV_88::MOV_88(Alu &a) : Instruction(a)
+MovAddressRegister::MovAddressRegister(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
 {
-  opcode = 0x88;
   operands = 1;
 }
 
-std::string MOV_88::Disassemble(std::uint16_t address) const
+std::string MovAddressRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) alu.flash.Get(address+1) << ", R0";
+  ss << "MOV " << (int) alu.flash.Get(address+1) << ", R" << (int) reg;
   return ss.str();
 }
 
-void MOV_88::Execute() const
+void MovAddressRegister::Execute() const
 {
-  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR0());
-  IncPC();
-}
-
-MOV_89::MOV_89(Alu &a) : Instruction(a)
-{
-  opcode = 0x89;
-  operands = 1;
-}
-
-std::string MOV_89::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) alu.flash.Get(address+1) << ", R1";
-  return ss.str();
-}
-
-void MOV_89::Execute() const
-{
-  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR1());
-  alu.SetPC(alu.GetPC() + 1 + operands);
-}
-
-MOV_8A::MOV_8A(Alu &a) : Instruction(a)
-{
-  opcode = 0x8A;
-  operands = 1;
-}
-
-std::string MOV_8A::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) alu.flash.Get(address+1) << ", R2";
-  return ss.str();
-}
-
-void MOV_8A::Execute() const
-{
-  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR2());
-  IncPC();
-}
-
-MOV_8B::MOV_8B(Alu &a) : Instruction(a)
-{
-  opcode = 0x8B;
-  operands = 1;
-}
-
-std::string MOV_8B::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) alu.flash.Get(address+1) << ", R3";
-  return ss.str();
-}
-
-void MOV_8B::Execute() const
-{
-  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR3());
-  IncPC();
-}
-
-MOV_8C::MOV_8C(Alu &a) : Instruction(a)
-{
-  opcode = 0x8C;
-  operands = 1;
-}
-
-std::string MOV_8C::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) alu.flash.Get(address+1) << ", R4";
-  return ss.str();
-}
-
-void MOV_8C::Execute() const
-{
-  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR4());
-  IncPC();
-}
-
-MOV_8D::MOV_8D(Alu &a) : Instruction(a)
-{
-  opcode = 0x8D;
-  operands = 1;
-}
-
-std::string MOV_8D::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) alu.flash.Get(address+1) << ", R5";
-  return ss.str();
-}
-
-void MOV_8D::Execute() const
-{
-  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR5());
-  IncPC();
-}
-
-MOV_8E::MOV_8E(Alu &a) : Instruction(a)
-{
-  opcode = 0x8E;
-  operands = 1;
-}
-
-std::string MOV_8E::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) alu.flash.Get(address+1) << ", R6";
-  return ss.str();
-}
-
-void MOV_8E::Execute() const
-{
-  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR6());
-  IncPC();
-}
-
-MOV_8F::MOV_8F(Alu &a) : Instruction(a)
-{
-  opcode = 0x8F;
-  operands = 1;
-}
-
-std::string MOV_8F::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "MOV ";
-  ss << (int) alu.flash.Get(address+1) << ", R7";
-  return ss.str();
-}
-
-void MOV_8F::Execute() const
-{
-  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetR7());
+  alu.Write(alu.flash.Get(alu.GetPC()+ 1), alu.GetReg(reg));
   IncPC();
 }
 

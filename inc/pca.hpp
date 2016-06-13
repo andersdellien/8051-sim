@@ -2,13 +2,12 @@
 #define _PCA_HPP
 
 #include "alu.hpp"
+#include "block.hpp"
 
-class Pca
+class Pca: public Block
 {
   public:
-    Pca(Alu &alu);
-  private:
-    Alu &alu;
+    Pca(Alu *alu);
 };
 
 #endif

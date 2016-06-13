@@ -7,7 +7,7 @@
 class Port1 : public Port
 {
   public:
-    Port1(Alu &alu);
+    Port1(Alu *alu);
 };
 
 #endif

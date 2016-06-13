@@ -17,15 +17,11 @@ typedef enum
   StartLinearAddress
 } RecordType;
 
-Flash::Flash(std::uint16_t s) : Memory(s)
+Flash::Flash(Alu *alu, std::uint16_t size) : Memory(alu, size)
 {
-}
-
-void Flash::SetAlu(Alu &a)
-{
-  a.RegisterSfr(0xb7, new Sfr("FLSCL", a, 0xb7), 0x00);
-  a.RegisterSfr(0xb6, new Sfr("FLKEY", a, 0xb6));
-  a.RegisterSfr(0xe5, new Sfr("FLWR", a, 0xe5));
+  alu->RegisterSfr(0xb7, new Sfr("FLSCL", alu, 0xb7), 0x00);
+  alu->RegisterSfr(0xb6, new Sfr("FLKEY", alu, 0xb6));
+  alu->RegisterSfr(0xe5, new Sfr("FLWR", alu, 0xe5));
 }
 
 void Flash::ParseHex(std::string fileName)

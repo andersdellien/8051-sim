@@ -19,22 +19,22 @@
 
 int main(int argc, char **argv)
 {
-  Flash flash(8192);
-  Memory xram(1024);
-  Alu alu(flash, xram, 256);
-  Port0 port0(alu);
-  Port1 port1(alu);
-  Port2 port2(alu);
-  Pca pca(alu);
-  System system(alu);
-  Uart uart(alu);
-  Adc adc(alu);
-  Timer timer(alu);
+  Memory xram(nullptr, 1024);
+  Alu *alu = new Alu(nullptr, xram, 256);
+  Flash *flash = new Flash(alu, 8192);
+  Port0 *port0 = new Port0(alu);
+  Port1 *port1 = new Port1(alu);
+  Port2 *port2 = new Port2(alu);
+  Pca *pca = new Pca(alu);
+  System *system = new System(alu);
+  Uart *uart = new Uart(alu);
+  Adc *adc = new Adc(alu);
+  Timer *timer = new Timer(alu);
   std::set<std::uint8_t> traceInstruction;
   std::set<std::uint16_t> breakpoints;
 
-  flash.SetAlu(alu);
-  alu.Reset();
+  alu->SetFlash(flash);
+  alu->Reset();
   while (1)
   {
     std::string line;
@@ -72,11 +72,11 @@ int main(int argc, char **argv)
       {
         if (tokens[2] == "on")
         {
-          alu.SetTraceSfr(true);
+          alu->SetTraceSfr(true);
         }
         else if (tokens[2] == "off")
         {
-          alu.SetTraceSfr(false);
+          alu->SetTraceSfr(false);
         }
       }
       else if (tokens[1] == "all")
@@ -97,22 +97,22 @@ int main(int argc, char **argv)
     }
     else if (tokens[0] == "reset")
     {
-      alu.Reset();
+      alu->Reset();
     }
     else if (tokens[0] == "reg")
     {
-      std::cout << std::hex << "PC:" << std::setw(4) << (int) alu.GetPC();
-      std::cout << " SP:" << std::setw(2) << (int) alu.GetSP();
-      std::cout << " A:" << std::setw(2) << (int) alu.GetA();
-      std::cout << " DPTR:" << std::setw(4) << (int) alu.GetDPTR() << std::endl;
-      std::cout << "R0:" << std::setw(2) << (int) alu.GetR0() << " ";
-      std::cout << "R1:" << std::setw(2) << (int) alu.GetR1() << " ";
-      std::cout << "R2:" << std::setw(2) << (int) alu.GetR2() << " ";
-      std::cout << "R3:" << std::setw(2) << (int) alu.GetR3() << " ";
-      std::cout << "R4:" << std::setw(2) << (int) alu.GetR4() << " ";
-      std::cout << "R5:" << std::setw(2) << (int) alu.GetR5() << " ";
-      std::cout << "R6:" << std::setw(2) << (int) alu.GetR6() << " ";
-      std::cout << "R7:" << std::setw(2) << (int) alu.GetR7();
+      std::cout << std::hex << "PC:" << std::setw(4) << (int) alu->GetPC();
+      std::cout << " SP:" << std::setw(2) << (int) alu->GetSP();
+      std::cout << " A:" << std::setw(2) << (int) alu->GetA();
+      std::cout << " DPTR:" << std::setw(4) << (int) alu->GetDPTR() << std::endl;
+      std::cout << "R0:" << std::setw(2) << (int) alu->GetR0() << " ";
+      std::cout << "R1:" << std::setw(2) << (int) alu->GetR1() << " ";
+      std::cout << "R2:" << std::setw(2) << (int) alu->GetR2() << " ";
+      std::cout << "R3:" << std::setw(2) << (int) alu->GetR3() << " ";
+      std::cout << "R4:" << std::setw(2) << (int) alu->GetR4() << " ";
+      std::cout << "R5:" << std::setw(2) << (int) alu->GetR5() << " ";
+      std::cout << "R6:" << std::setw(2) << (int) alu->GetR6() << " ";
+      std::cout << "R7:" << std::setw(2) << (int) alu->GetR7();
       std::cout << std::endl;
     }
     else if (tokens[0] == "step" || tokens[0] == "go")
@@ -126,18 +126,18 @@ int main(int argc, char **argv)
       int breakCount = 0;
       for (int i = 0; go || (i < limit); i++)
       {
-        alu.Step();
-        if (breakpoints.find(alu.GetPC()) != breakpoints.end())
+        alu->Step();
+        if (breakpoints.find(alu->GetPC()) != breakpoints.end())
         {
           breakCount++;
           if (breakCount == limit)
           {
-            std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
+            std::cout << "break at " << std::hex << alu->GetPC() << std::endl;
           }
         }
-        if (traceInstruction.find(alu.flash.Get(alu.GetPC())) != traceInstruction.end() || !go || (go && breakCount == limit))
+        if (traceInstruction.find(alu->flash->Get(alu->GetPC())) != traceInstruction.end() || !go || (go && breakCount == limit))
         {
-          std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
+          std::cout << std::hex << std::setw(4) << std::setfill('0') << alu->GetPC() << " " << alu->Disassemble(alu->GetPC()) << std::endl;
         }
         if (go && breakCount == limit)
         {
@@ -151,7 +151,7 @@ int main(int argc, char **argv)
     }
     else if (tokens[0] == "loadfile")
     {
-      flash.ParseHex(tokens[1]);
+      flash->ParseHex(tokens[1]);
     }
     else if (tokens[0] == "disassemble")
     {
@@ -160,8 +160,8 @@ int main(int argc, char **argv)
       std::uint16_t limit = address + length;
       while (address <= limit)
       {
-        std::cout << alu.Disassemble(address) << std::endl;
-        address += 1 + alu.GetOperands(address);
+        std::cout << alu->Disassemble(address) << std::endl;
+        address += 1 + alu->GetOperands(address);
       }
     }
     else if (tokens[0] == "flash" || tokens[0] == "iram")
@@ -172,11 +172,11 @@ int main(int argc, char **argv)
       Memory *mem;
       if (tokens[0] == "flash")
       {
-        mem = &flash;
+        mem = flash;
       }
       else
       {
-        mem = &alu.iram;
+        mem = &alu->iram;
       }
       for (int i = 0; i < length; i++)
       {

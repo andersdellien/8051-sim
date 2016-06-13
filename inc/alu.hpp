@@ -4,22 +4,23 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include "block.hpp"
 #include "flash.hpp"
 #include "sfr.hpp"
 
 class Instruction;
 
-class Alu
+class Alu : public Block
 {
   friend class SfrSp;
   friend class SfrDpl;
   public:
-    Flash &flash;
+    Flash *flash;
     Memory &xram;
     Memory iram;
     std::string Disassemble(std::uint16_t address);
     std::uint8_t GetOperands(std::uint16_t address);
-    Alu(Flash &f, Memory &x, std::uint16_t iramSize);
+    Alu(Block *block, Memory &x, std::uint16_t iramSize);
     void Reset();
     void Step();
     std::uint16_t GetPC();
@@ -75,6 +76,7 @@ class Alu
     void SetTraceSfr(bool val);
 
     Memory *GetIRam() const;
+    void SetFlash(Flash *flash);
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;

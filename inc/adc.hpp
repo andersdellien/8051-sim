@@ -1,12 +1,12 @@
 #ifndef _ADC_HPP
 #define _ADC_HPP
 
-#include "alu.hpp"
+#include "block.hpp"
 
-class Adc
+class Adc: public Block
 {
   public:
-    Adc(Alu &alu);
+    Adc(Alu *alu);
 };
 
 #endif

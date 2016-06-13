@@ -2,13 +2,12 @@
 #define _PORT_HPP
 
 #include "alu.hpp"
+#include "block.hpp"
 
-class Port
+class Port: public Block
 {
   public:
-    Port(Alu &a);
-  private:
-    Alu &alu;
+    Port(Alu *a);
 };
 
 #endif

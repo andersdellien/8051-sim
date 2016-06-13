@@ -5,7 +5,7 @@
 #include "alu.hpp"
 #include "symbol_table.hpp"
 
-Sfr::Sfr(std::string n, Alu &a, std::uint8_t addr): name(n), alu(a), address(addr)
+Sfr::Sfr(std::string n, Alu *a, std::uint8_t addr): name(n), alu(a), address(addr)
 {
   SymbolTable::GetInstance()->RegisterSymbol(address, name);
 }
@@ -17,7 +17,7 @@ std::string Sfr::GetName() const
 
 void Sfr::Write(std::uint8_t d)
 {
-  if (alu.GetTraceSfr())
+  if (alu->GetTraceSfr())
   {
     std::cout << name << " write " << (int) d << std::endl;
   }
@@ -26,14 +26,14 @@ void Sfr::Write(std::uint8_t d)
 
 std::uint8_t Sfr::Read()
 {
-  if (alu.GetTraceSfr())
+  if (alu->GetTraceSfr())
   {
     std::cout << name << " read " << (int) data << std::endl;
   }
   return data;
 }
 
-SfrBitAddressable::SfrBitAddressable(std::string name, Alu &alu, std::uint8_t address) : Sfr(name, alu, address)
+SfrBitAddressable::SfrBitAddressable(std::string name, Alu *alu, std::uint8_t address) : Sfr(name, alu, address)
 {
 }
 
@@ -41,7 +41,7 @@ void SfrBitAddressable::WriteBit(std::uint8_t bit, bool value)
 {
   std::uint8_t bitShifted = 1 << bit;
 
-  if (alu.GetTraceSfr())
+  if (alu->GetTraceSfr())
   {
     std::cout << name << " write bit " << (int) bit << " " << (int) value << std::endl;
   }
@@ -57,7 +57,7 @@ bool SfrBitAddressable::ReadBit(std::uint8_t bit)
 {
   std::uint8_t bitShifted = 1 << bit;
 
-  if (alu.GetTraceSfr())
+  if (alu->GetTraceSfr())
   {
     std::cout << name << " read bit " << (int) bit << " " << (int) (data & bitShifted) << std::endl;
   }

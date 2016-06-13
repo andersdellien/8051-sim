@@ -1,8 +1,9 @@
 #include <cstdint>
 #include "memory.hpp"
 #include "exceptions.hpp"
+#include "block.hpp"
 
-Memory::Memory(std::uint16_t s)
+Memory::Memory(Alu *alu, std::uint16_t s): Block(alu)
 {
   size = s;
   data = new std::uint8_t[s];

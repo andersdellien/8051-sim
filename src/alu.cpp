@@ -3,11 +3,12 @@
 #include <string>
 #include "flash.hpp"
 #include "alu.hpp"
+#include "block.hpp"
 #include "instruction_set.hpp"
 #include "exceptions.hpp"
 #include "sfr.hpp"
 
-Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(iramSize)
+Alu::Alu(Block *block, Memory &x, std::uint16_t iramSize): Block(nullptr), xram(x), iram(nullptr, iramSize)
 {
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
@@ -410,14 +411,14 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
   instructionSet[xrl_65->GetOpcode()] = xrl_65;
   XRL_63 *xrl_63 = new XRL_63(*this);
   instructionSet[xrl_63->GetOpcode()] = xrl_63;
-  sfrSP = new Sfr("SP", *this, 0x81);
-  sfrDPL = new Sfr("DPL", *this, 0x82);
-  sfrDPH = new Sfr("DPH", *this, 0x83);
-  sfrIP = new Sfr("IP", *this, 0xb8);
-  sfrIE = new SfrBitAddressable("IE", *this, 0xa7);
-  sfrSFRPAGE = new Sfr("SFRPAGE", *this, 0xa7);
-  sfrB = new SfrBitAddressable("B", *this, 0xf0);
-  sfrACC = new SfrBitAddressable("ACC", *this, 0xe0);
+  sfrSP = new Sfr("SP", this, 0x81);
+  sfrDPL = new Sfr("DPL", this, 0x82);
+  sfrDPH = new Sfr("DPH", this, 0x83);
+  sfrIP = new Sfr("IP", this, 0xb8);
+  sfrIE = new SfrBitAddressable("IE", this, 0xa7);
+  sfrSFRPAGE = new Sfr("SFRPAGE", this, 0xa7);
+  sfrB = new SfrBitAddressable("B", this, 0xf0);
+  sfrACC = new SfrBitAddressable("ACC", this, 0xe0);
   RegisterSfr(0x81, sfrSP);
   RegisterSfr(0x82, sfrDPL);
   RegisterSfr(0x83, sfrDPH);
@@ -430,7 +431,7 @@ Alu::Alu(Flash &f, Memory &x, std::uint16_t iramSize): flash(f), xram(x), iram(i
 
 std::string Alu::Disassemble(std::uint16_t address)
 {
-  const std::uint8_t opcode = flash.Get(address);
+  const std::uint8_t opcode = flash->Get(address);
 
   if (instructionSet.find(opcode) == instructionSet.end())
   {
@@ -444,7 +445,7 @@ std::string Alu::Disassemble(std::uint16_t address)
 
 std::uint8_t Alu::GetOperands(std::uint16_t address)
 {
-  const std::uint8_t opcode = flash.Get(address);
+  const std::uint8_t opcode = flash->Get(address);
 
   if (instructionSet.find(opcode) == instructionSet.end())
   {
@@ -470,7 +471,7 @@ void Alu::Reset()
 
 void Alu::Step()
 {
-  instructionSet[flash.Get(pc)]->Execute();  
+  instructionSet[flash->Get(pc)]->Execute();  
 }
 
 std::uint16_t Alu::GetPC()
@@ -757,3 +758,7 @@ void Alu::SetTraceSfr(bool value)
   traceSfr = value;
 }
 
+void Alu::SetFlash(Flash *f)
+{
+  flash = f;
+}

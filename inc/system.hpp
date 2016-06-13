@@ -2,11 +2,12 @@
 #define _SYSTEM_HPP
 
 #include "alu.hpp"
+#include "block.hpp"
 
-class System
+class System: public Block
 {
   public:
-    System(Alu &alu);
+    System(Alu *alu);
 };
 
 #endif

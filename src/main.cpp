@@ -26,46 +26,45 @@ class CommandHandler: public UcCallbacks
     void OnInstructionExecuted();
     void Reset();
   private:
-    Memory xram;
-    Alu *alu;
-    Flash *flash;
-    Port0 *port0;
-    Port1 *port1;
-    Port2 *port2;
-    Pca *pca;
-    System *system;
-    Uart *uart;
-    Adc *adc;
-    Timer *timer;
+    Alu alu;
+    Flash flash;
+    Port0 port0;
+    Port1 port1;
+    Port2 port2;
+    Pca pca;
+    System system;
+    Uart uart;
+    Adc adc;
+    Timer timer;
     std::set<std::uint8_t> traceInstruction;
     std::set<std::uint16_t> breakpoints;
     bool instructionExecuted;
     std::set<Block*> blocks;
 };
 
-CommandHandler::CommandHandler(): xram(nullptr, 1024)
+CommandHandler::CommandHandler() :
+  alu(1024, 256),
+  flash(&alu, 8192),
+  port0(&alu),
+  port1(&alu),
+  port2(&alu),
+  pca(&alu),
+  system(&alu),
+  uart(&alu),
+  adc(&alu),
+  timer(&alu)
 {
-  alu = new Alu(nullptr, xram, 256);
-  blocks.insert(alu);
-  flash = new Flash(alu, 8192);
-  blocks.insert(flash);
-  port0 = new Port0(alu);
-  blocks.insert(port0);
-  port1 = new Port1(alu);
-  blocks.insert(port1);
-  port2 = new Port2(alu);
-  blocks.insert(port2);
-  pca = new Pca(alu);
-  blocks.insert(pca);
-  system = new System(alu);
-  blocks.insert(system);
-  uart = new Uart(alu);
-  blocks.insert(uart);
-  adc = new Adc(alu);
-  blocks.insert(adc);
-  timer = new Timer(alu);
-  blocks.insert(timer);
-  alu->RegisterCallback(this);
+  blocks.insert(&alu);
+  blocks.insert(&flash);
+  blocks.insert(&port0);
+  blocks.insert(&port1);
+  blocks.insert(&port2);
+  blocks.insert(&pca);
+  blocks.insert(&system);
+  blocks.insert(&uart);
+  blocks.insert(&adc);
+  blocks.insert(&timer);
+  alu.RegisterCallback(this);
 }
 
 void CommandHandler::OnInstructionExecuted()
@@ -84,7 +83,7 @@ void CommandHandler::Reset()
 void CommandHandler::CommandLoop()
 {
 
-  alu->SetFlash(flash);
+  alu.SetFlash(&flash);
   Reset();
   while (1)
   {
@@ -96,7 +95,7 @@ void CommandHandler::CommandLoop()
     while (std::getline(ss, token, ' '))
     {
       tokens.push_back(token);
-    }    
+    }
     if (tokens[0] == "break")
     {
       if (tokens[1] == "list")
@@ -123,11 +122,11 @@ void CommandHandler::CommandLoop()
       {
         if (tokens[2] == "on")
         {
-          alu->SetTraceSfr(true);
+          alu.SetTraceSfr(true);
         }
         else if (tokens[2] == "off")
         {
-          alu->SetTraceSfr(false);
+          alu.SetTraceSfr(false);
         }
       }
       else if (tokens[1] == "all")
@@ -152,23 +151,23 @@ void CommandHandler::CommandLoop()
     }
     else if (tokens[0] == "reg")
     {
-      std::cout << std::hex << "PC:" << std::setw(4) << (int) alu->GetPC();
-      std::cout << " SP:" << std::setw(2) << (int) alu->GetSP();
-      std::cout << " A:" << std::setw(2) << (int) alu->GetA();
-      std::cout << " DPTR:" << std::setw(4) << (int) alu->GetDPTR() << std::endl;
-      std::cout << "R0:" << std::setw(2) << (int) alu->GetR0() << " ";
-      std::cout << "R1:" << std::setw(2) << (int) alu->GetR1() << " ";
-      std::cout << "R2:" << std::setw(2) << (int) alu->GetR2() << " ";
-      std::cout << "R3:" << std::setw(2) << (int) alu->GetR3() << " ";
-      std::cout << "R4:" << std::setw(2) << (int) alu->GetR4() << " ";
-      std::cout << "R5:" << std::setw(2) << (int) alu->GetR5() << " ";
-      std::cout << "R6:" << std::setw(2) << (int) alu->GetR6() << " ";
-      std::cout << "R7:" << std::setw(2) << (int) alu->GetR7();
+      std::cout << std::hex << "PC:" << std::setw(4) << (int) alu.GetPC();
+      std::cout << " SP:" << std::setw(2) << (int) alu.GetSP();
+      std::cout << " A:" << std::setw(2) << (int) alu.GetA();
+      std::cout << " DPTR:" << std::setw(4) << (int) alu.GetDPTR() << std::endl;
+      std::cout << "R0:" << std::setw(2) << (int) alu.GetR0() << " ";
+      std::cout << "R1:" << std::setw(2) << (int) alu.GetR1() << " ";
+      std::cout << "R2:" << std::setw(2) << (int) alu.GetR2() << " ";
+      std::cout << "R3:" << std::setw(2) << (int) alu.GetR3() << " ";
+      std::cout << "R4:" << std::setw(2) << (int) alu.GetR4() << " ";
+      std::cout << "R5:" << std::setw(2) << (int) alu.GetR5() << " ";
+      std::cout << "R6:" << std::setw(2) << (int) alu.GetR6() << " ";
+      std::cout << "R7:" << std::setw(2) << (int) alu.GetR7();
       std::cout << std::endl;
     }
     else if (tokens[0] == "step" || tokens[0] == "go")
     {
-      int limit = 1;      
+      int limit = 1;
       bool go = tokens[0] == "go";
 
       if (tokens.size() > 1)
@@ -181,19 +180,19 @@ void CommandHandler::CommandLoop()
         instructionExecuted = false;
         while (!instructionExecuted)
         {
-          alu->Tick();
+          alu.Tick();
         }
-        if (breakpoints.find(alu->GetPC()) != breakpoints.end())
+        if (breakpoints.find(alu.GetPC()) != breakpoints.end())
         {
           breakCount++;
           if (breakCount == limit)
           {
-            std::cout << "break at " << std::hex << alu->GetPC() << std::endl;
+            std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
           }
         }
-        if (traceInstruction.find(alu->flash->Get(alu->GetPC())) != traceInstruction.end() || !go || (go && breakCount == limit))
+        if (traceInstruction.find(alu.flash->Get(alu.GetPC())) != traceInstruction.end() || !go || (go && breakCount == limit))
         {
-          std::cout << std::hex << std::setw(4) << std::setfill('0') << alu->GetPC() << " " << alu->Disassemble(alu->GetPC()) << std::endl;
+          std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
         }
         if (go && breakCount == limit)
         {
@@ -207,7 +206,7 @@ void CommandHandler::CommandLoop()
     }
     else if (tokens[0] == "loadfile")
     {
-      flash->ParseHex(tokens[1]);
+      flash.ParseHex(tokens[1]);
     }
     else if (tokens[0] == "disassemble")
     {
@@ -216,8 +215,8 @@ void CommandHandler::CommandLoop()
       std::uint16_t limit = address + length;
       while (address <= limit)
       {
-        std::cout << alu->Disassemble(address) << std::endl;
-        address += 1 + alu->GetOperands(address);
+        std::cout << alu.Disassemble(address) << std::endl;
+        address += 1 + alu.GetOperands(address);
       }
     }
     else if (tokens[0] == "flash" || tokens[0] == "iram")
@@ -228,11 +227,11 @@ void CommandHandler::CommandLoop()
       Memory *mem;
       if (tokens[0] == "flash")
       {
-        mem = flash;
+        mem = &flash;
       }
       else
       {
-        mem = &alu->iram;
+        mem = &alu.iram;
       }
       for (int i = 0; i < length; i++)
       {

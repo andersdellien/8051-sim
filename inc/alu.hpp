@@ -17,11 +17,11 @@ class Alu : public Block
   friend class SfrDpl;
   public:
     Flash *flash;
-    Memory &xram;
+    Memory xram;
     Memory iram;
     std::string Disassemble(std::uint16_t address);
     std::uint8_t GetOperands(std::uint16_t address);
-    Alu(Block *block, Memory &x, std::uint16_t iramSize);
+    Alu(std::uint16_t xramSize, std::uint16_t iramSize);
     void Reset();
     void Step();
     std::uint16_t GetPC();

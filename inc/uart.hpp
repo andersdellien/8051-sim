@@ -8,8 +8,9 @@
 class Uart: public Block
 {
   public:
-    Uart(Alu *alu);
+    Uart(Alu &alu);
+  private:
+    Sfr scon0;
 };
 
 #endif
-

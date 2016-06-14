@@ -6,8 +6,13 @@
 class Adc: public Block
 {
   public:
-    Adc(Alu *alu);
+    Adc(Alu &alu);
+  private:
+    Sfr toffh;
+    Sfr toffl;
+    Sfr adc0cf;
+    Sfr adc0pwr;
+    Sfr adc0ac;
 };
 
 #endif
-

@@ -3,7 +3,7 @@
 #include "block.hpp"
 #include "alu.hpp"
 
-Block::Block(Alu *a) : alu(a)
+Block::Block(Alu &a) : alu(a)
 {
 }
 
@@ -38,10 +38,10 @@ void Block::Reset()
   remainingTicks = std::numeric_limits<int>::max();
 }
 
-void Block::RegisterSfr(Sfr *sfr, std::uint8_t page)
+void Block::RegisterSfr(Sfr &sfr, std::uint8_t page)
 {
-  alu->RegisterSfr(sfr->address, sfr, page);
-  sfrRegisters[sfr->GetName()] = sfr;
+  alu.RegisterSfr(sfr.address, sfr, page);
+  sfrRegisters[sfr.GetName()] = &sfr;
 }
 
 int Block::CalculateRemainingTicks()

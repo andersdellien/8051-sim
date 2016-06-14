@@ -3,7 +3,7 @@
 #include "exceptions.hpp"
 #include "block.hpp"
 
-Memory::Memory(Alu *alu, std::uint16_t s): Block(alu)
+Memory::Memory(Alu &alu, std::uint16_t s): Block(alu)
 {
   size = s;
   data = new std::uint8_t[s];
@@ -17,7 +17,7 @@ std::uint8_t Memory::Get(std::uint16_t address) const
   }
   else
   {
-    throw new IllegalAddressException();    
+    throw new IllegalAddressException();
   }
 }
 

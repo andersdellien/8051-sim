@@ -49,15 +49,15 @@ class CommandHandler: public UcCallbacks
 
 CommandHandler::CommandHandler() :
   alu(1024, 256),
-  flash(&alu, 8192),
-  port0(&alu),
-  port1(&alu),
-  port2(&alu),
-  pca(&alu),
-  system(&alu),
-  uart(&alu),
-  adc(&alu),
-  timer(&alu)
+  flash(alu, 8192),
+  port0(alu),
+  port1(alu),
+  port2(alu),
+  pca(alu),
+  system(alu),
+  uart(alu),
+  adc(alu),
+  timer(alu)
 {
   blocks.insert(&alu);
   blocks.insert(&flash);

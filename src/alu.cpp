@@ -7,8 +7,29 @@
 #include "exceptions.hpp"
 #include "sfr.hpp"
 
-Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize): Block(nullptr), xram(nullptr, xramSize), iram(nullptr, iramSize), callbacks(nullptr)
+Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
+    Block(*this),
+    xram(*this, xramSize),
+    iram(*this, iramSize),
+    callbacks(nullptr),
+    sfrSP("SP", *this, 0x81),
+    sfrDPL("DPL", *this, 0x82),
+    sfrDPH("DPH", *this, 0x83),
+    sfrIP("IP", *this, 0xb8),
+    sfrSFRPAGE("SFRPAGE", *this, 0xa7),
+    sfrB("B", *this, 0xf0),
+    sfrIE("IE", *this, 0xa8),
+    sfrACC("ACC", *this, 0xe0)
 {
+  RegisterSfr(0x81, sfrSP);
+  RegisterSfr(0x82, sfrDPL);
+  RegisterSfr(0x83, sfrDPH);
+  RegisterSfr(0xb8, sfrIP);
+  RegisterSfr(0xa7, sfrSFRPAGE);
+  RegisterSfr(0xf0, sfrB);
+  RegisterSfr(0xa8, sfrIE);
+  RegisterSfr(0xe0, sfrACC);
+
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
   ACALL_11 *acall_11 = new ACALL_11(*this);
@@ -410,22 +431,6 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize): Block(nullptr), xram(n
   instructionSet[xrl_65->GetOpcode()] = xrl_65;
   XRL_63 *xrl_63 = new XRL_63(*this);
   instructionSet[xrl_63->GetOpcode()] = xrl_63;
-  sfrSP = new Sfr("SP", this, 0x81);
-  sfrDPL = new Sfr("DPL", this, 0x82);
-  sfrDPH = new Sfr("DPH", this, 0x83);
-  sfrIP = new Sfr("IP", this, 0xb8);
-  sfrIE = new SfrBitAddressable("IE", this, 0xa7);
-  sfrSFRPAGE = new Sfr("SFRPAGE", this, 0xa7);
-  sfrB = new SfrBitAddressable("B", this, 0xf0);
-  sfrACC = new SfrBitAddressable("ACC", this, 0xe0);
-  RegisterSfr(0x81, sfrSP);
-  RegisterSfr(0x82, sfrDPL);
-  RegisterSfr(0x83, sfrDPH);
-  RegisterSfr(0xb8, sfrIP);
-  RegisterSfr(0xa7, sfrSFRPAGE);
-  RegisterSfr(0xf0, sfrB);
-  RegisterSfr(0xa8, sfrIE);
-  RegisterSfr(0xe0, sfrACC);
 }
 
 std::string Alu::Disassemble(std::uint16_t address)
@@ -460,8 +465,8 @@ void Alu::Reset()
 {
   SetA(0);
   pc = 0;
-  sfrSP->data = 7;
-  sfrSFRPAGE->data = 0;
+  sfrSP.data = 7;
+  sfrSFRPAGE.data = 0;
   for (int i = 0; i < 8; i++)
   {
      SetReg(i, 0);
@@ -480,11 +485,11 @@ std::uint16_t Alu::GetPC()
 
 std::uint8_t Alu::GetSP()
 {
-  return sfrSP->data;
+  return sfrSP.data;
 }
 void Alu::SetSP(std::uint8_t s)
 {
-  sfrSP->data = s;
+  sfrSP.data = s;
 }
 
 void Alu::SetPC(std::uint16_t newPC)
@@ -494,12 +499,12 @@ void Alu::SetPC(std::uint16_t newPC)
 
 void Alu::SetA(std::uint8_t a)
 {
-  sfrACC->data = a;
+  sfrACC.data = a;
 }
 
 std::uint8_t Alu::GetA()
 {
-  return sfrACC->data;
+  return sfrACC.data;
 }
 
 std::uint8_t Alu::GetReg(std::uint8_t reg)
@@ -594,13 +599,13 @@ void Alu::SetR7(std::uint8_t val)
 
 void Alu::SetDPTR(std::uint16_t val)
 {
-  sfrDPL->data = val & 255;
-  sfrDPH->data = val / 256;
+  sfrDPL.data = val & 255;
+  sfrDPH.data = val / 256;
 }
 
 std::uint16_t Alu::GetDPTR()
 {
-  return sfrDPL->data + 256 * sfrDPH->data;
+  return sfrDPL.data + 256 * sfrDPH.data;
 }
 
 bool Alu::GetC()
@@ -638,16 +643,18 @@ void Alu::ClrOV()
   ov = false;
 }
 
-void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr, std::uint8_t page)
+void Alu::RegisterSfr(std::uint8_t address, Sfr &sfr, std::uint8_t page)
 {
-  specialFunctionRegisters[page][address] = sfr;
-  SfrBitAddressable *sfrBitAddressable = dynamic_cast<SfrBitAddressable*>(sfr);
+  specialFunctionRegisters[page][address] = &sfr;
+  SfrBitAddressable *sfrBitAddressable = dynamic_cast<SfrBitAddressable*>(&sfr);
+
+  if (sfrBitAddressable != nullptr)
   {
     bitAddressableSfr[address] = sfrBitAddressable;
   }
 }
 
-void Alu::RegisterSfr(std::uint8_t address, Sfr *sfr)
+void Alu::RegisterSfr(std::uint8_t address, Sfr &sfr)
 {
   RegisterSfr(address, sfr, 0x00);
   RegisterSfr(address, sfr, 0x0f);
@@ -659,9 +666,9 @@ void Alu::Write(std::uint8_t address, std::uint8_t data)
   {
     iram.Set(address, data);
   }
-  else if (specialFunctionRegisters[sfrSFRPAGE->data].find(address) != specialFunctionRegisters[sfrSFRPAGE->data].end())
+  else if (specialFunctionRegisters[sfrSFRPAGE.data].find(address) != specialFunctionRegisters[sfrSFRPAGE.data].end())
   {
-    specialFunctionRegisters[sfrSFRPAGE->data][address]->Write(data);
+    specialFunctionRegisters[sfrSFRPAGE.data][address]->Write(data);
   }
   else
   {
@@ -675,9 +682,9 @@ std::uint8_t Alu::Read(std::uint8_t address)
   {
     return iram.Get(address);
   }
-  else if (specialFunctionRegisters[sfrSFRPAGE->data].find(address) != specialFunctionRegisters[sfrSFRPAGE->data].end())
+  else if (specialFunctionRegisters[sfrSFRPAGE.data].find(address) != specialFunctionRegisters[sfrSFRPAGE.data].end())
   {
-    return specialFunctionRegisters[sfrSFRPAGE->data][address]->Read();
+    return specialFunctionRegisters[sfrSFRPAGE.data][address]->Read();
   }
   else
   {

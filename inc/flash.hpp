@@ -10,10 +10,12 @@ class Alu;
 class Flash : public Memory
 {
   public:
-    Flash(Alu *alu, std::uint16_t s);
+    Flash(Alu &alu, std::uint16_t s);
     void ParseHex(std::string fileName);
+  private:
+    Sfr flscl;
+    Sfr flkey;
+    Sfr flwr;
 };
 
 #endif
-
-

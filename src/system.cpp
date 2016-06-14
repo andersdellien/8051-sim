@@ -4,14 +4,7 @@
 #include "alu.hpp"
 #include "block.hpp"
 
-class CLKSEL: public Sfr
-{
-  public:
-    CLKSEL(std::string name, Alu *a, std::uint8_t addresss);
-    std::uint8_t Read();
-};
-
-CLKSEL::CLKSEL(std::string name, Alu *alu, std::uint8_t address) : Sfr(name, alu, address)
+CLKSEL::CLKSEL(std::string name, Alu &alu, std::uint8_t address) : Sfr(name, alu, address)
 {
 }
 
@@ -21,17 +14,27 @@ std::uint8_t CLKSEL::Read()
   return data | 0x80;
 }
 
-System::System(Alu *a) : Block(a)
+System::System(Alu &a) :
+  Block(a),
+  pcon("PCON", a, 0x87),
+  clksel("CLKSEL", a, 0xa9),
+  oscicn("OSCICN", a, 0xb2),
+  rstsrc("RSTSRC", a, 0xef),
+  ref0cn("REF0CN", a, 0xd1),
+  rtc0key("RTC0KEY", a, 0xae),
+  rtc0dat("RTC0DAT", a, 0xad),
+  rtc0adr("RTC0ADR", a, 0xac),
+  pmu0cf("PMU0CF", a, 0xb5),
+  reg0cn("REG0CN", a, 0xc9)
 {
-  a->RegisterSfr(0x87, new Sfr("PCON", a, 0x87));
-  a->RegisterSfr(0xa9, new CLKSEL("CLKSEL", a, 0xa9));
-  a->RegisterSfr(0xb2, new Sfr("OSCICN", a, 0xb2), 0x00);
-  a->RegisterSfr(0xef, new Sfr("RSTSRC", a, 0xef), 0x00);
-  a->RegisterSfr(0xd1, new Sfr("REF0CN", a, 0xd1), 0x00);
-  a->RegisterSfr(0xae, new Sfr("RTC0KEY", a, 0xae), 0x00);
-  a->RegisterSfr(0xad, new Sfr("RTC0DAT", a, 0xad), 0x00);
-  a->RegisterSfr(0xac, new Sfr("RTC0ADR", a, 0xac), 0x00);
-  a->RegisterSfr(0xb5, new Sfr("PMU0CF", a, 0xb5), 0x00);
-  a->RegisterSfr(0xc9, new Sfr("REG0CN", a, 0xc9), 0x00);
+  a.RegisterSfr(0x87, pcon);
+  a.RegisterSfr(0xa9, clksel);
+  a.RegisterSfr(0xb2, oscicn, 0x00);
+  a.RegisterSfr(0xef, rstsrc, 0x00);
+  a.RegisterSfr(0xd1, ref0cn, 0x00);
+  a.RegisterSfr(0xae, rtc0key, 0x00);
+  a.RegisterSfr(0xad, rtc0dat, 0x00);
+  a.RegisterSfr(0xac, rtc0adr, 0x00);
+  a.RegisterSfr(0xb5, pmu0cf, 0x00);
+  a.RegisterSfr(0xc9, reg0cn, 0x00);
 }
-

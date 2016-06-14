@@ -1,7 +1,12 @@
 #include <iostream>
+#include <stdexcept>
 #include "timer.hpp"
 #include "sfr.hpp"
 #include "block.hpp"
+
+#define T0M 4
+#define SCA 3
+#define TR0 16
 
 Timer::Timer(Alu &a) :
   Block(a),
@@ -30,4 +35,54 @@ Timer::Timer(Alu &a) :
   RegisterSfr(tmr2l, 0x00);
   RegisterSfr(tmr2h, 0x00);
   RegisterSfr(tmr2cn, 0x00);
+}
+
+void Timer::ClockEvent()
+{
+  // One-shot semantics assumed (need to check an actual 8051 here), disable the timer after it has triggered
+
+  tcon.data &= ~TR0;
+  alu.TimerInterrupt(0);
+}
+
+int Timer::CalculateRemainingTicks()
+{
+  // Only support Timer0 in 16-bite mode for now
+
+  if (tcon.data & TR0)
+  {
+    int divisor;
+    int timerConfig = tl0.data + 256 * th0.data;
+    // Check timer configuration, T0M and SCA bits in CKCON
+    if (ckcon.data & T0M)
+    {
+      divisor = 1;
+    }
+    else
+    {
+      int sca = ckcon.data & SCA;
+      if (sca == 0)
+      {
+        divisor = 12;
+      }
+      else if (sca == 1)
+      {
+        divisor = 4;
+      }
+      else if (sca == 2)
+      {
+        divisor = 48;
+      }
+      else
+      {
+        throw new std::runtime_error("illegal timer configuration");
+      }
+    }
+    // Timer counting upwards
+    return divisor * (65536 - timerConfig);
+  }
+  else
+  {
+    return std::numeric_limits<int>::max();
+  }
 }

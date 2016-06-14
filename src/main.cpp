@@ -84,7 +84,7 @@ void CommandHandler::OnInstructionExecuted()
     std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
   }
   if (traceInstruction.find(alu.flash->Get(alu.GetPC())) != traceInstruction.end() ||
-      breakCount == breakLimit || instructionCount == instructionLimit)
+      breakCount == breakLimit || instructionLimit > 0)
   {
     std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
   }
@@ -203,7 +203,7 @@ void CommandHandler::CommandLoop()
             smallestTick = (*i)->GetRemainingTicks();
           }
         }
-        if (smallestTick == std::numeric_limits<int>::max())
+        if (smallestTick == 0 || smallestTick == std::numeric_limits<int>::max())
         {
           throw new std::runtime_error("No next event");
         }
@@ -233,7 +233,7 @@ void CommandHandler::CommandLoop()
             smallestTick = (*i)->GetRemainingTicks();
           }
         }
-        if (smallestTick == std::numeric_limits<int>::max())
+        if (smallestTick == 0 || smallestTick == std::numeric_limits<int>::max())
         {
           throw new std::runtime_error("No next event");
         }

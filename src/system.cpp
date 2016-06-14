@@ -16,7 +16,6 @@ std::uint8_t CLKSEL::Read()
 
 System::System(Alu &a) :
   Block(a),
-  pcon("PCON", a, 0x87),
   clksel("CLKSEL", a, 0xa9),
   oscicn("OSCICN", a, 0xb2),
   rstsrc("RSTSRC", a, 0xef),
@@ -27,7 +26,6 @@ System::System(Alu &a) :
   pmu0cf("PMU0CF", a, 0xb5),
   reg0cn("REG0CN", a, 0xc9)
 {
-  a.RegisterSfr(0x87, pcon);
   a.RegisterSfr(0xa9, clksel);
   a.RegisterSfr(0xb2, oscicn, 0x00);
   a.RegisterSfr(0xef, rstsrc, 0x00);

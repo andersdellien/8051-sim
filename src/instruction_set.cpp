@@ -484,6 +484,7 @@ ANL_53::ANL_53(Alu &a) : Instruction(a)
 {
   opcode = 0x53;
   operands = 2;
+  cycles = 2;
 }
 
 std::string ANL_53::Disassemble(std::uint16_t address) const
@@ -1163,6 +1164,7 @@ JMP_73::JMP_73(Alu &a) : Instruction(a)
 {
   opcode = 0x73;
   operands = 0;
+  cycles = 2;
 }
 
 std::string JMP_73::Disassemble(std::uint16_t address) const
@@ -1179,6 +1181,7 @@ JNB_30::JNB_30(Alu &a) : Instruction(a)
 {
   opcode = 0x30;
   operands = 2;
+  cycles = 2;
 }
 
 std::string JNB_30::Disassemble(std::uint16_t address) const
@@ -1878,6 +1881,23 @@ std::string MUL_A4::Disassemble(std::uint16_t address) const
   return "MUL AB";
 }
 
+void MUL_A4::Execute() const
+{
+  std::uint16_t result = alu.GetA() * alu.GetB();
+
+  alu.ClrC();
+  alu.SetA((uint8_t) result);
+  if (result > 255)
+  {
+    alu.SetOV();
+  }
+  else
+  {
+    alu.ClrOV();
+  }
+  IncPC();
+}
+
 NOP::NOP(Alu &a) : Instruction(a)
 {
   opcode = 0;
@@ -1986,7 +2006,7 @@ void ORL_45::Execute() const
 {
   std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
 
-  alu.SetA(alu.GetA() | alu.flash->Get(addr));
+  alu.SetA(alu.GetA() | alu.Read(addr));
   IncPC();
 }
 
@@ -2001,7 +2021,7 @@ std::string ORL_72::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL C, ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.ReadBit(address+1);
   return ss.str();
 }
 
@@ -2176,6 +2196,16 @@ RETI_32::RETI_32(Alu &a) : Instruction(a)
   opcode = 0x32;
   operands = 0;
   cycles = 2;
+}
+
+void RETI_32::Execute() const
+{
+  std::uint8_t sp = alu.GetSP();
+  std::uint8_t high = alu.iram.Get(sp);
+  std::uint8_t low = alu.iram.Get(sp-1);
+
+  alu.SetPC(low + high * 256);
+  alu.SetSP(sp - 2);
 }
 
 std::string RETI_32::Disassemble(std::uint16_t address) const

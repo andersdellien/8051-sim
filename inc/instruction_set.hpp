@@ -301,6 +301,7 @@ class RETI_32: public Instruction
   public:
     RETI_32(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class RLC_33: public Instruction
@@ -908,6 +909,7 @@ class MUL_A4: public Instruction
   public:
     MUL_A4(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_A6: public Instruction

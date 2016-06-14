@@ -55,6 +55,7 @@ class Alu : public Block
     void SetR7(std::uint8_t val);
     void SetDPTR(std::uint16_t val);
     std::uint16_t GetDPTR();
+    std::uint8_t GetB() const;
     bool GetC();
     void SetC();
     void ClrC();
@@ -81,6 +82,7 @@ class Alu : public Block
     void RegisterCallback(UcCallbacks *cb);
     int CalculateRemainingTicks();
     void ClockEvent();
+    void TimerInterrupt(int timer);
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;
@@ -95,9 +97,11 @@ class Alu : public Block
     Sfr sfrSFRPAGE;
     SfrBitAddressable sfrB;
     SfrBitAddressable sfrACC;
+    Sfr sfrPCON;
     bool traceSfr;
     int tickCount;
     UcCallbacks *callbacks;
+    std::uint8_t interruptPending;
 };
 
 #endif

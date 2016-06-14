@@ -1,4 +1,6 @@
 #include <cstdint>
+#include <iostream>
+#include <stdexcept>
 #include "instruction.hpp"
 
 Instruction::Instruction(Alu& a, std::uint8_t o, std::uint8_t r) : alu(a), opcode(o), reg(r)
@@ -25,6 +27,8 @@ std::uint8_t Instruction::GetOperands() const
 
 void Instruction::Execute() const
 {
+  std::cout << "Instruction " << (int) opcode << " not implemented" << std::endl;
+  throw new std::runtime_error("instruction not implemented");
 }
 
 void Instruction::IncPC() const

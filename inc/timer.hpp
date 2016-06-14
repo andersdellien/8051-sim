@@ -3,11 +3,14 @@
 
 #include "alu.hpp"
 #include "block.hpp"
+#include "sfr.hpp"
 
 class Timer: public Block
 {
   public:
     Timer(Alu &alu);
+    int CalculateRemainingTicks();
+    void ClockEvent();
   private:
     Sfr ckcon;
     Sfr th1;
@@ -21,7 +24,6 @@ class Timer: public Block
     Sfr tmr2l;
     Sfr tmr2h;
     SfrBitAddressable tmr2cn;
-
 };
 
 #endif

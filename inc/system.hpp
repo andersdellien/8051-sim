@@ -16,7 +16,6 @@ class System: public Block
   public:
     System(Alu &alu);
   private:
-    Sfr pcon;
     CLKSEL clksel;
     Sfr oscicn;
     Sfr rstsrc;

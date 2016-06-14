@@ -1,11 +1,14 @@
 #include <sstream>
 #include <iostream>
+#include <limits>
 #include <string>
 #include "flash.hpp"
 #include "alu.hpp"
 #include "instruction_set.hpp"
 #include "exceptions.hpp"
 #include "sfr.hpp"
+
+#define INTERRUPT_PENDING_UART0 1
 
 Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
     Block(*this),
@@ -19,7 +22,9 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
     sfrSFRPAGE("SFRPAGE", *this, 0xa7),
     sfrB("B", *this, 0xf0),
     sfrIE("IE", *this, 0xa8),
-    sfrACC("ACC", *this, 0xe0)
+    sfrACC("ACC", *this, 0xe0),
+    sfrPCON("PCON", *this, 0x87),
+    interruptPending(0)
 {
   RegisterSfr(0x81, sfrSP);
   RegisterSfr(0x82, sfrDPL);
@@ -29,6 +34,7 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
   RegisterSfr(0xf0, sfrB);
   RegisterSfr(0xa8, sfrIE);
   RegisterSfr(0xe0, sfrACC);
+  RegisterSfr(0x87, sfrPCON);
 
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
@@ -771,19 +777,67 @@ void Alu::SetFlash(Flash *f)
 
 void Alu::ClockEvent()
 {
-  instructionSet[flash->Get(pc)]->Execute();  
+  if (interruptPending)
+  {
+    interruptPending = 0;
+    SetSP(alu.GetSP() + 1);
+    alu.iram.Set(alu.GetSP(), (uint8_t) alu.GetPC());
+    SetSP(alu.GetSP() + 1);
+    alu.iram.Set(alu.GetSP(), alu.GetPC() / 256);
+    SetPC(0xb);
+  }
+  else
+  {
+    instructionSet[flash->Get(pc)]->Execute();
+  }
   if (callbacks)
   {
     callbacks->OnInstructionExecuted();
   }  
 }
 
+#define IDLE_MODE 1
+#define STOP_MODE 2
+#define SUSPEND_MODE 64
+#define SLEEP_MODE 128
+
 int Alu::CalculateRemainingTicks()
 {
-  return instructionSet[flash->Get(pc)]->cycles;  
+  // If any sleep mode bit is set, code execution stops. So we return infinity here
+  if (sfrPCON.data & (IDLE_MODE | STOP_MODE | SUSPEND_MODE | SLEEP_MODE))
+  {
+    return std::numeric_limits<int>::max();
+  }
+  else if (interruptPending)
+  {
+    // Let's assume that jumping to the interrupt vector takes two cycles
+    return 2;
+  }
+  else
+  {
+    return instructionSet[flash->Get(pc)]->cycles;
+  }
 }
 
 void Alu::RegisterCallback(UcCallbacks *c)
 {
   callbacks = c;
+}
+
+#define ET0 2
+
+void Alu::TimerInterrupt(int timer)
+{
+  // Wake-up from Idle mode
+  sfrPCON.data &= ~IDLE_MODE;
+  // Check if interrupt is enabled
+  if ((timer == 0) && (sfrIE.data & ET0))
+  {
+    interruptPending |= INTERRUPT_PENDING_UART0;
+  }
+}
+
+std::uint8_t Alu::GetB() const
+{
+  return sfrB.data;
 }

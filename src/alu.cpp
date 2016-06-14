@@ -762,18 +762,18 @@ void Alu::SetFlash(Flash *f)
   flash = f;
 }
 
-void Alu::Tick()
+void Alu::ClockEvent()
 {
-  tickCount++;
-  if (tickCount >= instructionSet[flash->Get(pc)]->cycles)
+  instructionSet[flash->Get(pc)]->Execute();  
+  if (callbacks)
   {
-    tickCount = 0;
-    instructionSet[flash->Get(pc)]->Execute();
-    if (callbacks)
-    {
-      callbacks->OnInstructionExecuted();
-    }
-  }
+    callbacks->OnInstructionExecuted();
+  }  
+}
+
+int Alu::CalculateRemainingTicks()
+{
+  return instructionSet[flash->Get(pc)]->cycles;  
 }
 
 void Alu::RegisterCallback(UcCallbacks *c)

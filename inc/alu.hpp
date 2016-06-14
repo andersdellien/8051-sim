@@ -78,8 +78,9 @@ class Alu : public Block
 
     Memory *GetIRam() const;
     void SetFlash(Flash *flash);
-    void Tick();
     void RegisterCallback(UcCallbacks *cb);
+    int CalculateRemainingTicks();
+    void ClockEvent();
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;

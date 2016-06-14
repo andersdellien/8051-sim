@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdexcept>
+#include <limits>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -38,8 +40,11 @@ class CommandHandler: public UcCallbacks
     Timer timer;
     std::set<std::uint8_t> traceInstruction;
     std::set<std::uint16_t> breakpoints;
-    bool instructionExecuted;
     std::set<Block*> blocks;
+    int instructionCount;
+    int instructionLimit;
+    int breakCount;
+    int breakLimit;
 };
 
 CommandHandler::CommandHandler() :
@@ -69,7 +74,20 @@ CommandHandler::CommandHandler() :
 
 void CommandHandler::OnInstructionExecuted()
 {
-  instructionExecuted = true;
+  instructionCount++;
+  if (breakpoints.find(alu.GetPC()) != breakpoints.end())
+  {
+     breakCount++;
+  }
+  if (breakCount == breakLimit)
+  {
+    std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
+  }
+  if (traceInstruction.find(alu.flash->Get(alu.GetPC())) != traceInstruction.end() ||
+      breakCount == breakLimit || instructionCount == instructionLimit)
+  {
+    std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
+  }
 }
 
 void CommandHandler::Reset()
@@ -165,38 +183,63 @@ void CommandHandler::CommandLoop()
       std::cout << "R7:" << std::setw(2) << (int) alu.GetR7();
       std::cout << std::endl;
     }
-    else if (tokens[0] == "step" || tokens[0] == "go")
+    else if (tokens[0] == "step")
     {
-      int limit = 1;
-      bool go = tokens[0] == "go";
-
+      instructionLimit = 1;
+      breakLimit = -1;
+      instructionCount = 0;
+      breakCount = 0;
       if (tokens.size() > 1)
       {
-        limit = stoi(tokens[1], nullptr, 16);
+        instructionLimit = stoi(tokens[1], nullptr, 16);
       }
-      int breakCount = 0;
-      for (int i = 0; go || (i < limit); i++)
+      while (instructionCount != instructionLimit)
       {
-        instructionExecuted = false;
-        while (!instructionExecuted)
+        int smallestTick = std::numeric_limits<int>::max();
+        for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
         {
-          alu.Tick();
-        }
-        if (breakpoints.find(alu.GetPC()) != breakpoints.end())
-        {
-          breakCount++;
-          if (breakCount == limit)
+          if ((*i)->GetRemainingTicks() < smallestTick)
           {
-            std::cout << "break at " << std::hex << alu.GetPC() << std::endl;
+            smallestTick = (*i)->GetRemainingTicks();
           }
         }
-        if (traceInstruction.find(alu.flash->Get(alu.GetPC())) != traceInstruction.end() || !go || (go && breakCount == limit))
+        if (smallestTick == std::numeric_limits<int>::max())
         {
-          std::cout << std::hex << std::setw(4) << std::setfill('0') << alu.GetPC() << " " << alu.Disassemble(alu.GetPC()) << std::endl;
+          throw new std::runtime_error("No next event");
         }
-        if (go && breakCount == limit)
+        for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
         {
-          break;
+          (*i)->Tick(smallestTick);
+        }
+      }
+    }
+    else if (tokens[0] == "go")
+    {
+      instructionLimit = -1;
+      breakLimit = 1;
+      instructionCount = 0;
+      breakCount = 0;
+      if (tokens.size() > 1)
+      {
+        breakLimit = stoi(tokens[1], nullptr, 16);
+      }
+      while (breakCount != breakLimit)
+      {
+        int smallestTick = std::numeric_limits<int>::max();
+        for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
+        {
+          if ((*i)->GetRemainingTicks() < smallestTick)
+          {
+            smallestTick = (*i)->GetRemainingTicks();
+          }
+        }
+        if (smallestTick == std::numeric_limits<int>::max())
+        {
+          throw new std::runtime_error("No next event");
+        }
+        for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
+        {
+          (*i)->Tick(smallestTick);
         }
       }
     }

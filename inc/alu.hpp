@@ -87,13 +87,11 @@ class Alu : public Block
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;
-    bool c;
-    bool ac;
-    bool ov;
     Sfr sfrSP;
     Sfr sfrDPL;
     Sfr sfrDPH;
     Sfr sfrIP;
+    Sfr sfrPSW;
     SfrBitAddressable sfrIE;
     Sfr sfrSFRPAGE;
     SfrBitAddressable sfrB;

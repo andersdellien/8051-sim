@@ -25,6 +25,7 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
     sfrIE("IE", *this, 0xa8),
     sfrACC("ACC", *this, 0xe0),
     sfrPCON("PCON", *this, 0x87),
+    sfrPSW("PSW", *this, 0xd0),
     interruptPending(0)
 {
   RegisterSfr(0x81, sfrSP);
@@ -36,6 +37,7 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
   RegisterSfr(0xa8, sfrIE);
   RegisterSfr(0xe0, sfrACC);
   RegisterSfr(0x87, sfrPCON);
+  RegisterSfr(0xd0, sfrPSW);
 
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
@@ -615,39 +617,44 @@ std::uint16_t Alu::GetDPTR()
   return sfrDPL.data + 256 * sfrDPH.data;
 }
 
+// PSW bits
+#define CY 0x80
+#define AC 0x40
+#define OV 0x04
+
 bool Alu::GetC()
 {
-  return c;
+  return sfrPSW.data & CY;
 }
 
 void Alu::SetC()
 {
-  c = true;
+  sfrPSW.data |= CY;
 }
 
 void Alu::ClrC()
 {
-  c = false;
+  sfrPSW.data &= ~CY;
 }
 
 void Alu::SetAC()
 {
-  ac = true;
+  sfrPSW.data |= AC;
 }
 
 void Alu::ClrAC()
 {
-  ac = false;
+  sfrPSW.data &= ~AC;
 }
 
 void Alu::SetOV()
 {
-  ov = true;
+  sfrPSW.data |= OV;
 }
 
 void Alu::ClrOV()
 {
-  ov = false;
+  sfrPSW.data &= ~OV;
 }
 
 void Alu::RegisterSfr(std::uint8_t address, Sfr &sfr, std::uint8_t page)
@@ -679,6 +686,7 @@ void Alu::Write(std::uint8_t address, std::uint8_t data)
   }
   else
   {
+    std::cout << "Illegal address " << (int) address << std::endl;
     throw new IllegalAddressException();
   }
 }

@@ -2163,7 +2163,7 @@ std::string PUSH_C0::Disassemble(std::uint16_t address) const
 void PUSH_C0::Execute() const
 {
   alu.SetSP(alu.GetSP() + 1);
-  alu.iram.Set(alu.GetSP(), alu.iram.Get(alu.flash->Get(alu.GetPC() + 1)));
+  alu.iram.Set(alu.GetSP(), alu.Read(alu.flash->Get(alu.GetPC() + 1)));
   IncPC();
 }
 

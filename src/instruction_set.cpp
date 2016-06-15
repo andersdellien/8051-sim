@@ -1131,6 +1131,21 @@ std::string JBC_10::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
+void JBC_10::Execute() const
+{
+  std::uint8_t bitAddr = alu.flash->Get(alu.GetPC() + 1);
+  std::int8_t relAddr = alu.flash->Get(alu.GetPC() + 2);
+
+  if (alu.ReadBit(bitAddr))
+  {
+    IncPC();
+  }
+  else
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands + relAddr);
+  }
+}
+
 JC_40::JC_40(Alu &a) : Instruction(a)
 {
   opcode = 0x40;
@@ -2360,8 +2375,13 @@ SubtractionHelper::SubtractionHelper(Alu &alu, std::uint8_t opcode, std::uint8_t
   cycles = 1;
 }
 
-void SubtractionHelper::Helper(std::uint8_t operand) const
+void SubtractionHelper::Helper(std::uint16_t operand) const
 {
+  if (alu.GetC())
+  {
+    operand++;
+  }
+
   if (operand > alu.GetA())
   {
     alu.SetC();

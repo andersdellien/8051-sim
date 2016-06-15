@@ -85,6 +85,7 @@ class JBC_10: public Instruction
   public:
     JBC_10(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class ACALL_11: public Instruction
@@ -833,7 +834,7 @@ class SubtractionHelper: public Instruction
   public:
     SubtractionHelper(Alu& alu, std::uint8_t opcode, std::uint8_t reg);
   protected:
-    void Helper(std::uint8_t operand) const;
+    void Helper(std::uint16_t operand) const;
 };
 
 class SUBB_94: public Instruction

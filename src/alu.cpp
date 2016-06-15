@@ -703,6 +703,7 @@ std::uint8_t Alu::Read(std::uint8_t address)
   }
   else
   {
+    std::cout << "Illegal byte address " << (int) address << std::endl;
     throw new IllegalAddressException();
   }
 }
@@ -722,6 +723,7 @@ bool Alu::ReadBit(std::uint8_t address)
   }
   else
   {
+    std::cout << "Illegal bit address " << (int) address << std::endl;
     throw new IllegalAddressException();
   }
 }
@@ -747,6 +749,7 @@ void Alu::WriteBit(std::uint8_t address, bool value)
   }
   else
   {
+    std::cout << "Illegal address " << (int) address << std::endl;
     throw new IllegalAddressException();
   }
 }

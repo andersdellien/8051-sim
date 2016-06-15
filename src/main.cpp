@@ -114,7 +114,14 @@ void CommandHandler::CommandLoop()
     {
       tokens.push_back(token);
     }
-    if (tokens[0] == "break")
+    if (tokens[0] == "uart")
+    {
+      if (tokens[1] == "rx")
+      {
+        uart.SimulateRx(tokens[2][0]);
+      }
+    }
+    else if (tokens[0] == "break")
     {
       if (tokens[1] == "list")
       {

@@ -8,7 +8,8 @@
 #include "exceptions.hpp"
 #include "sfr.hpp"
 
-#define INTERRUPT_PENDING_UART0 1
+#define INTERRUPT_PENDING_TIMER0 1
+#define INTERRUPT_PENDING_UART0 2
 
 Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
     Block(*this),
@@ -777,14 +778,23 @@ void Alu::SetFlash(Flash *f)
 
 void Alu::ClockEvent()
 {
-  if (interruptPending)
+  if (interruptPending & INTERRUPT_PENDING_TIMER0)
   {
-    interruptPending = 0;
+    interruptPending &= ~INTERRUPT_PENDING_TIMER0;
     SetSP(alu.GetSP() + 1);
     alu.iram.Set(alu.GetSP(), (uint8_t) alu.GetPC());
     SetSP(alu.GetSP() + 1);
     alu.iram.Set(alu.GetSP(), alu.GetPC() / 256);
     SetPC(0xb);
+  }
+  else if (interruptPending & INTERRUPT_PENDING_UART0)
+  {
+    interruptPending &= ~INTERRUPT_PENDING_UART0;
+    SetSP(alu.GetSP() + 1);
+    alu.iram.Set(alu.GetSP(), (uint8_t) alu.GetPC());
+    SetSP(alu.GetSP() + 1);
+    alu.iram.Set(alu.GetSP(), alu.GetPC() / 256);
+    SetPC(0x23);
   }
   else
   {
@@ -825,6 +835,7 @@ void Alu::RegisterCallback(UcCallbacks *c)
 }
 
 #define ET0 2
+#define ES0 16
 
 void Alu::TimerInterrupt(int timer)
 {
@@ -832,6 +843,17 @@ void Alu::TimerInterrupt(int timer)
   sfrPCON.data &= ~IDLE_MODE;
   // Check if interrupt is enabled
   if ((timer == 0) && (sfrIE.data & ET0))
+  {
+    interruptPending |= INTERRUPT_PENDING_TIMER0;
+  }
+}
+
+void Alu::UartInterrupt()
+{
+  // Wake-up from Idle mode
+  sfrPCON.data &= ~IDLE_MODE;
+  // Check if interrupt is enabled
+  if (sfrIE.data & ES0)
   {
     interruptPending |= INTERRUPT_PENDING_UART0;
   }

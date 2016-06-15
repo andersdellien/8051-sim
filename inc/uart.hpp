@@ -9,6 +9,7 @@ class Uart: public Block
 {
   public:
     Uart(Alu &alu);
+    void SimulateRx(char c);
   private:
     Sfr scon0;
 };

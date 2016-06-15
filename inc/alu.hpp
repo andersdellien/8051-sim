@@ -83,6 +83,7 @@ class Alu : public Block
     int CalculateRemainingTicks();
     void ClockEvent();
     void TimerInterrupt(int timer);
+    void UartInterrupt();
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;

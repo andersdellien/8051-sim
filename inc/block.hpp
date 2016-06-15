@@ -20,11 +20,11 @@ class Block
     Block(Alu &alu);
     virtual void Reset();
     void Tick(int ticks);
+    void RegisterSfr(Sfr &sfr, std::uint8_t page);
     int GetRemainingTicks();
   protected:
     std::map<std::string, Sfr*> sfrRegisters;
     Alu &alu;
-    void RegisterSfr(Sfr &sfr, std::uint8_t page);
     int remainingTicks;
     virtual int CalculateRemainingTicks();
     virtual void ClockEvent();

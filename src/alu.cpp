@@ -24,20 +24,31 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
     sfrB("B", *this, 0xf0),
     sfrIE("IE", *this, 0xa8),
     sfrACC("ACC", *this, 0xe0),
-    sfrPCON("PCON", *this, 0x87),
+    sfrPCON("PCON", *this, 0x87, 0x00),
     sfrPSW("PSW", *this, 0xd0),
     interruptPending(0)
 {
-  RegisterSfr(0x81, sfrSP);
-  RegisterSfr(0x82, sfrDPL);
-  RegisterSfr(0x83, sfrDPH);
-  RegisterSfr(0xb8, sfrIP);
-  RegisterSfr(0xa7, sfrSFRPAGE);
-  RegisterSfr(0xf0, sfrB);
-  RegisterSfr(0xa8, sfrIE);
-  RegisterSfr(0xe0, sfrACC);
-  RegisterSfr(0x87, sfrPCON);
-  RegisterSfr(0xd0, sfrPSW);
+  Block *b = dynamic_cast<Block*>(this);
+  b->RegisterSfr(sfrSP, 0x00);
+  b->RegisterSfr(sfrDPL, 0x00);
+  b->RegisterSfr(sfrDPH, 0x00);
+  b->RegisterSfr(sfrIP, 0x00);
+  b->RegisterSfr(sfrSFRPAGE, 0x00);
+  b->RegisterSfr(sfrB, 0x00);
+  b->RegisterSfr(sfrIE, 0x00);
+  b->RegisterSfr(sfrACC, 0x00);
+  b->RegisterSfr(sfrPCON, 0x00);
+  b->RegisterSfr(sfrPSW, 0x00);
+  b->RegisterSfr(sfrSP, 0x00f);
+  b->RegisterSfr(sfrDPL, 0x0f);
+  b->RegisterSfr(sfrDPH, 0x0f);
+  b->RegisterSfr(sfrIP, 0x0f);
+  b->RegisterSfr(sfrSFRPAGE, 0x0f);
+  b->RegisterSfr(sfrB, 0x0f);
+  b->RegisterSfr(sfrIE, 0x0f);
+  b->RegisterSfr(sfrACC, 0x0f);
+  b->RegisterSfr(sfrPCON, 0x0f);
+  b->RegisterSfr(sfrPSW, 0x0f);
 
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
@@ -472,7 +483,8 @@ std::uint8_t Alu::GetOperands(std::uint16_t address)
 
 void Alu::Reset()
 {
-  SetA(0);
+  Block::Reset();
+  this->SetA(0);
   pc = 0;
   sfrSP.data = 7;
   sfrSFRPAGE.data = 0;
@@ -827,6 +839,9 @@ int Alu::CalculateRemainingTicks()
   // If any sleep mode bit is set, code execution stops. So we return infinity here
   if (sfrPCON.data & (IDLE_MODE | STOP_MODE | SUSPEND_MODE | SLEEP_MODE))
   {
+
+std::cout << (int) sfrPCON.data << std::endl;
+
     return std::numeric_limits<int>::max();
   }
   else if (interruptPending)

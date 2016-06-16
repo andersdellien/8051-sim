@@ -591,7 +591,7 @@ void Alu::Write(std::uint8_t address, std::uint8_t data)
   }
   else
   {
-    std::cout << "Illegal byte address " << (int) address << std::endl;
+    std::cout << "Illegal byte address " << (int) address << " PC " << GetPC() << std::endl;
     throw new IllegalAddressException();
   }
 }
@@ -762,6 +762,7 @@ void Alu::TimerInterrupt(int timer)
   {
     interruptPending |= INTERRUPT_PENDING_TIMER0;
   }
+  ConfigurationChanged();
 }
 
 void Alu::UartInterrupt()
@@ -773,6 +774,7 @@ void Alu::UartInterrupt()
   {
     interruptPending |= INTERRUPT_PENDING_UART0;
   }
+  ConfigurationChanged();
 }
 
 std::uint8_t Alu::GetB() const

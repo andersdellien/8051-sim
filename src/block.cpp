@@ -1,15 +1,25 @@
 #include <exception>
+#include <iostream>
 #include <limits>
 #include "block.hpp"
 #include "alu.hpp"
 
-Block::Block(Alu &a) : alu(a)
+Block::Block(Alu &a) : alu(a), configurationChanged(true)
 {
+}
+
+void Block::ConfigurationChanged()
+{
+  configurationChanged = true;
 }
 
 int Block::GetRemainingTicks()
 {
-  remainingTicks = CalculateRemainingTicks();
+  if (configurationChanged)
+  {
+    remainingTicks = CalculateRemainingTicks();
+    configurationChanged = false;
+  }
   return remainingTicks;
 }
 
@@ -19,13 +29,14 @@ void Block::Tick(int ticks)
   {
     throw new std::runtime_error("Invalid tick");
   }
-  else
+  else if (remainingTicks < std::numeric_limits<int>::max())
   {
     remainingTicks -= ticks;
   }
   if (remainingTicks == 0)
   {
     ClockEvent();
+    configurationChanged = true;
   }
 }
 

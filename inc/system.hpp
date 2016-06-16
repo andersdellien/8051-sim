@@ -8,7 +8,7 @@
 class CLKSEL: public Sfr
 {
   public:
-    CLKSEL(std::string name, Alu &a, std::uint8_t addresss, std::uint8_t resetValue, std::set<std::uint8_t> pages);
+    CLKSEL(std::string name, Block &block, std::uint8_t addresss, std::uint8_t resetValue, std::set<std::uint8_t> pages);
     std::uint8_t Read();
 };
 

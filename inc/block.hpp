@@ -22,12 +22,15 @@ class Block
     void Tick(int ticks);
     void RegisterSfr(Sfr *sfr);
     int GetRemainingTicks();
+    void ConfigurationChanged();
     Alu &alu;
   protected:
     std::map<std::string, Sfr*> sfrRegisters;
     int remainingTicks;
     virtual int CalculateRemainingTicks();
     virtual void ClockEvent();
+  public:
+    bool configurationChanged;
 };
 
 #endif

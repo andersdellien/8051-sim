@@ -9,7 +9,7 @@
 class SBUF0: public Sfr
 {
   public:
-    SBUF0(std::string name, Alu &a, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages);
+    SBUF0(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages);
     void Write(std::uint8_t tx);
 };
 

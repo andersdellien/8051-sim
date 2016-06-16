@@ -180,14 +180,10 @@ void CommandHandler::CommandLoop()
       std::cout << " SP:" << std::setw(2) << (int) alu.GetSP();
       std::cout << " A:" << std::setw(2) << (int) alu.GetA();
       std::cout << " DPTR:" << std::setw(4) << (int) alu.GetDPTR() << std::endl;
-      std::cout << "R0:" << std::setw(2) << (int) alu.GetR0() << " ";
-      std::cout << "R1:" << std::setw(2) << (int) alu.GetR1() << " ";
-      std::cout << "R2:" << std::setw(2) << (int) alu.GetR2() << " ";
-      std::cout << "R3:" << std::setw(2) << (int) alu.GetR3() << " ";
-      std::cout << "R4:" << std::setw(2) << (int) alu.GetR4() << " ";
-      std::cout << "R5:" << std::setw(2) << (int) alu.GetR5() << " ";
-      std::cout << "R6:" << std::setw(2) << (int) alu.GetR6() << " ";
-      std::cout << "R7:" << std::setw(2) << (int) alu.GetR7();
+      for (int i = 0; i < 8; i++)
+      {
+        std::cout << "R" << i << ":" << std::setw(2) << (int) alu.GetReg(i) << " ";
+      }
       std::cout << std::endl;
     }
     else if (tokens[0] == "step")

@@ -40,6 +40,9 @@ std::uint8_t Sfr::Read()
 
 void Sfr::Reset()
 {
+
+std::cout << "reset " << name << std::endl;
+
   data = resetValue;
 }
 

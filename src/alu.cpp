@@ -28,27 +28,26 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
     sfrPSW("PSW", *this, 0xd0),
     interruptPending(0)
 {
-  Block *b = dynamic_cast<Block*>(this);
-  b->RegisterSfr(sfrSP, 0x00);
-  b->RegisterSfr(sfrDPL, 0x00);
-  b->RegisterSfr(sfrDPH, 0x00);
-  b->RegisterSfr(sfrIP, 0x00);
-  b->RegisterSfr(sfrSFRPAGE, 0x00);
-  b->RegisterSfr(sfrB, 0x00);
-  b->RegisterSfr(sfrIE, 0x00);
-  b->RegisterSfr(sfrACC, 0x00);
-  b->RegisterSfr(sfrPCON, 0x00);
-  b->RegisterSfr(sfrPSW, 0x00);
-  b->RegisterSfr(sfrSP, 0x00f);
-  b->RegisterSfr(sfrDPL, 0x0f);
-  b->RegisterSfr(sfrDPH, 0x0f);
-  b->RegisterSfr(sfrIP, 0x0f);
-  b->RegisterSfr(sfrSFRPAGE, 0x0f);
-  b->RegisterSfr(sfrB, 0x0f);
-  b->RegisterSfr(sfrIE, 0x0f);
-  b->RegisterSfr(sfrACC, 0x0f);
-  b->RegisterSfr(sfrPCON, 0x0f);
-  b->RegisterSfr(sfrPSW, 0x0f);
+  Block::RegisterSfr(sfrSP, 0x00);
+  Block::RegisterSfr(sfrDPL, 0x00);
+  Block::RegisterSfr(sfrDPH, 0x00);
+  Block::RegisterSfr(sfrIP, 0x00);
+  Block::RegisterSfr(sfrSFRPAGE, 0x00);
+  Block::RegisterSfr(sfrB, 0x00);
+  Block::RegisterSfr(sfrIE, 0x00);
+  Block::RegisterSfr(sfrACC, 0x00);
+  Block::RegisterSfr(sfrPCON, 0x00);
+  Block::RegisterSfr(sfrPSW, 0x00);
+  Block::RegisterSfr(sfrSP, 0x00f);
+  Block::RegisterSfr(sfrDPL, 0x0f);
+  Block::RegisterSfr(sfrDPH, 0x0f);
+  Block::RegisterSfr(sfrIP, 0x0f);
+  Block::RegisterSfr(sfrSFRPAGE, 0x0f);
+  Block::RegisterSfr(sfrB, 0x0f);
+  Block::RegisterSfr(sfrIE, 0x0f);
+  Block::RegisterSfr(sfrACC, 0x0f);
+  Block::RegisterSfr(sfrPCON, 0x0f);
+  Block::RegisterSfr(sfrPSW, 0x0f);
 
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;

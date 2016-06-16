@@ -4,9 +4,7 @@
 
 Port2::Port2(Alu &a) :
   Port(a),
-  p2("P2", a, 0xa0),
-  xbr2("XBR2", a, 0xe3)
+  p2("P2", a, 0xa0, 0x80, {0x0, 0xf}),
+  xbr2("XBR2", a, 0xe3, 0x00, {0x0})
 {
-  a.RegisterSfr(0xa0, p2);
-  a.RegisterSfr(0xe3, xbr2, 0x00);
 }

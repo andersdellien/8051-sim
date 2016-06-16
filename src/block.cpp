@@ -38,10 +38,10 @@ void Block::Reset()
   remainingTicks = std::numeric_limits<int>::max();
 }
 
-void Block::RegisterSfr(Sfr &sfr, std::uint8_t page)
+void Block::RegisterSfr(Sfr *sfr)
 {
-  alu.RegisterSfr(sfr.address, sfr, page);
-  sfrRegisters[sfr.GetName()] = &sfr;
+  alu.RegisterSfr(sfr);
+  sfrRegisters[sfr->GetName()] = sfr;
 }
 
 int Block::CalculateRemainingTicks()

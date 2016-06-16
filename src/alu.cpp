@@ -16,39 +16,18 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
     xram(*this, xramSize),
     iram(*this, iramSize),
     callbacks(nullptr),
-    sfrSP("SP", *this, 0x81),
-    sfrDPL("DPL", *this, 0x82),
-    sfrDPH("DPH", *this, 0x83),
-    sfrIP("IP", *this, 0xb8),
-    sfrSFRPAGE("SFRPAGE", *this, 0xa7),
-    sfrB("B", *this, 0xf0),
-    sfrIE("IE", *this, 0xa8),
-    sfrACC("ACC", *this, 0xe0),
-    sfrPCON("PCON", *this, 0x87, 0x00),
-    sfrPSW("PSW", *this, 0xd0),
+    sfrSP("SP", *this, 0x81, 0x07, {0x0, 0xf}),
+    sfrDPL("DPL", *this, 0x82, 0x00, {0x0, 0xf}),
+    sfrDPH("DPH", *this, 0x83, 0x00, {0x0, 0xf}),
+    sfrIP("IP", *this, 0xb8, 0x80, {0x0, 0xf}),
+    sfrSFRPAGE("SFRPAGE", *this, 0xa7, 0x00, {0x0, 0xf}),
+    sfrB("B", *this, 0xf0, 0x00, {0x0, 0xf}),
+    sfrIE("IE", *this, 0xa8, 0x00, {0x0, 0xf}),
+    sfrACC("ACC", *this, 0xe0, 0x00, {0x0, 0xf}),
+    sfrPCON("PCON", *this, 0x87, 0x00, {0x0, 0xf}),
+    sfrPSW("PSW", *this, 0xd0, 0x00, {0x0, 0xf}),
     interruptPending(0)
 {
-  Block::RegisterSfr(sfrSP, 0x00);
-  Block::RegisterSfr(sfrDPL, 0x00);
-  Block::RegisterSfr(sfrDPH, 0x00);
-  Block::RegisterSfr(sfrIP, 0x00);
-  Block::RegisterSfr(sfrSFRPAGE, 0x00);
-  Block::RegisterSfr(sfrB, 0x00);
-  Block::RegisterSfr(sfrIE, 0x00);
-  Block::RegisterSfr(sfrACC, 0x00);
-  Block::RegisterSfr(sfrPCON, 0x00);
-  Block::RegisterSfr(sfrPSW, 0x00);
-  Block::RegisterSfr(sfrSP, 0x00f);
-  Block::RegisterSfr(sfrDPL, 0x0f);
-  Block::RegisterSfr(sfrDPH, 0x0f);
-  Block::RegisterSfr(sfrIP, 0x0f);
-  Block::RegisterSfr(sfrSFRPAGE, 0x0f);
-  Block::RegisterSfr(sfrB, 0x0f);
-  Block::RegisterSfr(sfrIE, 0x0f);
-  Block::RegisterSfr(sfrACC, 0x0f);
-  Block::RegisterSfr(sfrPCON, 0x0f);
-  Block::RegisterSfr(sfrPSW, 0x0f);
-
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
   ACALL_11 *acall_11 = new ACALL_11(*this);
@@ -485,8 +464,6 @@ void Alu::Reset()
   Block::Reset();
   this->SetA(0);
   pc = 0;
-  sfrSP.data = 7;
-  sfrSFRPAGE.data = 0;
   for (int i = 0; i < 8; i++)
   {
      SetReg(i, 0);
@@ -588,21 +565,18 @@ void Alu::ClrOV()
   sfrPSW.data &= ~OV;
 }
 
-void Alu::RegisterSfr(std::uint8_t address, Sfr &sfr, std::uint8_t page)
+void Alu::RegisterSfr(Sfr *sfr)
 {
-  specialFunctionRegisters[page][address] = &sfr;
-  SfrBitAddressable *sfrBitAddressable = dynamic_cast<SfrBitAddressable*>(&sfr);
-
-  if (sfrBitAddressable != nullptr)
+  for (std::set<std::uint8_t>::iterator i = sfr->pages.begin(); i != sfr->pages.end(); i++)
   {
-    bitAddressableSfr[address] = sfrBitAddressable;
+    specialFunctionRegisters[*i][sfr->address] = sfr;
   }
-}
 
-void Alu::RegisterSfr(std::uint8_t address, Sfr &sfr)
-{
-  RegisterSfr(address, sfr, 0x00);
-  RegisterSfr(address, sfr, 0x0f);
+  SfrBitAddressable *b = dynamic_cast<SfrBitAddressable*>(sfr);
+  if (b)
+  {
+    bitAddressableSfr[sfr->address] = b;
+  }
 }
 
 void Alu::Write(std::uint8_t address, std::uint8_t data)
@@ -617,7 +591,7 @@ void Alu::Write(std::uint8_t address, std::uint8_t data)
   }
   else
   {
-    std::cout << "Illegal address " << (int) address << std::endl;
+    std::cout << "Illegal byte address " << (int) address << std::endl;
     throw new IllegalAddressException();
   }
 }
@@ -680,7 +654,7 @@ void Alu::WriteBit(std::uint8_t address, bool value)
   }
   else
   {
-    std::cout << "Illegal address " << (int) address << std::endl;
+    std::cout << "Illegal bit address " << (int) address << std::endl;
     throw new IllegalAddressException();
   }
 }
@@ -758,9 +732,6 @@ int Alu::CalculateRemainingTicks()
   // If any sleep mode bit is set, code execution stops. So we return infinity here
   if (sfrPCON.data & (IDLE_MODE | STOP_MODE | SUSPEND_MODE | SLEEP_MODE))
   {
-
-std::cout << (int) sfrPCON.data << std::endl;
-
     return std::numeric_limits<int>::max();
   }
   else if (interruptPending)

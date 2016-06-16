@@ -19,13 +19,10 @@ typedef enum
 
 Flash::Flash(Alu &alu, std::uint16_t size) :
     Memory(alu, size),
-    flscl("FLSCL", alu, 0xb7),
-    flkey("FLKEY", alu, 0xb6),
-    flwr("FLWR", alu, 0xe5)
+    flscl("FLSCL", *this, 0xb7, 0x00, {0x0}),
+    flkey("FLKEY", *this, 0xb6, 0x00, {0x0, 0xf}),
+    flwr("FLWR", *this, 0xe5, 0x00, {0x0, 0xf})
 {
-  alu.RegisterSfr(0xb7, flscl, 0x00);
-  alu.RegisterSfr(0xb6, flkey);
-  alu.RegisterSfr(0xe5, flwr);
 }
 
 void Flash::ParseHex(std::string fileName)

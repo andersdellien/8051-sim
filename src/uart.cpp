@@ -1,9 +1,11 @@
 #include <iostream>
+#include <set>
 #include "uart.hpp"
 #include "sfr.hpp"
 #include "block.hpp"
 
-SBUF0::SBUF0(std::string name, Alu &alu, std::uint8_t address) : Sfr(name, alu, address)
+SBUF0::SBUF0(std::string name, Alu &alu, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages):
+  Sfr(name, alu, address, resetValue, pages)
 {
 }
 
@@ -14,11 +16,9 @@ void SBUF0::Write(std::uint8_t tx)
 
 Uart::Uart(Alu &a) :
   Block(a),
-  scon0("SCON0", a, 0x98),
-  sbuf0("SBUF0", a, 0x99)
+  scon0("SCON0", a, 0x98, 0x40, {0x0}),
+  sbuf0("SBUF0", a, 0x99, 0x00, {0x0})
 {
-  a.RegisterSfr(0x98, scon0, 0x00);
-  a.RegisterSfr(0x99, sbuf0, 0x00);
 }
 
 #define REN0 16

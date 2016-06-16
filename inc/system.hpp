@@ -1,13 +1,14 @@
 #ifndef _SYSTEM_HPP
 #define _SYSTEM_HPP
 
+#include <set>
 #include "alu.hpp"
 #include "block.hpp"
 
 class CLKSEL: public Sfr
 {
   public:
-    CLKSEL(std::string name, Alu &a, std::uint8_t addresss);
+    CLKSEL(std::string name, Alu &a, std::uint8_t addresss, std::uint8_t resetValue, std::set<std::uint8_t> pages);
     std::uint8_t Read();
 };
 

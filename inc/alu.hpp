@@ -31,10 +31,7 @@ class Alu : public Block
     void SetSP(std::uint8_t sp);
     void SetA(std::uint8_t data);
     std::uint16_t GetDP();
-    void RegisterSfr(std::uint8_t address, Sfr &sfr, std::uint8_t page);
-    void RegisterSfr(std::uint8_t address, Sfr &sfr);
-    std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
-    std::map<std::uint8_t, SfrBitAddressable*> bitAddressableSfr;
+    void RegisterSfr(Sfr *sfr);
     std::uint8_t GetReg(std::uint8_t reg);
     void SetReg(std::uint8_t reg, std::uint8_t value);
     void SetDPTR(std::uint16_t val);
@@ -68,6 +65,8 @@ class Alu : public Block
     void ClockEvent();
     void TimerInterrupt(int timer);
     void UartInterrupt();
+    std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
+    std::map<std::uint8_t, SfrBitAddressable*> bitAddressableSfr;
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;

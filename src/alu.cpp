@@ -26,6 +26,7 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
     sfrACC("ACC", *this, 0xe0, 0x00, {0x0, 0xf}),
     sfrPCON("PCON", *this, 0x87, 0x00, {0x0, 0xf}),
     sfrPSW("PSW", *this, 0xd0, 0x00, {0x0, 0xf}),
+    sfrPSCTL("PSCTL", *this, 0x8f, 0x00, {0x0, 0xf}),
     interruptPending(0)
 {
   INC_7 *inc_7 = new INC_7(*this);
@@ -780,4 +781,31 @@ void Alu::UartInterrupt()
 std::uint8_t Alu::GetB() const
 {
   return sfrB.data;
+}
+
+#define PSEE 2
+#define PSWE 1
+
+void Alu::WriteX(std::uint16_t address, std::uint8_t value)
+{
+  if (sfrPSCTL.data & PSWE)
+  {
+    if (sfrPSCTL.data & PSEE)
+    {
+      std::uint16_t base = address & 0xff00;
+      for (int i = 0; i < 256; i++)
+      {
+        flash->Set(base + i, value);
+      }
+    }
+    else
+    {
+      flash->Set(address, value);
+    }
+    sfrPSCTL.data &= ~(PSWE | PSEE);
+  }
+  else
+  {
+    xram.Set(address, value);
+  }
 }

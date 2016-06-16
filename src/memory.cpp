@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cstdint>
 #include "memory.hpp"
 #include "exceptions.hpp"
@@ -17,6 +18,7 @@ std::uint8_t Memory::Get(std::uint16_t address) const
   }
   else
   {
+    std::cout << "Illegal memory read at " << address << std::endl;
     throw new IllegalAddressException();
   }
 }
@@ -29,6 +31,7 @@ void Memory::Set(std::uint16_t address, std::uint8_t value)
   }
   else
   {
+    std::cout << "Illegal memory write at " << address << std::endl;
     throw new IllegalAddressException();
   }
 }

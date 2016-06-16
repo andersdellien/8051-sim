@@ -26,6 +26,7 @@ class System: public Block
     Sfr rtc0adr;
     Sfr pmu0cf;
     Sfr reg0cn;
+    Sfr vdm0cn;
 };
 
 #endif

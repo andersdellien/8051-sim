@@ -48,6 +48,8 @@ class Alu : public Block
     // Handles byte access to IRAM as well as SFR
     std::uint8_t Read(std::uint8_t address);
     void Write(std::uint8_t address, std::uint8_t value);
+    // Handles writes done via 'MOVX' - these can go to either flash or external RAM
+    void WriteX(std::uint16_t address, std::uint8_t value);
 
     // Handles bit access to bit-addressable IRAM as well as SFR
     bool ReadBit(std::uint8_t address);
@@ -80,6 +82,7 @@ class Alu : public Block
     SfrBitAddressable sfrB;
     SfrBitAddressable sfrACC;
     Sfr sfrPCON;
+    Sfr sfrPSCTL;
     bool traceSfr;
     int tickCount;
     UcCallbacks *callbacks;

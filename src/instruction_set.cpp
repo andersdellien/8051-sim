@@ -1816,7 +1816,7 @@ std::string MOVX_F0::Disassemble(std::uint16_t address) const
 
 void MOVX_F0::Execute() const
 {
-  alu.xram.Set(alu.GetDPTR(), alu.GetA());
+  alu.WriteX(alu.GetDPTR(), alu.GetA());
   IncPC();
 }
 
@@ -1834,7 +1834,7 @@ std::string MOVX_F2::Disassemble(std::uint16_t address) const
 
 void MOVX_F2::Execute() const
 {
-  alu.xram.Set(alu.GetReg(0), alu.GetA());
+  alu.WriteX(alu.GetReg(0), alu.GetA());
   IncPC();
 }
 

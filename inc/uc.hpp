@@ -8,6 +8,7 @@ class UcCallbacks
   public:
     virtual void OnInstructionExecuted() = 0;
     virtual bool OnGPIORead(std::uint8_t port, std::uint8_t pin) = 0;
+    virtual void OnGPIOWrite(std::uint8_t port, std::uint8_t pin, bool value) = 0;
 };
 
 #endif

@@ -28,6 +28,7 @@ class CommandHandler: public UcCallbacks
     void Reset();
     void OnInstructionExecuted();
     bool OnGPIORead(std::uint8_t port, std::uint8_t bit);
+    void OnGPIOWrite(std::uint8_t port, std::uint8_t bit, bool value);
   private:
     Alu alu;
     Flash flash;
@@ -71,6 +72,11 @@ CommandHandler::CommandHandler() :
   blocks.insert(&adc);
   blocks.insert(&timer);
   alu.RegisterCallback(this);
+}
+
+void CommandHandler::OnGPIOWrite(std::uint8_t port, std::uint8_t bit, bool value)
+{
+  std::cout << "Write " << value << " to port " << (int) port << " bit " << (int) bit << std::endl;
 }
 
 bool CommandHandler::OnGPIORead(std::uint8_t port, std::uint8_t bit)

@@ -252,13 +252,22 @@ void CommandHandler::CommandLoop()
         }
       }
     }
-    else if (tokens[0] == "loadsym")
+    else if (tokens[0] == "load")
     {
-      SymbolTable::GetInstance()->ParseFile(tokens[1]);
-    }
-    else if (tokens[0] == "loadfile")
-    {
-      flash.ParseHex(tokens[1]);
+      std::string hex = "hex";
+      std::string sym = "rst";
+      if (tokens[1].rfind(hex) + hex.length() == tokens[1].length())
+      {
+        flash.ParseHex(tokens[1]);
+      }    
+      else if (tokens[1].rfind(sym) + sym.length() == tokens[1].length())
+      {
+        SymbolTable::GetInstance()->ParseFile(tokens[1]);
+      }
+      else
+      {
+        std::cout << "Unknown file " << tokens[1] << std::endl;
+      }
     }
     else if (tokens[0] == "disassemble")
     {

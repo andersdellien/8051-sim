@@ -30,6 +30,7 @@ void Flash::ParseHex(std::string fileName)
   std::ifstream file;
   std::string line;
   std::uint32_t addressOffset = 0;
+  int byteCount = 0;
   file.open(fileName);
   while (std::getline(file, line))
   {
@@ -47,6 +48,7 @@ void Flash::ParseHex(std::string fileName)
     {
       for (int i = 0; i < data.length(); i += 2)
       {
+        byteCount++;
         Set(addressOffset + address + i / 2, stoi(data.substr(i, 2), nullptr, 16));
       }
     }
@@ -75,4 +77,5 @@ void Flash::ParseHex(std::string fileName)
       throw new InvalidHexFileException();
     }
   }
+  std::cout << "Read " << byteCount << " bytes from " << fileName << std::endl;
 }

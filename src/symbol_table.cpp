@@ -9,6 +9,7 @@ void SymbolTable::ParseFile(const std::string &fileName)
 {
   std::string line;
   std::ifstream file;
+  int symbolCount = 0;
 
   file.open(fileName);
   while (std::getline(file, line))
@@ -54,8 +55,10 @@ void SymbolTable::ParseFile(const std::string &fileName)
       std::uint16_t a = stoi(address, nullptr, 16);
       addressMap[a] = name;
       symbolMap[name] = a;
+      symbolCount++;
     }
   }
+  std::cout << "Found " << symbolCount << " symbols in " << fileName << std::endl;
 }
 
 void SymbolTable::LookupSymbol(const std::string &symbolName, std::uint16_t &address, bool &found)

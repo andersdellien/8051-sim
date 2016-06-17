@@ -7,7 +7,7 @@
 class Port2 : public Port
 {
   public:
-    Port2(Alu &alu);
+    Port2(std::string name, Alu &alu);
   private:
     SfrBitAddressable p2;
     Sfr xbr2;

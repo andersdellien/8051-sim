@@ -7,7 +7,7 @@
 class Port: public Block
 {
   public:
-    Port(Alu &a);
+    Port(std::string name, Alu &a);
 };
 
 #endif

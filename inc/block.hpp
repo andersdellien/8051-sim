@@ -17,14 +17,16 @@ class Alu;
 class Block
 {
   public:
-    Block(Alu &alu);
+    Block(std::string name, Alu &alu);
     virtual void Reset();
     void Tick(int ticks);
     void RegisterSfr(Sfr *sfr);
     int GetRemainingTicks();
     void ConfigurationChanged();
     Alu &alu;
+    const std::string &GetName() const;
   protected:
+    std::string name;
     std::map<std::string, Sfr*> sfrRegisters;
     int remainingTicks;
     virtual int CalculateRemainingTicks();

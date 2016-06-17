@@ -49,16 +49,16 @@ class CommandHandler: public UcCallbacks
 };
 
 CommandHandler::CommandHandler() :
-  alu(1024, 256),
-  flash(alu, 8192),
-  port0(alu),
-  port1(alu),
-  port2(alu),
-  pca(alu),
-  system(alu),
-  uart(alu),
-  adc(alu),
-  timer(alu)
+  alu("Alu", 1024, 256),
+  flash("Flash", alu, 8192),
+  port0("Port0", alu),
+  port1("Port1", alu),
+  port2("Port2", alu),
+  pca("Pca", alu),
+  system("System", alu),
+  uart("Uart", alu),
+  adc("Adc", alu),
+  timer("Timer", alu)
 {
   blocks.insert(&alu);
   blocks.insert(&flash);
@@ -138,9 +138,26 @@ void CommandHandler::CommandLoop()
         tokens.push_back(token);
       }
     }
+
     while(tokens.size() == 0);
     
-    if (tokens[0] == "uart")
+    if (tokens[0] == "block")
+    {
+      for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
+      {
+        int t = (*i)->GetRemainingTicks();
+        std::cout << (*i)->GetName();
+        if (t < std::numeric_limits<int>::max())
+        {
+          std::cout << " " << (*i)->GetRemainingTicks() << std::endl;
+        }
+        else
+        {
+          std::cout << " idle" << std::endl;
+        }
+      }
+    }
+    else if (tokens[0] == "uart")
     {
       if (tokens[1] == "rx")
       {

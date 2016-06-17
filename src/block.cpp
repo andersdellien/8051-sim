@@ -4,8 +4,13 @@
 #include "block.hpp"
 #include "alu.hpp"
 
-Block::Block(Alu &a) : alu(a), configurationChanged(true)
+Block::Block(std::string n, Alu &a) : name(n), alu(a), configurationChanged(true)
 {
+}
+
+const std::string &Block::GetName() const
+{
+  return name;
 }
 
 void Block::ConfigurationChanged()

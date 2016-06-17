@@ -6,7 +6,7 @@
 class Adc: public Block
 {
   public:
-    Adc(Alu &alu);
+    Adc(std::string name, Alu &alu);
   private:
     Sfr toffh;
     Sfr toffl;

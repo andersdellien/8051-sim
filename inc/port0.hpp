@@ -15,7 +15,7 @@ class P0: public SfrBitAddressable
 class Port0 : public Port
 {
   public:
-    Port0(Alu &alu);
+    Port0(std::string name, Alu &alu);
   private:
     Sfr p0mdin;
     Sfr p0mdout;

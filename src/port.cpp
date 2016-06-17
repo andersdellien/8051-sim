@@ -2,6 +2,6 @@
 #include "port.hpp"
 #include "block.hpp"
 
-Port::Port(Alu &a): Block(a)
+Port::Port(std::string name, Alu &a): Block(name, a)
 {
 }

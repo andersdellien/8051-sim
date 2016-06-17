@@ -21,7 +21,7 @@ class Alu : public Block
     Memory iram;
     std::string Disassemble(std::uint16_t address);
     std::uint8_t GetOperands(std::uint16_t address);
-    Alu(std::uint16_t xramSize, std::uint16_t iramSize);
+    Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize);
     void Reset();
     void Step();
     std::uint16_t GetPC();

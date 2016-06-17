@@ -7,7 +7,7 @@
 class Pca: public Block
 {
   public:
-    Pca(Alu &alu);
+    Pca(std::string name, Alu &alu);
   private:
     Sfr pca0cpl2;
     Sfr pca0h;

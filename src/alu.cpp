@@ -11,10 +11,10 @@
 #define INTERRUPT_PENDING_TIMER0 1
 #define INTERRUPT_PENDING_UART0 2
 
-Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
-    Block(*this),
-    xram(*this, xramSize),
-    iram(*this, iramSize),
+Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
+    Block(name, *this),
+    xram("XRAM", *this, xramSize),
+    iram("IRAM", *this, iramSize),
     callbacks(nullptr),
     sfrSP("SP", *this, 0x81, 0x07, {0x0, 0xf}),
     sfrDPL("DPL", *this, 0x82, 0x00, {0x0, 0xf}),

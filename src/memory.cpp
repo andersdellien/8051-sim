@@ -4,7 +4,7 @@
 #include "exceptions.hpp"
 #include "block.hpp"
 
-Memory::Memory(Alu &alu, std::uint16_t s): Block(alu)
+Memory::Memory(std::string name, Alu &alu, std::uint16_t s): Block(name, alu)
 {
   size = s;
   data = new std::uint8_t[s];

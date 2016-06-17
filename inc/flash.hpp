@@ -10,7 +10,7 @@ class Alu;
 class Flash : public Memory
 {
   public:
-    Flash(Alu &alu, std::uint16_t s);
+    Flash(std::string name, Alu &alu, std::uint16_t s);
     void ParseHex(std::string fileName);
   private:
     Sfr flscl;

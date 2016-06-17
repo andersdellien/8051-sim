@@ -24,7 +24,7 @@ class SCON0: public SfrBitAddressable
 class Uart: public Block
 {
   public:
-    Uart(Alu &alu);
+    Uart(std::string name, Alu &alu);
     void SimulateRx(char c);
     bool interruptPending;
   private:

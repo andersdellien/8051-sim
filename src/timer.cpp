@@ -34,8 +34,8 @@ void TCON::WriteBit(std::uint8_t bit, bool value)
   SfrBitAddressable::WriteBit(bit, value);
 }
 
-Timer::Timer(Alu &a) :
-  Block(a),
+Timer::Timer(std::string name, Alu &a) :
+  Block(name, a),
   ckcon("CKCON", *this, 0x8e, 0, {0x0}),
   th1("TH1", *this, 0x8d, 0, {0x0}),
   th0("TH0", *this, 0x8c, 0, {0x0}),

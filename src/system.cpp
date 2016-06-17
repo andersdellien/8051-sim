@@ -16,8 +16,8 @@ std::uint8_t CLKSEL::Read()
   return data | 0x80;
 }
 
-System::System(Alu &a) :
-  Block(a),
+System::System(std::string name, Alu &a) :
+  Block(name, a),
   clksel("CLKSEL", *this, 0xa9, 0x82, {0x0, 0xf}),
   oscicn("OSCICN", *this, 0xb2, 0x00, {0x0}),
   rstsrc("RSTSRC", *this, 0xef, 0x00, {0x0}),

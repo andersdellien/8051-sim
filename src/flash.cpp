@@ -17,8 +17,8 @@ typedef enum
   StartLinearAddress
 } RecordType;
 
-Flash::Flash(Alu &alu, std::uint16_t size) :
-    Memory(alu, size),
+Flash::Flash(std::string name, Alu &alu, std::uint16_t size) :
+    Memory(name, alu, size),
     flscl("FLSCL", *this, 0xb7, 0x00, {0x0}),
     flkey("FLKEY", *this, 0xb6, 0x00, {0x0, 0xf}),
     flwr("FLWR", *this, 0xe5, 0x00, {0x0, 0xf})

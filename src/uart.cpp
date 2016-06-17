@@ -44,8 +44,8 @@ void SBUF0::Write(std::uint8_t tx)
   block.ConfigurationChanged();
 }
 
-Uart::Uart(Alu &a) :
-  Block(a),
+Uart::Uart(std::string name, Alu &a) :
+  Block(name, a),
   scon0("SCON0", *this, 0x98, 0x40, {0x0}),
   sbuf0("SBUF0", *this, 0x99, 0x00, {0x0}),
   interruptPending(false)

@@ -259,7 +259,7 @@ void CommandHandler::CommandLoop()
       if (tokens[1].rfind(hex) + hex.length() == tokens[1].length())
       {
         flash.ParseHex(tokens[1]);
-      }    
+      }
       else if (tokens[1].rfind(sym) + sym.length() == tokens[1].length())
       {
         SymbolTable::GetInstance()->ParseFile(tokens[1]);
@@ -299,9 +299,9 @@ void CommandHandler::CommandLoop()
         const int itemsPerLine = 16;
         if (i % itemsPerLine == 0)
         {
-          std::cout << address + i << " ";
+          std::cout << std::hex << std::setfill('0') << std::setw(4) << address + i << " ";
         }
-        std::cout << (int) mem->Get(address + i);
+        std::cout << std::hex << std::setw(2) << (int) mem->Get(address + i);
         if (i % itemsPerLine == itemsPerLine - 1)
         {
           std::cout << std::endl;

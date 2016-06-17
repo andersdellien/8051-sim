@@ -178,7 +178,7 @@ std::string ACALL_F1::Disassemble(std::uint16_t address) const
 }
 
 /* 0x24 and 0x34 */
-AddImmediate::AddImmediate(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, c)
+AddImmediate::AddImmediate(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, 0, c)
 {
   operands = 1;
 }
@@ -187,7 +187,12 @@ std::string AddImmediate::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ADD A, #";
+  ss << "ADD";
+  if (carry)
+  {
+    ss << "C";
+  }
+  ss << " A, #";
   ss << (int) alu.flash->Get(address+1);
   return ss.str();
 }
@@ -197,7 +202,7 @@ void AddImmediate::Execute() const
   Helper(alu.flash->Get(alu.GetPC() + 1));
 }
 
-AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, bool c): Instruction(alu, opcode), carry(c)
+AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, std::uint8_t reg, bool c): Instruction(alu, opcode, reg), carry(c)
 {
   cycles = 1;
 }
@@ -245,7 +250,7 @@ void AdditionHelper::Helper(std::uint16_t data) const
 }
 
 /* 0x25 and 0x35 */
-AddMemory::AddMemory(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, c)
+AddMemory::AddMemory(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, 0, c)
 {
   operands = 1;
 }
@@ -269,7 +274,7 @@ void AddMemory::Execute() const
   Helper(alu.Read(alu.flash->Get(alu.GetPC() + 1)));
 }
 
-AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : AdditionHelper(a, r, o)
+AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : AdditionHelper(a, o, r, false)
 {
   operands = 0;
 }
@@ -288,7 +293,7 @@ void AddIndirectRegister::Execute() const
   Helper(data);
 }
 
-AddRegister::AddRegister(Alu &a, std::uint8_t r, std::uint8_t o, bool c) : AdditionHelper(a, r, o), carry(c)
+AddRegister::AddRegister(Alu &a, std::uint8_t o, std::uint8_t r, bool c) : AdditionHelper(a, o, r, c)
 {
   operands = 0;
 }
@@ -2415,11 +2420,9 @@ void SubtractionHelper::Helper(std::uint16_t operand) const
   IncPC();
 }
 
-SUBB_94::SUBB_94(Alu &a) : Instruction(a)
+SUBB_94::SUBB_94(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode, 0)
 {
-  opcode = 0x94;
   operands = 1;
-  cycles = 1;
 }
 
 std::string SUBB_94::Disassemble(std::uint16_t address) const
@@ -2429,6 +2432,13 @@ std::string SUBB_94::Disassemble(std::uint16_t address) const
   ss << "SUBB A, #";
   ss << (int) alu.flash->Get(address+1);
   return ss.str();
+}
+
+void SUBB_94::Execute() const
+{
+  std::uint8_t operand = alu.flash->Get(alu.GetPC() + 1);
+
+  Helper(operand);
 }
 
 SUBB_95::SUBB_95(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode, 0)
@@ -2492,9 +2502,8 @@ void SubARegister::Execute() const
   Helper(alu.GetReg(reg));
 }
 
-SWAP_C4::SWAP_C4(Alu &a) : Instruction(a)
+SWAP_C4::SWAP_C4(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
-  opcode = 0xC4;
   operands = 0;
   cycles = 1;
 }
@@ -2502,6 +2511,15 @@ SWAP_C4::SWAP_C4(Alu &a) : Instruction(a)
 std::string SWAP_C4::Disassemble(std::uint16_t address) const
 {
   return "SWAP A";
+}
+
+void SWAP_C4::Execute(void) const
+{
+  std::uint8_t data = alu.GetA();
+
+  data = ((data & 0xf) << 4) | ((data & 0xf0) >> 4);
+  alu.SetA(data);
+  IncPC();
 }
 
 XCH_C5::XCH_C5(Alu &a) : Instruction(a)

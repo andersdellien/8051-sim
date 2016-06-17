@@ -52,14 +52,14 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);
   instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, 0);
   instructionSet[0x27] = new AddIndirectRegister(*this, 0x27, 1);
-  instructionSet[0x28] = new AddRegister(*this, 0, 0x28, false);
-  instructionSet[0x29] = new AddRegister(*this, 1, 0x29, false);
-  instructionSet[0x2a] = new AddRegister(*this, 2, 0x2a, false);
-  instructionSet[0x2b] = new AddRegister(*this, 3, 0x2b, false);
-  instructionSet[0x2c] = new AddRegister(*this, 4, 0x2c, false);
-  instructionSet[0x2d] = new AddRegister(*this, 5, 0x2d, false);
-  instructionSet[0x2e] = new AddRegister(*this, 6, 0x2e, false);
-  instructionSet[0x2f] = new AddRegister(*this, 7, 0x2f, false);
+  instructionSet[0x28] = new AddRegister(*this, 0x28, 0, false);
+  instructionSet[0x29] = new AddRegister(*this, 0x29, 1, false);
+  instructionSet[0x2a] = new AddRegister(*this, 0x2a, 2, false);
+  instructionSet[0x2b] = new AddRegister(*this, 0x2b, 3, false);
+  instructionSet[0x2c] = new AddRegister(*this, 0x2c, 4, false);
+  instructionSet[0x2d] = new AddRegister(*this, 0x2d, 5, false);
+  instructionSet[0x2e] = new AddRegister(*this, 0x2e, 6, false);
+  instructionSet[0x2f] = new AddRegister(*this, 0x2f, 7, false);
   instructionSet[0x34] = new AddImmediate(*this, 0x34, true);
   instructionSet[0x35] = new AddMemory(*this, 0x35, true);
 
@@ -68,14 +68,14 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
   ADDC_37 *addc_37 = new ADDC_37(*this);
   instructionSet[addc_37->GetOpcode()] = addc_37;
 
-  instructionSet[0x38] = new AddRegister(*this, 0, 0x38, true);
-  instructionSet[0x39] = new AddRegister(*this, 1, 0x39, true);
-  instructionSet[0x3a] = new AddRegister(*this, 2, 0x3a, true);
-  instructionSet[0x3b] = new AddRegister(*this, 3, 0x3b, true);
-  instructionSet[0x3c] = new AddRegister(*this, 4, 0x3c, true);
-  instructionSet[0x3d] = new AddRegister(*this, 5, 0x3d, true);
-  instructionSet[0x3e] = new AddRegister(*this, 6, 0x3e, true);
-  instructionSet[0x3f] = new AddRegister(*this, 7, 0x3f, true);
+  instructionSet[0x38] = new AddRegister(*this, 0x38, 0, true);
+  instructionSet[0x39] = new AddRegister(*this, 0x39, 1, true);
+  instructionSet[0x3a] = new AddRegister(*this, 0x3a, 2, true);
+  instructionSet[0x3b] = new AddRegister(*this, 0x3b, 3, true);
+  instructionSet[0x3c] = new AddRegister(*this, 0x3c, 4, true);
+  instructionSet[0x3d] = new AddRegister(*this, 0x3d, 5, true);
+  instructionSet[0x3e] = new AddRegister(*this, 0x3e, 6, true);
+  instructionSet[0x3f] = new AddRegister(*this, 0x3f, 7, true);
 
   AJMP_1 *ajmp_1 = new AJMP_1(*this);
   instructionSet[ajmp_1->GetOpcode()] = ajmp_1;
@@ -367,9 +367,8 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
   instructionSet[setb_d2->GetOpcode()] = setb_d2;
   SJMP_80 *sjmp_80 = new SJMP_80(*this);
   instructionSet[sjmp_80->GetOpcode()] = sjmp_80;
-  SUBB_94 *subb_94 = new SUBB_94(*this);
-  instructionSet[subb_94->GetOpcode()] = subb_94;
 
+  instructionSet[0x94] = new SUBB_94(*this, 0x94);
   instructionSet[0x95] = new SUBB_95(*this, 0x95);
 
   SUBB_96 *subb_96 = new SUBB_96(*this);
@@ -386,8 +385,8 @@ Alu::Alu(std::uint16_t xramSize, std::uint16_t iramSize):
   instructionSet[0x9e] = new SubARegister(*this, 0x9e, 6);
   instructionSet[0x9f] = new SubARegister(*this, 0x9f, 7);
 
-  SWAP_C4 *swap_c4 = new SWAP_C4(*this);
-  instructionSet[swap_c4->GetOpcode()] = swap_c4;
+  instructionSet[0xc4] = new SWAP_C4(*this, 0xc4, 0);
+
   XCH_C5 *xch_c5 = new XCH_C5(*this);
   instructionSet[xch_c5->GetOpcode()] = xch_c5;
   XCH_C6 *xch_c6 = new XCH_C6(*this);

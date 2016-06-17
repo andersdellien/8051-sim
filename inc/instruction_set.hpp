@@ -237,7 +237,7 @@ class RL_23: public Instruction
 class AdditionHelper: public Instruction
 {
   public:
-    AdditionHelper(Alu& alu, std::uint8_t opcode, bool carry);
+    AdditionHelper(Alu& alu, std::uint8_t opcode, std::uint8_t reg, bool carry);
   protected:
     void Helper(std::uint16_t operand) const;
     bool carry;
@@ -265,7 +265,7 @@ class AddMemory: public AdditionHelper
 class AddIndirectRegister: public AdditionHelper
 {
   public:
-    AddIndirectRegister(Alu&, uint8_t reg, std::uint8_t opcode);
+    AddIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -275,11 +275,9 @@ class AddIndirectRegister: public AdditionHelper
 class AddRegister: public AdditionHelper
 {
   public:
-    AddRegister(Alu&, uint8_t reg, std::uint8_t opcode, bool carry);
+    AddRegister(Alu&, std::uint8_t opcode, std::uint8_t reg, bool carry);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-  private:
-    bool carry;
 };
 
 class JNB_30: public Instruction
@@ -837,11 +835,12 @@ class SubtractionHelper: public Instruction
     void Helper(std::uint16_t operand) const;
 };
 
-class SUBB_94: public Instruction
+class SUBB_94: public SubtractionHelper
 {
   public:
-    SUBB_94(Alu&);
+    SUBB_94(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class SUBB_95: public SubtractionHelper
@@ -1035,8 +1034,9 @@ class CLR_C3: public Instruction
 class SWAP_C4: public Instruction
 {
   public:
-    SWAP_C4(Alu&);
+    SWAP_C4(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCH_C5: public Instruction

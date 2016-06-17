@@ -11,21 +11,7 @@ P0::P0(std::string name, Block &block, std::uint8_t address, std::uint8_t resetV
 
 bool P0::ReadBit(std::uint8_t bit)
 {
-  std::string line;
-
-  std::cout << "Read of " << name << " bit " << (int) bit << std::endl;
-  std::getline(std::cin, line);
-
-  if (line[0] == '1')
-  {
-    std::cout << "Logic high" << std::endl;
-    return true;
-  }
-  else
-  {
-    std::cout << "Logic low" << std::endl;
-    return false;
-  }
+  return block.alu.GetCallback()->OnGPIORead(0, bit);
 }
 
 Port0::Port0(Alu &a) :

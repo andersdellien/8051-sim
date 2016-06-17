@@ -750,6 +750,11 @@ void Alu::RegisterCallback(UcCallbacks *c)
   callbacks = c;
 }
 
+UcCallbacks *Alu::GetCallback() const
+{
+  return callbacks;
+}
+
 #define ET0 2
 #define ES0 16
 

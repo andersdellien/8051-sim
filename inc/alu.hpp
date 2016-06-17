@@ -63,6 +63,7 @@ class Alu : public Block
     Memory *GetIRam() const;
     void SetFlash(Flash *flash);
     void RegisterCallback(UcCallbacks *cb);
+    UcCallbacks *GetCallback() const;
     int CalculateRemainingTicks();
     void ClockEvent();
     void TimerInterrupt(int timer);

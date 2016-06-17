@@ -25,8 +25,9 @@ class CommandHandler: public UcCallbacks
   public:
     CommandHandler();
     void CommandLoop();
-    void OnInstructionExecuted();
     void Reset();
+    void OnInstructionExecuted();
+    bool OnGPIORead(std::uint8_t port, std::uint8_t bit);
   private:
     Alu alu;
     Flash flash;
@@ -70,6 +71,25 @@ CommandHandler::CommandHandler() :
   blocks.insert(&adc);
   blocks.insert(&timer);
   alu.RegisterCallback(this);
+}
+
+bool CommandHandler::OnGPIORead(std::uint8_t port, std::uint8_t bit)
+{
+  std::string line;
+
+  std::cout << "Read of GPIO port " << (int) port << " bit " << (int) bit << std::endl;
+  std::getline(std::cin, line);
+
+  if (line[0] == '1')
+  {
+    std::cout << "Logic high" << std::endl;
+    return true;
+  }
+  else
+  {
+    std::cout << "Logic low" << std::endl;
+    return false;
+  }
 }
 
 void CommandHandler::OnInstructionExecuted()

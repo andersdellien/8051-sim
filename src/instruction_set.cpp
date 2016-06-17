@@ -1138,11 +1138,12 @@ void JBC_10::Execute() const
 
   if (alu.ReadBit(bitAddr))
   {
-    IncPC();
+    alu.WriteBit(bitAddr, false);
+    alu.SetPC(alu.GetPC() + 1 + operands + relAddr);
   }
   else
   {
-    alu.SetPC(alu.GetPC() + 1 + operands + relAddr);
+    IncPC();
   }
 }
 

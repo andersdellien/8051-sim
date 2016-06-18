@@ -19,37 +19,11 @@
 #include "adc.hpp"
 #include "timer.hpp"
 #include "uc.hpp"
-
-class CommandHandler: public UcCallbacks
-{
-  public:
-    CommandHandler();
-    void CommandLoop();
-    void Reset();
-    void OnInstructionExecuted();
-    bool OnGPIORead(std::uint8_t port, std::uint8_t bit);
-    void OnGPIOWrite(std::uint8_t port, std::uint8_t bit, bool value);
-  private:
-    Alu alu;
-    Flash flash;
-    Port0 port0;
-    Port1 port1;
-    Port2 port2;
-    Pca pca;
-    System system;
-    Uart uart;
-    Adc adc;
-    Timer timer;
-    std::set<std::uint8_t> traceInstruction;
-    std::set<std::uint16_t> breakpoints;
-    std::set<Block*> blocks;
-    int instructionCount;
-    int instructionLimit;
-    int breakCount;
-    int breakLimit;
-};
+#include "command.hpp"
 
 CommandHandler::CommandHandler() :
+  blockCommand(),
+
   alu("Alu", 1024, 256),
   flash("Flash", alu, 8192),
   port0("Port0", alu),
@@ -144,26 +118,16 @@ void CommandHandler::CommandLoop()
         tokens.push_back(token);
       }
     }
-
     while(tokens.size() == 0);
-    
-    if (tokens[0] == "block")
+
+    Command* cmd = Command::findCommand(tokens[0]);
+
+    if (cmd != nullptr)
     {
-      for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
-      {
-        int t = (*i)->GetRemainingTicks();
-        std::cout << (*i)->GetName();
-        if (t < std::numeric_limits<int>::max())
-        {
-          std::cout << " " << (*i)->GetRemainingTicks() << std::endl;
-        }
-        else
-        {
-          std::cout << " idle" << std::endl;
-        }
-      }
+      cmd->executeCommand(*this);
     }
-    else if (tokens[0] == "uart")
+
+    if (tokens[0] == "uart")
     {
       if (tokens[1] == "rx")
       {

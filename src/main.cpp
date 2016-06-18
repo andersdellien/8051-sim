@@ -105,15 +105,21 @@ void CommandHandler::CommandLoop()
   Reset();
   while (1)
   {
-    std::string line;
-    std::getline(std::cin, line);
-    std::stringstream ss(line);
     std::vector<std::string> tokens;
     std::string token;
-    while (std::getline(ss, token, ' '))
+    std::string line;
+
+    do
     {
-      tokens.push_back(token);
+      std::getline(std::cin, line);
+      std::stringstream ss(line);
+      while (std::getline(ss, token, ' '))
+      {
+        tokens.push_back(token);
+      }
     }
+    while(tokens.size() == 0);
+    
     if (tokens[0] == "uart")
     {
       if (tokens[1] == "rx")

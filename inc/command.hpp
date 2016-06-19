@@ -31,11 +31,9 @@ class CommandHandler;
 class Command
 {
   public:
-    Command(std::string command);
-    virtual int executeCommand(CommandHandler& handler) = 0;
-    static Command* findCommand(std::string command);
-
-    std::string cmd;
+    Command();
+    virtual bool executeCommand(CommandHandler& handler, std::vector<std::string>& tokens) = 0;
+    static bool dispatchCommand(CommandHandler &handler, std::vector<std::string>& tokens);
   private:
     static std::set<Command*> commands;
 };
@@ -44,7 +42,28 @@ class BlockCommand : public Command
 {
   public:
     BlockCommand();
-    int executeCommand(CommandHandler& handler);
+    bool executeCommand(CommandHandler& handler, std::vector<std::string>& tokens);
+};
+
+class BreakCommand : public Command
+{
+  public:
+    BreakCommand();
+    bool executeCommand(CommandHandler& handler, std::vector<std::string>& tokens);
+};
+
+class TraceCommand : public Command
+{
+  public:
+    TraceCommand();
+    bool executeCommand(CommandHandler& handler, std::vector<std::string>& tokens);
+};
+
+class MiscCommand : public Command
+{
+  public:
+    MiscCommand();
+    bool executeCommand(CommandHandler& handler, std::vector<std::string>& tokens);
 };
 
 class CommandHandler: public UcCallbacks
@@ -58,8 +77,12 @@ class CommandHandler: public UcCallbacks
     void OnGPIOWrite(std::uint8_t port, std::uint8_t bit, bool value);
 
     std::set<Block*> blocks;
-  private:
+    std::set<std::uint16_t> breakpoints;
+
     BlockCommand blockCommand;
+    BreakCommand breakCommand;
+    TraceCommand traceCommand;
+    MiscCommand miscCommand;
 
     Alu alu;
     Flash flash;
@@ -72,7 +95,6 @@ class CommandHandler: public UcCallbacks
     Adc adc;
     Timer timer;
     std::set<std::uint8_t> traceInstruction;
-    std::set<std::uint16_t> breakpoints;
     int instructionCount;
     int instructionLimit;
     int breakCount;

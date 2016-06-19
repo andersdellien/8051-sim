@@ -2,6 +2,7 @@
 #include "port.hpp"
 #include "port1.hpp"
 #include "sfr.hpp"
+#include "command.hpp"
 
 P1::P1(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages):
   SfrBitAddressable(name, block, address, resetValue, pages)
@@ -10,7 +11,7 @@ P1::P1(std::string name, Block &block, std::uint8_t address, std::uint8_t resetV
 
 void P1::WriteBit(std::uint8_t bit, bool value)
 {
-  return block.alu.GetCallback()->OnGPIOWrite(1, bit, value);
+  return block.alu.GetCallback()->OnGPIOWrite(*block.alu.GetCallbackCpu(), 1, bit, value);
 }
 
 Port1::Port1(std::string name, Alu &a) :

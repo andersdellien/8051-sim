@@ -7,6 +7,10 @@ Command::Command()
   commands.insert(this);
 }
 
+void Command::OnInstructionExecuted(Cpu8051 &handler) {}
+bool Command::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit) { return false; }
+void Command::OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value) {}
+
 bool Command::dispatchCommand(Cpu8051 &handler, std::vector<std::string>& tokens)
 {
   bool cmdHandled = true;
@@ -103,16 +107,16 @@ bool TraceCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& to
     {
       for (std::uint16_t i = 0x00; i <= 0x255; i++)
       {
-        handler.traceInstruction.insert((uint8_t) i);
+        traceInstruction.insert((uint8_t) i);
       }
     }
     else if (tokens[1] == "none")
     {
-      handler.traceInstruction.clear();
+      traceInstruction.clear();
     }
     else
     {
-      handler.traceInstruction.insert(stoi(tokens[1], nullptr, 16));
+      traceInstruction.insert(stoi(tokens[1], nullptr, 16));
     }
   }
   return retVal;
@@ -153,15 +157,15 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
   else if (tokens[0] == "step")
   {
     retVal = true;
-    handler.instructionLimit = 1;
-    handler.breakLimit = -1;
-    handler.instructionCount = 0;
-    handler.breakCount = 0;
+    instructionLimit = 1;
+    breakLimit = -1;
+    instructionCount = 0;
+    breakCount = 0;
     if (tokens.size() > 1)
     {
-      handler.instructionLimit = stoi(tokens[1], nullptr, 16);
+      instructionLimit = stoi(tokens[1], nullptr, 16);
     }
-    while (handler.instructionCount != handler.instructionLimit)
+    while (instructionCount != instructionLimit)
     {
       int smallestTick = std::numeric_limits<int>::max();
       for (std::set<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
@@ -184,15 +188,15 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
   else if (tokens[0] == "go")
   {
     retVal = true;
-    handler.instructionLimit = -1;
-    handler.breakLimit = 1;
-    handler.instructionCount = 0;
-    handler.breakCount = 0;
+    instructionLimit = -1;
+    breakLimit = 1;
+    instructionCount = 0;
+    breakCount = 0;
     if (tokens.size() > 1)
     {
-      handler.breakLimit = stoi(tokens[1], nullptr, 16);
+      breakLimit = stoi(tokens[1], nullptr, 16);
     }
-    while (handler.breakCount != handler.breakLimit)
+    while (breakCount != breakLimit)
     {
       int smallestTick = std::numeric_limits<int>::max();
       for (std::set<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
@@ -283,4 +287,46 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
   }
 
   return retVal;
+}
+
+void MiscCommand::OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value)
+{
+  std::cout << "Write " << value << " to port " << (int) port << " bit " << (int) bit << std::endl;
+}
+
+bool MiscCommand::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit)
+{
+  std::string line;
+
+  std::cout << "Read of GPIO port " << (int) port << " bit " << (int) bit << std::endl;
+  std::getline(std::cin, line);
+
+  if (line[0] == '1')
+  {
+    std::cout << "Logic high" << std::endl;
+    return true;
+  }
+  else
+  {
+    std::cout << "Logic low" << std::endl;
+    return false;
+  }
+}
+
+void MiscCommand::OnInstructionExecuted(Cpu8051 &handler)
+{
+  instructionCount++;
+  if (handler.breakpoints.find(handler.alu.GetPC()) != handler.breakpoints.end())
+  {
+     breakCount++;
+  }
+  if (breakCount == breakLimit)
+  {
+    std::cout << "break at " << std::hex << handler.alu.GetPC() << std::endl;
+  }
+  if (traceInstruction.find(handler.alu.flash->Get(handler.alu.GetPC())) != traceInstruction.end() ||
+      breakCount == breakLimit || instructionLimit > 0)
+  {
+    std::cout << std::hex << std::setw(4) << std::setfill('0') << handler.alu.GetPC() << " " << handler.alu.Disassemble(handler.alu.GetPC()) << std::endl;
+  }
 }

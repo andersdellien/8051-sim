@@ -22,16 +22,12 @@
 #include "uart.hpp"
 #include "adc.hpp"
 #include "timer.hpp"
-#include "uc.hpp"
 
-class Cpu8051: public UcCallbacks
+class Cpu8051
 {
   public:
     Cpu8051();
     void Reset();
-    void OnInstructionExecuted();
-    bool OnGPIORead(std::uint8_t port, std::uint8_t bit);
-    void OnGPIOWrite(std::uint8_t port, std::uint8_t bit, bool value);
 
     std::set<Block*> blocks;
     std::set<std::uint16_t> breakpoints;
@@ -46,11 +42,6 @@ class Cpu8051: public UcCallbacks
     Uart uart;
     Adc adc;
     Timer timer;
-    std::set<std::uint8_t> traceInstruction;
-    int instructionCount;
-    int instructionLimit;
-    int breakCount;
-    int breakLimit;
 };
 
 #endif

@@ -7,6 +7,7 @@
 #include "instruction_set.hpp"
 #include "exceptions.hpp"
 #include "sfr.hpp"
+#include "command.hpp"
 
 #define INTERRUPT_PENDING_TIMER0 1
 #define INTERRUPT_PENDING_UART0 2
@@ -718,8 +719,8 @@ void Alu::ClockEvent()
   }
   if (callbacks)
   {
-    callbacks->OnInstructionExecuted();
-  }  
+    callbacks->OnInstructionExecuted(*callbackCpu);
+  }
 }
 
 #define IDLE_MODE 1
@@ -745,14 +746,20 @@ int Alu::CalculateRemainingTicks()
   }
 }
 
-void Alu::RegisterCallback(UcCallbacks *c)
+void Alu::RegisterCallback(Command *c, Cpu8051* cpu)
 {
+  callbackCpu = cpu;
   callbacks = c;
 }
 
-UcCallbacks *Alu::GetCallback() const
+Command *Alu::GetCallback() const
 {
   return callbacks;
+}
+
+Cpu8051 *Alu::GetCallbackCpu() const
+{
+  return callbackCpu;
 }
 
 #define ET0 2

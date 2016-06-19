@@ -2,6 +2,7 @@
 
 void Shell::CommandLoop()
 {
+  cpu.alu.RegisterCallback(&miscCommand, &cpu);
   cpu.Reset();
   while (1)
   {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		955E87121D142A97007EF3D6 /* block.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 955E87111D142A97007EF3D6 /* block.cpp */; };
 		95CA13071D09F38B00CF1B51 /* alu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12F61D09F38B00CF1B51 /* alu.cpp */; };
 		95CA13081D09F38B00CF1B51 /* flash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12F71D09F38B00CF1B51 /* flash.cpp */; };
 		95CA13091D09F38B00CF1B51 /* instruction_set.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA12F81D09F38B00CF1B51 /* instruction_set.cpp */; };
@@ -23,8 +24,10 @@
 		95CA13141D09F38B00CF1B51 /* system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13031D09F38B00CF1B51 /* system.cpp */; };
 		95CA13151D09F38B00CF1B51 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13041D09F38B00CF1B51 /* timer.cpp */; };
 		95CA13161D09F38B00CF1B51 /* uart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13051D09F38B00CF1B51 /* uart.cpp */; };
-		95CA13171D09F38B00CF1B51 /* vreg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13061D09F38B00CF1B51 /* vreg.cpp */; };
 		95CA13191D09F4D300CF1B51 /* adc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95CA13181D09F4D300CF1B51 /* adc.cpp */; };
+		95D428A01D1738B9000CD522 /* command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95D4289D1D1738B9000CD522 /* command.cpp */; };
+		95D428A11D1738B9000CD522 /* cpu8051.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95D4289E1D1738B9000CD522 /* cpu8051.cpp */; };
+		95D428A21D1738B9000CD522 /* shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95D4289F1D1738B9000CD522 /* shell.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		955E87111D142A97007EF3D6 /* block.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = block.cpp; path = ../../src/block.cpp; sourceTree = "<group>"; };
 		95CA12E21D09EBA700CF1B51 /* Sim-8051 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Sim-8051"; sourceTree = BUILT_PRODUCTS_DIR; };
 		95CA12F61D09F38B00CF1B51 /* alu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = alu.cpp; path = ../../src/alu.cpp; sourceTree = "<group>"; };
 		95CA12F71D09F38B00CF1B51 /* flash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = flash.cpp; path = ../../src/flash.cpp; sourceTree = "<group>"; };
@@ -57,8 +61,10 @@
 		95CA13031D09F38B00CF1B51 /* system.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = system.cpp; path = ../../src/system.cpp; sourceTree = "<group>"; };
 		95CA13041D09F38B00CF1B51 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = ../../src/timer.cpp; sourceTree = "<group>"; };
 		95CA13051D09F38B00CF1B51 /* uart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = uart.cpp; path = ../../src/uart.cpp; sourceTree = "<group>"; };
-		95CA13061D09F38B00CF1B51 /* vreg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vreg.cpp; path = ../../src/vreg.cpp; sourceTree = "<group>"; };
 		95CA13181D09F4D300CF1B51 /* adc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = adc.cpp; path = ../../src/adc.cpp; sourceTree = "<group>"; };
+		95D4289D1D1738B9000CD522 /* command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = command.cpp; path = ../../src/command.cpp; sourceTree = "<group>"; };
+		95D4289E1D1738B9000CD522 /* cpu8051.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpu8051.cpp; path = ../../src/cpu8051.cpp; sourceTree = "<group>"; };
+		95D4289F1D1738B9000CD522 /* shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shell.cpp; path = ../../src/shell.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +81,10 @@
 		95CA12D91D09EBA700CF1B51 = {
 			isa = PBXGroup;
 			children = (
+				95D4289D1D1738B9000CD522 /* command.cpp */,
+				95D4289E1D1738B9000CD522 /* cpu8051.cpp */,
+				95D4289F1D1738B9000CD522 /* shell.cpp */,
+				955E87111D142A97007EF3D6 /* block.cpp */,
 				95CA13181D09F4D300CF1B51 /* adc.cpp */,
 				95CA12F61D09F38B00CF1B51 /* alu.cpp */,
 				95CA12F71D09F38B00CF1B51 /* flash.cpp */,
@@ -92,7 +102,6 @@
 				95CA13031D09F38B00CF1B51 /* system.cpp */,
 				95CA13041D09F38B00CF1B51 /* timer.cpp */,
 				95CA13051D09F38B00CF1B51 /* uart.cpp */,
-				95CA13061D09F38B00CF1B51 /* vreg.cpp */,
 				95CA12E31D09EBA700CF1B51 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -168,17 +177,20 @@
 				95CA13111D09F38B00CF1B51 /* port2.cpp in Sources */,
 				95CA13161D09F38B00CF1B51 /* uart.cpp in Sources */,
 				95CA13191D09F4D300CF1B51 /* adc.cpp in Sources */,
+				95D428A21D1738B9000CD522 /* shell.cpp in Sources */,
 				95CA130D1D09F38B00CF1B51 /* pca.cpp in Sources */,
 				95CA13131D09F38B00CF1B51 /* symbol_table.cpp in Sources */,
 				95CA13101D09F38B00CF1B51 /* port1.cpp in Sources */,
 				95CA130A1D09F38B00CF1B51 /* instruction.cpp in Sources */,
 				95CA130F1D09F38B00CF1B51 /* port0.cpp in Sources */,
 				95CA13141D09F38B00CF1B51 /* system.cpp in Sources */,
+				955E87121D142A97007EF3D6 /* block.cpp in Sources */,
+				95D428A11D1738B9000CD522 /* cpu8051.cpp in Sources */,
 				95CA13151D09F38B00CF1B51 /* timer.cpp in Sources */,
 				95CA130B1D09F38B00CF1B51 /* main.cpp in Sources */,
 				95CA130E1D09F38B00CF1B51 /* port.cpp in Sources */,
-				95CA13171D09F38B00CF1B51 /* vreg.cpp in Sources */,
 				95CA13071D09F38B00CF1B51 /* alu.cpp in Sources */,
+				95D428A01D1738B9000CD522 /* command.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +313,7 @@
 				95CA12EB1D09EBA700CF1B51 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

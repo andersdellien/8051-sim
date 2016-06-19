@@ -3,6 +3,7 @@
 #include "port0.hpp"
 #include "sfr.hpp"
 #include "port.hpp"
+#include "command.hpp"
 
 P0::P0(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages):
   SfrBitAddressable(name, block, address, resetValue, pages)
@@ -11,7 +12,7 @@ P0::P0(std::string name, Block &block, std::uint8_t address, std::uint8_t resetV
 
 bool P0::ReadBit(std::uint8_t bit)
 {
-  return block.alu.GetCallback()->OnGPIORead(0, bit);
+  return block.alu.GetCallback()->OnGPIORead(*block.alu.GetCallbackCpu(), 0, bit);
 }
 
 Port0::Port0(std::string name, Alu &a) :

@@ -7,9 +7,9 @@ Command::Command()
   commands.insert(this);
 }
 
-bool Command::dispatchCommand(CommandHandler &handler, std::vector<std::string>& tokens)
+bool Command::dispatchCommand(Cpu8051 &handler, std::vector<std::string>& tokens)
 {
-  int cmdHandled = 0;
+  bool cmdHandled = true;
 
   for (std::set<Command*>::iterator i = commands.begin(); i != commands.end(); i++)
   {
@@ -26,7 +26,7 @@ bool Command::dispatchCommand(CommandHandler &handler, std::vector<std::string>&
 
 BlockCommand::BlockCommand() : Command() {}
 
-bool BlockCommand::executeCommand(CommandHandler& handler, std::vector<std::string>& tokens)
+bool BlockCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
 {
   bool retVal = false;
 
@@ -53,7 +53,7 @@ bool BlockCommand::executeCommand(CommandHandler& handler, std::vector<std::stri
 
 BreakCommand::BreakCommand() : Command() {}
 
-bool BreakCommand::executeCommand(CommandHandler& handler, std::vector<std::string>& tokens)
+bool BreakCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
 {
   bool retVal = false;
 
@@ -82,7 +82,7 @@ bool BreakCommand::executeCommand(CommandHandler& handler, std::vector<std::stri
 
 TraceCommand::TraceCommand() : Command() {}
 
-bool TraceCommand::executeCommand(CommandHandler& handler, std::vector<std::string>& tokens)
+bool TraceCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
 {
   bool retVal = false;
 
@@ -120,7 +120,7 @@ bool TraceCommand::executeCommand(CommandHandler& handler, std::vector<std::stri
 
 MiscCommand::MiscCommand() : Command() {}
 
-bool MiscCommand::executeCommand(CommandHandler& handler, std::vector<std::string>& tokens)
+bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
 {
   bool retVal = false;
 

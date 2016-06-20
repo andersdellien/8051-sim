@@ -12,7 +12,7 @@
 
 #include "cpu8051.hpp"
 
-class Command
+class Command : public Cpu8051Callbacks
 {
   public:
     Command();

@@ -4,6 +4,7 @@
 #include <string>
 #include "flash.hpp"
 #include "alu.hpp"
+#include "cpu8051.hpp"
 #include "instruction_set.hpp"
 #include "exceptions.hpp"
 #include "sfr.hpp"
@@ -746,13 +747,13 @@ int Alu::CalculateRemainingTicks()
   }
 }
 
-void Alu::RegisterCallback(Command *c, Cpu8051* cpu)
+void Alu::RegisterCallback(Cpu8051Callbacks *c, Cpu8051* cpu)
 {
   callbackCpu = cpu;
   callbacks = c;
 }
 
-Command *Alu::GetCallback() const
+Cpu8051Callbacks *Alu::GetCallback() const
 {
   return callbacks;
 }

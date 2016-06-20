@@ -8,8 +8,8 @@
 #include "flash.hpp"
 #include "sfr.hpp"
 
+class Cpu8051Callbacks;
 class Cpu8051;
-class Command;
 class Instruction;
 
 class Alu : public Block
@@ -63,8 +63,8 @@ class Alu : public Block
 
     Memory *GetIRam() const;
     void SetFlash(Flash *flash);
-    void RegisterCallback(Command *cb, Cpu8051* cpu);
-    Command *GetCallback() const;
+    void RegisterCallback(Cpu8051Callbacks *cb, Cpu8051* cpu);
+    Cpu8051Callbacks *GetCallback() const;
     Cpu8051* GetCallbackCpu() const;
     int CalculateRemainingTicks();
     void ClockEvent();
@@ -88,7 +88,7 @@ class Alu : public Block
     Sfr sfrPSCTL;
     bool traceSfr;
     int tickCount;
-    Command *callbacks;
+    Cpu8051Callbacks *callbacks;
     Cpu8051* callbackCpu;
     std::uint8_t interruptPending;
 };

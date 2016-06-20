@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iomanip>
 #include <set>
+#include <queue>
 
 #include "flash.hpp"
 #include "memory.hpp"
@@ -31,12 +32,16 @@ class Cpu8051Callbacks
     virtual void OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value) = 0;
 };
 
+typedef std::pair<int,char> ExternalEvent;
+
 class Cpu8051
 {
   public:
     Cpu8051();
     void Reset();
-
+    void Tick();
+    int GetTicks();
+    void InjectEvent(int deltaTicks, char c);
     std::set<Block*> blocks;
     std::set<std::uint16_t> breakpoints;
 
@@ -50,6 +55,9 @@ class Cpu8051
     Uart uart;
     Adc adc;
     Timer timer;
+  private:
+    std::priority_queue<ExternalEvent, std::vector<ExternalEvent>, std::greater<ExternalEvent> > externalEvents;
+    int ticks;
 };
 
 #endif

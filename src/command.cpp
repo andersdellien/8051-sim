@@ -167,22 +167,7 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
     }
     while (instructionCount != instructionLimit)
     {
-      int smallestTick = std::numeric_limits<int>::max();
-      for (std::set<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
-      {
-        if ((*i)->GetRemainingTicks() < smallestTick)
-        {
-          smallestTick = (*i)->GetRemainingTicks();
-        }
-      }
-      if (smallestTick == 0 || smallestTick == std::numeric_limits<int>::max())
-      {
-        throw new std::runtime_error("No next event");
-      }
-      for (std::set<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
-      {
-        (*i)->Tick(smallestTick);
-      }
+      handler.Tick();
     }
   }
   else if (tokens[0] == "go")
@@ -198,22 +183,7 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
     }
     while (breakCount != breakLimit)
     {
-      int smallestTick = std::numeric_limits<int>::max();
-      for (std::set<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
-      {
-        if ((*i)->GetRemainingTicks() < smallestTick)
-        {
-          smallestTick = (*i)->GetRemainingTicks();
-        }
-      }
-      if (smallestTick == 0 || smallestTick == std::numeric_limits<int>::max())
-      {
-        throw new std::runtime_error("No next event");
-      }
-      for (std::set<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
-      {
-        (*i)->Tick(smallestTick);
-      }
+      handler.Tick();
     }
   }
   else if (tokens[0] == "load")

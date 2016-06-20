@@ -29,7 +29,8 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
     sfrPCON("PCON", *this, 0x87, 0x00, {0x0, 0xf}),
     sfrPSW("PSW", *this, 0xd0, 0x00, {0x0, 0xf}),
     sfrPSCTL("PSCTL", *this, 0x8f, 0x00, {0x0, 0xf}),
-    interruptPending(0)
+    interruptPending(0),
+    traceSfr(false)
 {
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;

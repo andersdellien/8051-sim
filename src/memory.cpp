@@ -53,3 +53,8 @@ void Memory::Set(std::uint16_t address, std::uint8_t value)
     throw new IllegalAddressException();
   }
 }
+
+std::uint16_t Memory::GetSize() const
+{
+  return size;
+}

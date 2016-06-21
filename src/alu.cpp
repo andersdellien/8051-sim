@@ -23,6 +23,7 @@
 #include "flash.hpp"
 #include "alu.hpp"
 #include "cpu8051.hpp"
+#include "instruction_coverage.hpp"
 #include "instruction_set.hpp"
 #include "exceptions.hpp"
 #include "sfr.hpp"
@@ -480,6 +481,20 @@ std::uint8_t Alu::GetOperands(std::uint16_t address)
   }
 }
 
+std::set<std::uint16_t> Alu::GetNextAddresses(std::uint16_t address)
+{
+  const std::uint8_t opcode = flash->Get(address);
+
+  if (instructionSet.find(opcode) == instructionSet.end())
+  {
+    throw new IllegalInstructionException();
+  }
+  else
+  {
+    return instructionSet[opcode]->GetNextAddresses(address);
+  }
+}
+
 void Alu::Reset()
 {
   Block::Reset();
@@ -723,6 +738,7 @@ void Alu::ClockEvent()
     SetSP(alu.GetSP() + 1);
     alu.iram.Set(alu.GetSP(), alu.GetPC() / 256);
     SetPC(0xb);
+    InstructionCoverage::GetInstance()->InstructionExecuted(0xb);
   }
   else if (interruptPending & INTERRUPT_PENDING_UART0)
   {
@@ -732,9 +748,11 @@ void Alu::ClockEvent()
     SetSP(alu.GetSP() + 1);
     alu.iram.Set(alu.GetSP(), alu.GetPC() / 256);
     SetPC(0x23);
+    InstructionCoverage::GetInstance()->InstructionExecuted(0x23);
   }
   else
   {
+    InstructionCoverage::GetInstance()->InstructionExecuted(pc);
     instructionSet[flash->Get(pc)]->Execute();
   }
   if (callbacks)

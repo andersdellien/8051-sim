@@ -32,6 +32,7 @@ class Memory: public Block
     Memory(std::string name, Alu &alu, std::uint16_t size);
     std::uint8_t Get(std::uint16_t address) const;
     void Set(std::uint16_t address, std::uint8_t value);
+    std::uint16_t GetSize() const;
 };
 
 #endif

@@ -17,6 +17,7 @@
  */
 
 #include "command.hpp"
+#include "instruction_coverage.hpp"
 
 std::set<Command*> Command::commands;
 
@@ -146,7 +147,20 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
 {
   bool retVal = false;
 
-  if (tokens[0] == "uart")
+  if (tokens[0] == "cov")
+  {
+    if (tokens[1] == "init")
+    {
+      InstructionCoverage::GetInstance()->Initialize(handler.alu);
+    }
+    else if (tokens[1] == "list")
+    {
+      int total, executed;
+      InstructionCoverage::GetInstance()->GetCoverage(total, executed);
+      std::cout << std::dec << "Total: " << total << " executed: " << executed << " percentage: " << std::setw(2) <<  (100.0*executed) / total << std::endl;      
+    }
+  }
+  else if (tokens[0] == "uart")
   {
     retVal = true;
     if (tokens[1] == "rx")

@@ -18,6 +18,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <set>
 #include <stdexcept>
 #include "instruction.hpp"
 
@@ -52,4 +53,9 @@ void Instruction::Execute() const
 void Instruction::IncPC() const
 {
   alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
+std::set<std::uint16_t> Instruction::GetNextAddresses(std::uint16_t address) const
+{
+  return {(std::uint16_t) (address + 1 + operands)};
 }

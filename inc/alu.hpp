@@ -21,6 +21,7 @@
 
 #include <cstdint>
 #include <map>
+#include <set>
 #include <string>
 #include "block.hpp"
 #include "flash.hpp"
@@ -40,6 +41,7 @@ class Alu : public Block
     Memory iram;
     std::string Disassemble(std::uint16_t address);
     std::uint8_t GetOperands(std::uint16_t address);
+    std::set<std::uint16_t> GetNextAddresses(std::uint16_t address);
     Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize);
     void Reset();
     void Step();

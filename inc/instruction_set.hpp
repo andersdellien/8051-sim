@@ -284,11 +284,11 @@ class AddMemory: public AdditionHelper
     void Execute() const;
 };
 
-// 0x26 and 0x27
+// 0x26, 0x27 (ADD A, @R{n}) and 0x36, 0x37 (ADDC A, @R{n})
 class AddIndirectRegister: public AdditionHelper
 {
   public:
-    AddIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    AddIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg, bool carry);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -340,20 +340,6 @@ class ADDC_34: public Instruction
 {
   public:
     ADDC_34(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class ADDC_36: public Instruction
-{
-  public:
-    ADDC_36(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class ADDC_37: public Instruction
-{
-  public:
-    ADDC_37(Alu&);
     std::string Disassemble(std::uint16_t address) const;
 };
 

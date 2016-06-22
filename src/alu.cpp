@@ -72,8 +72,8 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
 
   instructionSet[0x24] = new AddImmediate(*this, 0x24, false);
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);
-  instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, 0);
-  instructionSet[0x27] = new AddIndirectRegister(*this, 0x27, 1);
+  instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, 0, false);
+  instructionSet[0x27] = new AddIndirectRegister(*this, 0x27, 1, false);
   instructionSet[0x28] = new AddRegister(*this, 0x28, 0, false);
   instructionSet[0x29] = new AddRegister(*this, 0x29, 1, false);
   instructionSet[0x2a] = new AddRegister(*this, 0x2a, 2, false);
@@ -84,12 +84,8 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
   instructionSet[0x2f] = new AddRegister(*this, 0x2f, 7, false);
   instructionSet[0x34] = new AddImmediate(*this, 0x34, true);
   instructionSet[0x35] = new AddMemory(*this, 0x35, true);
-
-  ADDC_36 *addc_36 = new ADDC_36(*this);
-  instructionSet[addc_36->GetOpcode()] = addc_36;
-  ADDC_37 *addc_37 = new ADDC_37(*this);
-  instructionSet[addc_37->GetOpcode()] = addc_37;
-
+  instructionSet[0x36] = new AddIndirectRegister(*this, 0x36, 0, true);
+  instructionSet[0x37] = new AddIndirectRegister(*this, 0x37, 1, true);
   instructionSet[0x38] = new AddRegister(*this, 0x38, 0, true);
   instructionSet[0x39] = new AddRegister(*this, 0x39, 1, true);
   instructionSet[0x3a] = new AddRegister(*this, 0x3a, 2, true);

@@ -292,7 +292,7 @@ void AddMemory::Execute() const
   Helper(alu.Read(alu.flash->Get(alu.GetPC() + 1)));
 }
 
-AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : AdditionHelper(a, o, r, false)
+AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r, bool carry) : AdditionHelper(a, o, r, carry)
 {
   operands = 0;
 }
@@ -300,7 +300,12 @@ AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r)
 std::string AddIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "ADD A, @R" << (int) reg;
+  ss << "ADD A";
+  if (carry)
+  {
+    ss << "C";
+  }
+  ss << ", @R" << (int) reg;
   return ss.str();
 }
 
@@ -333,30 +338,6 @@ void AddRegister::Execute() const
   std::uint16_t data = alu.GetReg(reg);
 
   Helper(data);
-}
-
-ADDC_36::ADDC_36(Alu &a) : Instruction(a)
-{
-  opcode = 0x36;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string ADDC_36::Disassemble(std::uint16_t address) const
-{
-  return "ADDC A, @R0";
-}
-
-ADDC_37::ADDC_37(Alu &a) : Instruction(a)
-{
-  opcode = 0x37;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string ADDC_37::Disassemble(std::uint16_t address) const
-{
-  return "ADDC A, @R1";
 }
 
 AJMP_1::AJMP_1(Alu &a) : Instruction(a)

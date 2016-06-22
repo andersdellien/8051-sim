@@ -506,11 +506,6 @@ void Alu::Reset()
   }
 }
 
-void Alu::Step()
-{
-  instructionSet[flash->Get(pc)]->Execute();
-}
-
 std::uint16_t Alu::GetPC()
 {
   return pc;

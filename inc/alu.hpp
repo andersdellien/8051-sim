@@ -44,7 +44,6 @@ class Alu : public Block
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address);
     Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize);
     void Reset();
-    void Step();
     std::uint16_t GetPC();
     std::uint8_t GetSP();
     std::uint8_t GetA();

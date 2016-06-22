@@ -95,22 +95,15 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
   instructionSet[0x3e] = new AddRegister(*this, 0x3e, 6, true);
   instructionSet[0x3f] = new AddRegister(*this, 0x3f, 7, true);
 
-  AJMP_1 *ajmp_1 = new AJMP_1(*this);
-  instructionSet[ajmp_1->GetOpcode()] = ajmp_1;
-  AJMP_21 *ajmp_21 = new AJMP_21(*this);
-  instructionSet[ajmp_21->GetOpcode()] = ajmp_21;
-  AJMP_41 *ajmp_41 = new AJMP_41(*this);
-  instructionSet[ajmp_41->GetOpcode()] = ajmp_41;
-  AJMP_61 *ajmp_61 = new AJMP_61(*this);
-  instructionSet[ajmp_61->GetOpcode()] = ajmp_61;
-  AJMP_81 *ajmp_81 = new AJMP_81(*this);
-  instructionSet[ajmp_81->GetOpcode()] = ajmp_81;
-  AJMP_A1 *ajmp_a1 = new AJMP_A1(*this);
-  instructionSet[ajmp_a1->GetOpcode()] = ajmp_a1;
-  AJMP_C1 *ajmp_c1 = new AJMP_C1(*this);
-  instructionSet[ajmp_c1->GetOpcode()] = ajmp_c1;
-  AJMP_E1 *ajmp_e1 = new AJMP_E1(*this);
-  instructionSet[ajmp_e1->GetOpcode()] = ajmp_e1;
+  instructionSet[0x01] = new AJMP(*this, 0x01);
+  instructionSet[0x21] = new AJMP(*this, 0x21);
+  instructionSet[0x41] = new AJMP(*this, 0x41);
+  instructionSet[0x61] = new AJMP(*this, 0x61);
+  instructionSet[0x81] = new AJMP(*this, 0x81);
+  instructionSet[0xa1] = new AJMP(*this, 0xa1);
+  instructionSet[0xc1] = new AJMP(*this, 0xc1);
+  instructionSet[0xe1] = new AJMP(*this, 0xe1);
+
   ANL_52 *anl_52 = new ANL_52(*this);
   instructionSet[anl_52->GetOpcode()] = anl_52;
   ANL_53 *anl_53 = new ANL_53(*this);

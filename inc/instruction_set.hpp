@@ -30,11 +30,12 @@ class NOP: public Instruction
     void Execute() const;
 };
 
-class AJMP_1: public Instruction
+class AJMP: public Instruction
 {
   public:
-    AJMP_1(Alu&);
+    AJMP(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class LJMP_2: public Instruction
@@ -233,13 +234,6 @@ class JB_20: public Instruction
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
-class AJMP_21: public Instruction
-{
-  public:
-    AJMP_21(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class RET_22: public Instruction
 {
   public:
@@ -350,13 +344,6 @@ class JC_40: public Instruction
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
-};
-
-class AJMP_41: public Instruction
-{
-  public:
-    AJMP_41(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
 };
 
 class ORL_42: public Instruction
@@ -563,13 +550,6 @@ class JZ_60: public Instruction
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
-class AJMP_61: public Instruction
-{
-  public:
-    AJMP_61(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class XRL_62: public Instruction
 {
   public:
@@ -752,13 +732,6 @@ class SJMP_80: public Instruction
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
-class AJMP_81: public Instruction
-{
-  public:
-    AJMP_81(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class ANL_82: public Instruction
 {
   public:
@@ -898,13 +871,6 @@ class ORL_A0: public Instruction
     std::string Disassemble(std::uint16_t address) const;
 };
 
-class AJMP_A1: public Instruction
-{
-  public:
-    AJMP_A1(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class MOV_A2: public Instruction
 {
   public:
@@ -1025,13 +991,6 @@ class PUSH_C0: public Instruction
     PUSH_C0(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-};
-
-class AJMP_C1: public Instruction
-{
-  public:
-    AJMP_C1(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
 };
 
 class CLR_C2: public Instruction
@@ -1159,13 +1118,6 @@ class MOVX_E0: public Instruction
 {
   public:
     MOVX_E0(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class AJMP_E1: public Instruction
-{
-  public:
-    AJMP_E1(Alu&);
     std::string Disassemble(std::uint16_t address) const;
 };
 

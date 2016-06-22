@@ -340,14 +340,13 @@ void AddRegister::Execute() const
   Helper(data);
 }
 
-AJMP_1::AJMP_1(Alu &a) : Instruction(a)
+AJMP::AJMP(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  opcode = 1;
   operands = 1;
   cycles = 2;
 }
 
-std::string AJMP_1::Disassemble(std::uint16_t address) const
+std::string AJMP::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
@@ -356,116 +355,11 @@ std::string AJMP_1::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-AJMP_21::AJMP_21(Alu &a) : Instruction(a)
+void AJMP::Execute() const
 {
-  opcode = 0x21;
-  operands = 1;
-  cycles = 2;
-}
+  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
 
-std::string AJMP_21::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "AJMP ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-AJMP_41::AJMP_41(Alu &a) : Instruction(a)
-{
-  opcode = 0x41;
-  operands = 1;
-  cycles = 2;
-}
-
-std::string AJMP_41::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "AJMP ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-AJMP_61::AJMP_61(Alu &a) : Instruction(a)
-{
-  opcode = 0x61;
-  operands = 1;
-  cycles = 2;
-}
-
-std::string AJMP_61::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "AJMP ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-AJMP_81::AJMP_81(Alu &a) : Instruction(a)
-{
-  opcode = 0x81;
-  operands = 1;
-  cycles = 2;
-}
-
-std::string AJMP_81::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "AJMP ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-AJMP_A1::AJMP_A1(Alu &a) : Instruction(a)
-{
-  opcode = 0xA1;
-  operands = 1;
-  cycles = 2;
-}
-
-std::string AJMP_A1::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "AJMP ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-AJMP_C1::AJMP_C1(Alu &a) : Instruction(a)
-{
-  opcode = 0xC1;
-  operands = 1;
-  cycles = 2;
-}
-
-std::string AJMP_C1::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "AJMP ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-AJMP_E1::AJMP_E1(Alu &a) : Instruction(a)
-{
-  opcode = 0xE1;
-  operands = 1;
-  cycles = 2;
-}
-
-std::string AJMP_E1::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "AJMP ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
+  alu.SetPC(alu.flash->Get((alu.GetPC()) & 0x3) * 256 + addr);
 }
 
 ANL_52::ANL_52(Alu &a) : Instruction(a)

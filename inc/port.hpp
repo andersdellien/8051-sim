@@ -22,6 +22,18 @@
 #include "alu.hpp"
 #include "block.hpp"
 
+
+// Common superclass for P0, P1 and P2
+class SfrIO: public SfrBitAddressable
+{
+  public:
+    SfrIO(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages, std::uint8_t port);
+    void WriteBit(std::uint8_t bit, bool value);
+    bool ReadBit(std::uint8_t bit);
+  private:
+    std::uint8_t port;
+};
+
 class Port: public Block
 {
   public:

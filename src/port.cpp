@@ -19,6 +19,23 @@
 #include "alu.hpp"
 #include "port.hpp"
 #include "block.hpp"
+#include "sfr.hpp"
+#include "cpu8051.hpp"
+
+SfrIO::SfrIO(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages, std::uint8_t p):
+  SfrBitAddressable(name, block, address, resetValue, pages), port(p)
+{
+}
+
+bool SfrIO::ReadBit(std::uint8_t bit)
+{
+  return block.alu.GetCallback()->OnGPIORead(*block.alu.GetCallbackCpu(), port, bit);
+}
+
+void SfrIO::WriteBit(std::uint8_t bit, bool value)
+{
+  return block.alu.GetCallback()->OnGPIOWrite(*block.alu.GetCallbackCpu(), port, bit, value);
+}
 
 Port::Port(std::string name, Alu &a): Block(name, a)
 {

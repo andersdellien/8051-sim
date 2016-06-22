@@ -68,14 +68,13 @@ std::string INC_7::Disassemble(std::uint16_t address) const
   return "INC @R0";
 }
 
-ACALL_11::ACALL_11(Alu &a) : Instruction(a)
+ACALL::ACALL(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  opcode = 0x11;
   operands = 1;
   cycles = 2;
 }
 
-std::string ACALL_11::Disassemble(std::uint16_t address) const
+std::string ACALL::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
@@ -84,115 +83,16 @@ std::string ACALL_11::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-ACALL_31::ACALL_31(Alu &a) : Instruction(a)
+void ACALL::Execute() const
 {
-  opcode = 0x31;
-  operands = 0;
-  cycles = 2;
-}
+  std::uint8_t sp = alu.GetSP();
+  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
 
-std::string ACALL_31::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ACALL ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-ACALL_51::ACALL_51(Alu &a) : Instruction(a)
-{
-  opcode = 0x51;
-  operands = 0;
-  cycles = 2;
-}
+  alu.iram.Set(sp + 1, (alu.GetPC() + 1 + operands) % 256);
+  alu.iram.Set(sp + 2, (alu.GetPC() + 1 + operands) / 256);
+  alu.SetSP(sp + 2);
 
-std::string ACALL_51::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ACALL ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-ACALL_71::ACALL_71(Alu &a) : Instruction(a)
-{
-  opcode = 0x71;
-  operands = 0;
-  cycles = 2;
-}
-
-std::string ACALL_71::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ACALL ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-ACALL_91::ACALL_91(Alu &a) : Instruction(a)
-{
-  opcode = 0x91;
-  operands = 0;
-  cycles = 2;
-}
-
-std::string ACALL_91::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ACALL ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-ACALL_B1::ACALL_B1(Alu &a) : Instruction(a)
-{
-  opcode = 0xB1;
-  operands = 0;
-  cycles = 2;
-}
-
-std::string ACALL_B1::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ACALL ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-ACALL_D1::ACALL_D1(Alu &a) : Instruction(a)
-{
-  opcode = 0xD1;
-  operands = 0;
-  cycles = 2;
-}
-
-std::string ACALL_D1::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ACALL ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
-}
-
-ACALL_F1::ACALL_F1(Alu &a) : Instruction(a)
-{
-  opcode = 0xF1;
-  operands = 0;
-  cycles = 2;
-}
-
-std::string ACALL_F1::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ACALL ";
-  ss << (int) alu.flash->Get(address+1);
-  return ss.str();
+  alu.SetPC((alu.flash->Get(alu.GetPC()) & 0x3) * 256 + addr);
 }
 
 /* 0x24 and 0x34 */

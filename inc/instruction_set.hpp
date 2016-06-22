@@ -109,11 +109,12 @@ class JBC_10: public Instruction
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
-class ACALL_11: public Instruction
+class ACALL: public Instruction
 {
   public:
-    ACALL_11(Alu&);
+    ACALL(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class LCALL_12: public Instruction
@@ -306,13 +307,6 @@ class JNB_30: public Instruction
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
-class ACALL_31: public Instruction
-{
-  public:
-    ACALL_31(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class RETI_32: public Instruction
 {
   public:
@@ -423,13 +417,6 @@ class JNC_50: public Instruction
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
-};
-
-class ACALL_51: public Instruction
-{
-  public:
-    ACALL_51(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
 };
 
 class ANL_52: public Instruction
@@ -659,13 +646,6 @@ class JNZ_70: public Instruction
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
-class ACALL_71: public Instruction
-{
-  public:
-    ACALL_71(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class ORL_72: public Instruction
 {
   public:
@@ -794,13 +774,6 @@ class MOV_90: public Instruction
     void Execute() const;
 };
 
-class ACALL_91: public Instruction
-{
-  public:
-    ACALL_91(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class MOV_92: public Instruction
 {
   public:
@@ -921,13 +894,6 @@ class ANL_B0: public Instruction
 {
   public:
     ANL_B0(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class ACALL_B1: public Instruction
-{
-  public:
-    ACALL_B1(Alu&);
     std::string Disassemble(std::uint16_t address) const;
 };
 
@@ -1055,13 +1021,6 @@ class POP_D0: public Instruction
     void Execute() const;
 };
 
-class ACALL_D1: public Instruction
-{
-  public:
-    ACALL_D1(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class SETB_D2: public Instruction
 {
   public:
@@ -1165,13 +1124,6 @@ class MOVX_F0: public Instruction
     MOVX_F0(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-};
-
-class ACALL_F1: public Instruction
-{
-  public:
-    ACALL_F1(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
 };
 
 class MOVX_F2: public Instruction

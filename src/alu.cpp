@@ -53,22 +53,15 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
 {
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
-  ACALL_11 *acall_11 = new ACALL_11(*this);
-  instructionSet[acall_11->GetOpcode()] = acall_11;
-  ACALL_31 *acall_31 = new ACALL_31(*this);
-  instructionSet[acall_31->GetOpcode()] = acall_31;
-  ACALL_51 *acall_51 = new ACALL_51(*this);
-  instructionSet[acall_51->GetOpcode()] = acall_51;
-  ACALL_71 *acall_71 = new ACALL_71(*this);
-  instructionSet[acall_71->GetOpcode()] = acall_71;
-  ACALL_91 *acall_91 = new ACALL_91(*this);
-  instructionSet[acall_91->GetOpcode()] = acall_91;
-  ACALL_B1 *acall_b1 = new ACALL_B1(*this);
-  instructionSet[acall_b1->GetOpcode()] = acall_b1;
-  ACALL_D1 *acall_d1 = new ACALL_D1(*this);
-  instructionSet[acall_d1->GetOpcode()] = acall_d1;
-  ACALL_F1 *acall_f1 = new ACALL_F1(*this);
-  instructionSet[acall_f1->GetOpcode()] = acall_f1;
+
+  instructionSet[0x11] = new ACALL(*this, 0x11);
+  instructionSet[0x31] = new ACALL(*this, 0x31);
+  instructionSet[0x51] = new ACALL(*this, 0x51);
+  instructionSet[0x71] = new ACALL(*this, 0x71);
+  instructionSet[0x91] = new ACALL(*this, 0x91);
+  instructionSet[0xb1] = new ACALL(*this, 0xb1);
+  instructionSet[0xd1] = new ACALL(*this, 0xd1);
+  instructionSet[0xf1] = new ACALL(*this, 0xf1);
 
   instructionSet[0x24] = new AddImmediate(*this, 0x24, false);
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);

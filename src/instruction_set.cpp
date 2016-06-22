@@ -79,20 +79,20 @@ std::string ACALL::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ACALL ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void ACALL::Execute() const
 {
   std::uint8_t sp = alu.GetSP();
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
 
-  alu.iram.Set(sp + 1, (alu.GetPC() + 1 + operands) % 256);
-  alu.iram.Set(sp + 2, (alu.GetPC() + 1 + operands) / 256);
+  alu.iram.Write(sp + 1, (alu.GetPC() + 1 + operands) % 256);
+  alu.iram.Write(sp + 2, (alu.GetPC() + 1 + operands) / 256);
   alu.SetSP(sp + 2);
 
-  alu.SetPC((alu.flash->Get(alu.GetPC()) & 0x3) * 256 + addr);
+  alu.SetPC((alu.flash.Read(alu.GetPC()) & 0x3) * 256 + addr);
 }
 
 /* 0x24 and 0x34 */
@@ -111,13 +111,13 @@ std::string AddImmediate::Disassemble(std::uint16_t address) const
     ss << "C";
   }
   ss << " A, #";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void AddImmediate::Execute() const
 {
-  Helper(alu.flash->Get(alu.GetPC() + 1));
+  Helper(alu.flash.Read(alu.GetPC() + 1));
 }
 
 AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, std::uint8_t reg, bool c): Instruction(alu, opcode, reg), carry(c)
@@ -183,13 +183,13 @@ std::string AddMemory::Disassemble(std::uint16_t address) const
     ss << "C";
   }
   ss << ",";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void AddMemory::Execute() const
 {
-  Helper(alu.Read(alu.flash->Get(alu.GetPC() + 1)));
+  Helper(alu.Read(alu.flash.Read(alu.GetPC() + 1)));
 }
 
 AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r, bool carry) : AdditionHelper(a, o, r, carry)
@@ -251,15 +251,15 @@ std::string AJMP::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "AJMP ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void AJMP::Execute() const
 {
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
 
-  alu.SetPC(alu.flash->Get((alu.GetPC()) & 0x3) * 256 + addr);
+  alu.SetPC(alu.flash.Read((alu.GetPC()) & 0x3) * 256 + addr);
 }
 
 ANL_52::ANL_52(Alu &a) : Instruction(a)
@@ -274,7 +274,7 @@ std::string ANL_52::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ANL ";
-  ss << (int) alu.flash->Get(address+1) << ", A";
+  ss << (int) alu.flash.Read(address+1) << ", A";
   return ss.str();
 }
 
@@ -290,14 +290,14 @@ std::string ANL_53::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ANL ";
-  ss << (int) alu.flash->Get(address+1) << " ,#" << (int) alu.flash->Get(address+2);
+  ss << (int) alu.flash.Read(address+1) << " ,#" << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void ANL_53::Execute() const
 {
-  std::uint8_t operand = alu.flash->Get(alu.GetPC() + 2);
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t operand = alu.flash.Read(alu.GetPC() + 2);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.Write(addr, alu.Read(addr) & operand);
   IncPC();
@@ -315,13 +315,13 @@ std::string ANL_54::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "ANL A, #";
-  ss << std::setw(2) << (int) alu.flash->Get(address+1);
+  ss << std::setw(2) << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void ANL_54::Execute() const
 {
-  std::uint8_t operand = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t operand = alu.flash.Read(alu.GetPC() + 1);
   alu.SetA(operand & alu.GetA());
   IncPC();
 }
@@ -338,14 +338,14 @@ std::string ANL_55::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "ANL A,";
-  ss << std::setw(2) << (int) alu.flash->Get(address+1);
+  ss << std::setw(2) << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void ANL_55::Execute() const
 {
-  std::uint8_t address = alu.flash->Get(alu.GetPC() + 1);
-  alu.SetA(alu.iram.Get(address) & alu.GetA());
+  std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
+  alu.SetA(alu.iram.Read(address) & alu.GetA());
   IncPC();
 }
 
@@ -385,7 +385,7 @@ std::string ANL_82::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ANL C, ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -401,7 +401,7 @@ std::string ANL_B0::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ANL C, ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -417,7 +417,7 @@ std::string CJNE_B4::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "CJNE A, #";
-  ss << (int) alu.flash->Get(address+1) << ", " << (int) alu.flash->Get(address+2);
+  ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
@@ -433,14 +433,14 @@ std::string CJNE_B5::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "CJNE A, ";
-  ss << (int) alu.flash->Get(address+1) << ", " << (int) alu.flash->Get(address+2);
+  ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void CJNE_B5::Execute() const
 {
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash->Get(alu.GetPC() + 2);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
+  std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 2);
 
   if (alu.GetA() != alu.Read(addr))
   {
@@ -463,7 +463,7 @@ void CJNE_B5::Execute() const
 
 std::set<std::uint16_t> CJNE_B5::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t reladdr = alu.flash->Get(address + 2);
+  std::int8_t reladdr = alu.flash.Read(address + 2);
   return {(std::uint16_t) (address + 1 + operands + reladdr), (std::uint16_t) (address + 1 + operands)};
 }
 
@@ -479,7 +479,7 @@ std::string CJNE_B6::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "CJNE @R0, #";
-  ss << std::setw(2) << (int) alu.flash->Get(address+1) << ", " << std::setw(2) << (int) alu.flash->Get(address+2);
+  ss << std::setw(2) << (int) alu.flash.Read(address+1) << ", " << std::setw(2) << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
@@ -495,7 +495,7 @@ std::string CJNE_B7::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "CJNE @R1, #";
-  ss << (int) alu.flash->Get(address+1) << ", " << (int) alu.flash->Get(address+2);
+  ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
@@ -510,14 +510,14 @@ std::string CJNERegister::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "CJNE R" << (int) reg << ", #";
-  ss << std::setw(2) << (int) alu.flash->Get(address+1) << ", " << std::setw(2) << (int) alu.flash->Get(address+2);
+  ss << std::setw(2) << (int) alu.flash.Read(address+1) << ", " << std::setw(2) << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void CJNERegister::Execute() const
 {
-  std::uint8_t operand = alu.flash->Get(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash->Get(alu.GetPC() + 2);
+  std::uint8_t operand = alu.flash.Read(alu.GetPC() + 1);
+  std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 2);
 
   if (alu.GetReg(reg) != operand)
   {
@@ -540,7 +540,7 @@ void CJNERegister::Execute() const
 
 std::set<std::uint16_t> CJNERegister::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t reladdr = alu.flash->Get(address + 2);
+  std::int8_t reladdr = alu.flash.Read(address + 2);
   return {(std::uint16_t) (address + 1 + operands + reladdr), (std::uint16_t) (address + 1 + operands)};
 }
 
@@ -556,13 +556,13 @@ std::string CLR_C2::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "CLR ";
-  ss << alu.GetBitAddressName((int) alu.flash->Get(address+1));
+  ss << alu.GetBitAddressName((int) alu.flash.Read(address+1));
   return ss.str();
 }
 
 void CLR_C2::Execute(void) const
 {
-  std::uint8_t bitAddr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.WriteBit(bitAddr, false);
   alu.SetPC(alu.GetPC() + 1 + operands);
@@ -653,7 +653,7 @@ std::string CPL_B2::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "CPL ";
-  ss << alu.flash->Get(address+1);
+  ss << alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -681,7 +681,7 @@ std::string DEC_15::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "DEC ";
-  ss << alu.flash->Get(address+1);
+  ss << alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -751,7 +751,7 @@ std::string DJNZ_D5::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "DJNZ ";
-  ss << alu.flash->Get(address+1) << ", " << (int) alu.flash->Get(address+2);
+  ss << alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
@@ -766,13 +766,13 @@ std::string DJNZRegister::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "DJNZ R" << (int) reg << ", ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void DJNZRegister::Execute() const
 {
-  std::int8_t reladdr = alu.flash->Get(alu.GetPC() + 1);
+  std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.SetReg(reg, alu.GetReg(reg) - 1);
 
@@ -788,7 +788,7 @@ void DJNZRegister::Execute() const
 
 std::set<std::uint16_t> DJNZRegister::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t reladdr = alu.flash->Get(address + 1);
+  std::int8_t reladdr = alu.flash.Read(address + 1);
 
   return {(std::uint16_t) (address + 1 + operands + reladdr), (std::uint16_t) (address + 1 + operands)};
 }
@@ -805,13 +805,13 @@ std::string INC_5::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "INC ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void INC_5::Execute() const
 {
-  std::uint8_t address = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
 
   alu.Write(address, alu.Read(address) + 1);
   IncPC();
@@ -913,14 +913,14 @@ std::string JB_20::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JB ";
-  ss << (int) alu.flash->Get(address+1) << ", " << (int) alu.flash->Get(address+2);
+  ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void JB_20::Execute() const
 {
-  std::uint8_t bitAddr = alu.flash->Get(alu.GetPC() + 1);
-  std::int8_t relAddr = alu.flash->Get(alu.GetPC() + 2);
+  std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
+  std::int8_t relAddr = alu.flash.Read(alu.GetPC() + 2);
 
   if (alu.ReadBit(bitAddr))
   {
@@ -934,7 +934,7 @@ void JB_20::Execute() const
 
 std::set<std::uint16_t> JB_20::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t relAddr = alu.flash->Get(address + 2);
+  std::int8_t relAddr = alu.flash.Read(address + 2);
 
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
@@ -951,14 +951,14 @@ std::string JBC_10::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JBC ";
-  ss << (int) alu.flash->Get(address+1) << ", " << (int) alu.flash->Get(address+2);
+  ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void JBC_10::Execute() const
 {
-  std::uint8_t bitAddr = alu.flash->Get(alu.GetPC() + 1);
-  std::int8_t relAddr = alu.flash->Get(alu.GetPC() + 2);
+  std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
+  std::int8_t relAddr = alu.flash.Read(alu.GetPC() + 2);
 
   if (alu.ReadBit(bitAddr))
   {
@@ -973,7 +973,7 @@ void JBC_10::Execute() const
 
 std::set<std::uint16_t> JBC_10::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t relAddr = alu.flash->Get(alu.GetPC() + 2);
+  std::int8_t relAddr = alu.flash.Read(alu.GetPC() + 2);
 
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
@@ -990,7 +990,7 @@ std::string JC_40::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JC ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -998,7 +998,7 @@ void JC_40::Execute() const
 {
   if (alu.GetC())
   {
-    std::int8_t reladdr = alu.flash->Get(alu.GetPC() + 1);
+    std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
   }
   else
@@ -1009,7 +1009,7 @@ void JC_40::Execute() const
 
 std::set<std::uint16_t> JC_40::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t relAddr = alu.flash->Get(address + 1);
+  std::int8_t relAddr = alu.flash.Read(address + 1);
 
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
@@ -1049,14 +1049,14 @@ std::string JNB_30::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JNB ";
-  ss << (int) alu.flash->Get(address+1) << ", " << (int) alu.flash->Get(address+2);
+  ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void JNB_30::Execute() const
 {
-  std::uint8_t bitAddr = alu.flash->Get(alu.GetPC() + 1);
-  std::int8_t relAddr = alu.flash->Get(alu.GetPC() + 2);
+  std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
+  std::int8_t relAddr = alu.flash.Read(alu.GetPC() + 2);
 
   if (!(alu.ReadBit(bitAddr)))
   {
@@ -1070,7 +1070,7 @@ void JNB_30::Execute() const
 
 std::set<std::uint16_t> JNB_30::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t relAddr = alu.flash->Get(address + 2);
+  std::int8_t relAddr = alu.flash.Read(address + 2);
 
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
@@ -1087,7 +1087,7 @@ std::string JNC_50::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JNC ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -1095,7 +1095,7 @@ void JNC_50::Execute() const
 {
   if (!alu.GetC())
   {
-    std::int8_t reladdr = alu.flash->Get(alu.GetPC() + 1);
+    std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
   }
   else
@@ -1106,7 +1106,7 @@ void JNC_50::Execute() const
 
 std::set<std::uint16_t> JNC_50::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t relAddr = alu.flash->Get(address + 1);
+  std::int8_t relAddr = alu.flash.Read(address + 1);
 
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
@@ -1123,7 +1123,7 @@ std::string JNZ_70::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JNZ ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -1131,7 +1131,7 @@ void JNZ_70::Execute() const
 {
   if (alu.GetA() != 0)
   {
-    std::int8_t reladdr = alu.flash->Get(alu.GetPC() + 1);
+    std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
   }
   else
@@ -1142,7 +1142,7 @@ void JNZ_70::Execute() const
 
 std::set<std::uint16_t> JNZ_70::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t relAddr = alu.flash->Get(address + 1);
+  std::int8_t relAddr = alu.flash.Read(address + 1);
 
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
@@ -1159,7 +1159,7 @@ std::string JZ_60::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "JZ ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -1167,7 +1167,7 @@ void JZ_60::Execute() const
 {
   if (alu.GetA() == 0)
   {
-    std::int8_t reladdr = alu.flash->Get(alu.GetPC() + 1);
+    std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
   }
   else
@@ -1178,7 +1178,7 @@ void JZ_60::Execute() const
 
 std::set<std::uint16_t> JZ_60::GetNextAddresses(std::uint16_t address) const
 {
-  std::int8_t relAddr = alu.flash->Get(address + 1);
+  std::int8_t relAddr = alu.flash.Read(address + 1);
 
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
@@ -1195,18 +1195,18 @@ std::string LCALL_12::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "LCALL ";
-  PrintAddress(ss, (uint16_t) (alu.flash->Get(address + 1) * 256 + alu.flash->Get(address + 2)));
+  PrintAddress(ss, (uint16_t) (alu.flash.Read(address + 1) * 256 + alu.flash.Read(address + 2)));
   return ss.str();
 }
 
 void LCALL_12::Execute() const
 {
   std::uint8_t sp = alu.GetSP();
-  std::uint8_t high = alu.flash->Get(alu.GetPC() + 1);
-  std::uint8_t low = alu.flash->Get(alu.GetPC() + 2);
+  std::uint8_t high = alu.flash.Read(alu.GetPC() + 1);
+  std::uint8_t low = alu.flash.Read(alu.GetPC() + 2);
 
-  alu.iram.Set(sp + 1, (alu.GetPC() + 3) % 256);
-  alu.iram.Set(sp + 2, (alu.GetPC() + 3) / 256);
+  alu.iram.Write(sp + 1, (alu.GetPC() + 3) % 256);
+  alu.iram.Write(sp + 2, (alu.GetPC() + 3) / 256);
   alu.SetSP(sp + 2);
 
   alu.SetPC(low + 256 * high);
@@ -1214,7 +1214,7 @@ void LCALL_12::Execute() const
 
 std::set<std::uint16_t> LCALL_12::GetNextAddresses(std::uint16_t address) const
 { 
-  return {(std::uint16_t) (address + 1 + operands), (std::uint16_t) (256 * alu.flash->Get(address + 1) + alu.flash->Get(address + 2))};
+  return {(std::uint16_t) (address + 1 + operands), (std::uint16_t) (256 * alu.flash.Read(address + 1) + alu.flash.Read(address + 2))};
 }
 
 LJMP_2::LJMP_2(Alu &a) : Instruction(a)
@@ -1229,18 +1229,18 @@ std::string LJMP_2::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "LJMP ";
-  PrintAddress(ss, (uint16_t) (alu.flash->Get(address + 1) * 256 + alu.flash->Get(address + 2)));
+  PrintAddress(ss, (uint16_t) (alu.flash.Read(address + 1) * 256 + alu.flash.Read(address + 2)));
   return ss.str();
 }
 
 void LJMP_2::Execute() const
 {
-  alu.SetPC(256 * alu.flash->Get(alu.GetPC() + 1) + alu.flash->Get(alu.GetPC() + 2));
+  alu.SetPC(256 * alu.flash.Read(alu.GetPC() + 1) + alu.flash.Read(alu.GetPC() + 2));
 }
 
 std::set<std::uint16_t> LJMP_2::GetNextAddresses(std::uint16_t address) const
 {
-  return {(std::uint16_t) (256 * alu.flash->Get(address + 1) + alu.flash->Get(address + 2))};
+  return {(std::uint16_t) (256 * alu.flash.Read(address + 1) + alu.flash.Read(address + 2))};
 }
 
 MOV_90::MOV_90(Alu &a) : Instruction(a)
@@ -1255,14 +1255,14 @@ std::string MOV_90::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "MOV DPTR, #";
-  ss << std::setw(2) << (int) alu.flash->Get(address+1);
-  ss << std::setw(2) << (int) alu.flash->Get(address+2);
+  ss << std::setw(2) << (int) alu.flash.Read(address+1);
+  ss << std::setw(2) << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void MOV_90::Execute() const
 {
-  alu.SetDPTR(alu.flash->Get(alu.GetPC() + 1) * 256 + alu.flash->Get(alu.GetPC() + 2));
+  alu.SetDPTR(alu.flash.Read(alu.GetPC() + 1) * 256 + alu.flash.Read(alu.GetPC() + 2));
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
@@ -1279,15 +1279,15 @@ std::string MOV_75::Disassemble(std::uint16_t address) const
 
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  PrintAddress(ss, alu.flash->Get(address+1));
-  ss << ", #" << std::setw(2) << (int) alu.flash->Get(address+2);
+  PrintAddress(ss, alu.flash.Read(address+1));
+  ss << ", #" << std::setw(2) << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void MOV_75::Execute() const
 {
-  std::uint8_t address = alu.flash->Get(alu.GetPC() + 1);
-  std::uint8_t data = alu.flash->Get(alu.GetPC() + 2);
+  std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
+  std::uint8_t data = alu.flash.Read(alu.GetPC() + 2);
 
   alu.Write(address, data);
   IncPC();
@@ -1305,15 +1305,15 @@ std::string MOV_85::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << std::setw(2) << (int) alu.flash->Get(address+1) << ", " << std::setw(2) << (int) alu.flash->Get(address+2);
+  ss << std::setw(2) << (int) alu.flash.Read(address+1) << ", " << std::setw(2) << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void MOV_85::Execute() const
 {
-  std::uint8_t data = alu.Read(alu.flash->Get(alu.GetPC() + 1));
+  std::uint8_t data = alu.Read(alu.flash.Read(alu.GetPC() + 1));
 
-  alu.Write(alu.flash->Get(alu.GetPC() + 2), data);
+  alu.Write(alu.flash.Read(alu.GetPC() + 2), data);
   IncPC();
 }
 
@@ -1327,13 +1327,13 @@ std::string MovRegisterIndirectImmediate::Disassemble(std::uint16_t address) con
 {
   std::stringstream ss;
   ss << "MOV @R" << (int) reg << ", #";
-  PrintAddress(ss, alu.flash->Get(address+1));
+  PrintAddress(ss, alu.flash.Read(address+1));
   return ss.str();
 }
 
 void MovRegisterIndirectImmediate::Execute() const
 {
-  alu.Write(alu.GetReg(reg), alu.flash->Get(alu.GetPC() + 1));
+  alu.Write(alu.GetReg(reg), alu.flash.Read(alu.GetPC() + 1));
   IncPC();
 }
 
@@ -1349,13 +1349,13 @@ std::string MOV_74::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV A, #";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void MOV_74::Execute() const
 {
-  alu.SetA(alu.flash->Get(alu.GetPC() + 1));
+  alu.SetA(alu.flash.Read(alu.GetPC() + 1));
   IncPC();
 }
 
@@ -1371,13 +1371,13 @@ std::string MOV_E5::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV A, ";
-  PrintAddress(ss, alu.flash->Get(address+1));
+  PrintAddress(ss, alu.flash.Read(address+1));
   return ss.str();
 }
 
 void MOV_E5::Execute() const
 {
-  std::uint8_t address = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
 
   alu.SetA(alu.Read(address));
   IncPC();
@@ -1395,13 +1395,13 @@ std::string MOV_A2::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV C, ";
-  ss << alu.GetBitAddressName(alu.flash->Get(address+1));
+  ss << alu.GetBitAddressName(alu.flash.Read(address+1));
   return ss.str();
 }
 
 void MOV_A2::Execute(void) const
 {
-  std::uint8_t bitAddr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
 
   if (alu.ReadBit(bitAddr))
   {
@@ -1424,13 +1424,13 @@ std::string MovRegisterImmediate::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV R" << (int) reg << ", #";
-  ss << std::setw(2) << std::hex << (int) alu.flash->Get(address+1);
+  ss << std::setw(2) << std::hex << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void MovRegisterImmediate::Execute() const
 {
-  alu.SetReg(reg, alu.flash->Get(alu.GetPC() + 1));
+  alu.SetReg(reg, alu.flash.Read(alu.GetPC() + 1));
   IncPC();
 }
 
@@ -1463,13 +1463,13 @@ std::string MovRegisterAddress::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV R" << (int) reg << ", ";
-  PrintAddress(ss, alu.flash->Get(address+1));
+  PrintAddress(ss, alu.flash.Read(address+1));
   return ss.str();
 }
 
 void MovRegisterAddress::Execute() const
 {
-  std::uint8_t address = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
 
   alu.SetReg(reg, alu.Read(address));
   IncPC();
@@ -1487,13 +1487,13 @@ std::string MOV_92::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  ss << alu.GetBitAddressName((int) alu.flash->Get(address+1)) << ", C";
+  ss << alu.GetBitAddressName((int) alu.flash.Read(address+1)) << ", C";
   return ss.str();
 }
 
 void MOV_92::Execute(void) const
 {
-  std::uint8_t bitAddr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.WriteBit(bitAddr, alu.GetC());
   IncPC();
@@ -1510,13 +1510,13 @@ std::string MovMemoryIndirectRegister::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << "MOV ";
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << (int) alu.flash->Get(address+1) << ", @R" << (int) reg;
+  ss << (int) alu.flash.Read(address+1) << ", @R" << (int) reg;
   return ss.str();
 }
 
 void MovMemoryIndirectRegister::Execute() const
 {
-  alu.Write(alu.flash->Get(alu.GetPC() + 1), alu.Read(alu.GetReg(reg)));
+  alu.Write(alu.flash.Read(alu.GetPC() + 1), alu.Read(alu.GetReg(reg)));
   IncPC();
 }
 
@@ -1529,13 +1529,13 @@ MovAddressRegister::MovAddressRegister(Alu &a, std::uint8_t opcode, std::uint8_t
 std::string MovAddressRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "MOV " << (int) alu.flash->Get(address+1) << ", R" << (int) reg;
+  ss << "MOV " << (int) alu.flash.Read(address+1) << ", R" << (int) reg;
   return ss.str();
 }
 
 void MovAddressRegister::Execute() const
 {
-  alu.Write(alu.flash->Get(alu.GetPC()+ 1), alu.GetReg(reg));
+  alu.Write(alu.flash.Read(alu.GetPC()+ 1), alu.GetReg(reg));
   IncPC();
 }
 
@@ -1570,14 +1570,14 @@ std::string MOV_F5::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "MOV ";
-  PrintAddress(ss, alu.flash->Get(address+1));
+  PrintAddress(ss, alu.flash.Read(address+1));
   ss << ", A";
   return ss.str();
 }
 
 void MOV_F5::Execute() const
 {
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.Write(addr, alu.GetA());
   IncPC();
@@ -1600,7 +1600,7 @@ std::string MovIndirect::Disassemble(std::uint16_t address) const
 
 void MovIndirect::Execute() const
 {
-  alu.iram.Set(alu.GetReg(reg), alu.GetA());
+  alu.iram.Write(alu.GetReg(reg), alu.GetA());
   IncPC();
 }
 
@@ -1616,13 +1616,13 @@ std::string MovIndirectFromMem::Disassemble(std::uint16_t address) const
   ss << "MOV @R";
   ss << (int) reg;
   ss << ", ";
-  ss << std::hex << std::setw(2) << (int) alu.flash->Get(alu.GetPC() + 1);
+  ss << std::hex << std::setw(2) << (int) alu.flash.Read(alu.GetPC() + 1);
   return ss.str();
 }
 
 void MovIndirectFromMem::Execute() const
 {
-  alu.iram.Set(alu.GetReg(reg), alu.iram.Get(alu.flash->Get(alu.GetPC() + 1)));
+  alu.iram.Write(alu.GetReg(reg), alu.iram.Read(alu.flash.Read(alu.GetPC() + 1)));
   IncPC();
 }
 
@@ -1661,7 +1661,7 @@ void MOVC_93::Execute() const
 {
   std::uint16_t address = alu.GetA() + alu.GetDPTR();
 
-  alu.SetA(alu.flash->Get(address));
+  alu.SetA(alu.flash.Read(address));
   IncPC();
 }
 
@@ -1679,7 +1679,7 @@ std::string MOVC_83::Disassemble(std::uint16_t address) const
 
 void MOVC_83::Execute() const
 {
-  alu.SetA(alu.flash->Get(alu.GetA() + 1 + alu.GetPC()));
+  alu.SetA(alu.flash.Read(alu.GetA() + 1 + alu.GetPC()));
   IncPC();
 }
 
@@ -1823,17 +1823,17 @@ std::string ORL_43::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "ORL ";
-  PrintAddress(ss, alu.flash->Get(address + 1));
-  ss << ", #" << std::setw(2) << (int) alu.flash->Get(address+2);
+  PrintAddress(ss, alu.flash.Read(address + 1));
+  ss << ", #" << std::setw(2) << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void ORL_43::Execute() const
 {
-  std::uint8_t address = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
   std::uint8_t data = alu.Read(address);
 
-  alu.Write(address, data | alu.flash->Get(alu.GetPC() + 2));
+  alu.Write(address, data | alu.flash.Read(alu.GetPC() + 2));
   IncPC();
 }
 
@@ -1849,13 +1849,13 @@ std::string ORL_42::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL ";
-  ss << (int) alu.flash->Get(address+1) << ", A";
+  ss << (int) alu.flash.Read(address+1) << ", A";
   return ss.str();
 }
 
 void ORL_42::Execute() const
 {
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
   alu.Write(addr, alu.GetA() | alu.Read(addr));
   IncPC();
 }
@@ -1872,13 +1872,13 @@ std::string ORL_44::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL A, #";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void ORL_44::Execute() const
 {
-  alu.SetA(alu.GetA() | alu.flash->Get(alu.GetPC() + 1));
+  alu.SetA(alu.GetA() | alu.flash.Read(alu.GetPC() + 1));
   IncPC();
 }
 
@@ -1894,13 +1894,13 @@ std::string ORL_45::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL A, ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void ORL_45::Execute() const
 {
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.SetA(alu.GetA() | alu.Read(addr));
   IncPC();
@@ -1933,7 +1933,7 @@ std::string ORL_A0::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "ORL C, ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -2029,13 +2029,13 @@ std::string POP_D0::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "POP ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void POP_D0::Execute() const
 {
-  alu.iram.Set(alu.flash->Get(alu.GetPC() + 1), alu.iram.Get(alu.GetSP()));
+  alu.iram.Write(alu.flash.Read(alu.GetPC() + 1), alu.iram.Read(alu.GetSP()));
   alu.SetSP(alu.GetSP() - 1);
   IncPC();
 }
@@ -2052,14 +2052,14 @@ std::string PUSH_C0::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
   ss << "PUSH ";
-  ss << std::setw(2) << (int) alu.flash->Get(address+1);
+  ss << std::setw(2) << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void PUSH_C0::Execute() const
 {
   alu.SetSP(alu.GetSP() + 1);
-  alu.iram.Set(alu.GetSP(), alu.Read(alu.flash->Get(alu.GetPC() + 1)));
+  alu.iram.Write(alu.GetSP(), alu.Read(alu.flash.Read(alu.GetPC() + 1)));
   IncPC();
 }
 
@@ -2078,8 +2078,8 @@ std::string RET_22::Disassemble(std::uint16_t address) const
 void RET_22::Execute() const
 {
   std::uint8_t sp = alu.GetSP();
-  std::uint8_t high = alu.iram.Get(sp);
-  std::uint8_t low = alu.iram.Get(sp-1);
+  std::uint8_t high = alu.iram.Read(sp);
+  std::uint8_t low = alu.iram.Read(sp-1);
 
   alu.SetPC(low + high * 256);
   alu.SetSP(sp - 2);
@@ -2100,8 +2100,8 @@ RETI_32::RETI_32(Alu &a) : Instruction(a)
 void RETI_32::Execute() const
 {
   std::uint8_t sp = alu.GetSP();
-  std::uint8_t high = alu.iram.Get(sp);
-  std::uint8_t low = alu.iram.Get(sp-1);
+  std::uint8_t high = alu.iram.Read(sp);
+  std::uint8_t low = alu.iram.Read(sp-1);
 
   alu.SetPC(low + high * 256);
   alu.SetSP(sp - 2);
@@ -2225,13 +2225,13 @@ std::string SETB_D2::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SETB ";
-  ss << alu.GetBitAddressName((int) alu.flash->Get(address+1));
+  ss << alu.GetBitAddressName((int) alu.flash.Read(address+1));
   return ss.str();
 }
 
 void SETB_D2::Execute(void) const
 {
-  std::uint8_t bitAddr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.WriteBit(bitAddr, true);
   IncPC();
@@ -2249,19 +2249,19 @@ std::string SJMP_80::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SJMP ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void SJMP_80::Execute() const
 {
-  std::int8_t reladdr = alu.flash->Get(alu.GetPC() + 1);
+  std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
   alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
 }
 
 std::set<std::uint16_t> SJMP_80::GetNextAddresses(std::uint16_t address) const
 { 
-  std::int8_t reladdr = alu.flash->Get(address + 1);
+  std::int8_t reladdr = alu.flash.Read(address + 1);
 
   return {(std::uint16_t) (address + 1 + operands + reladdr)};
 }
@@ -2320,13 +2320,13 @@ std::string SUBB_94::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SUBB A, #";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void SUBB_94::Execute() const
 {
-  std::uint8_t operand = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t operand = alu.flash.Read(alu.GetPC() + 1);
 
   Helper(operand);
 }
@@ -2341,13 +2341,13 @@ std::string SUBB_95::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "SUBB A, ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void SUBB_95::Execute() const
 {
-  std::uint8_t operand = alu.Read(alu.flash->Get(alu.GetPC() + 1));
+  std::uint8_t operand = alu.Read(alu.flash.Read(alu.GetPC() + 1));
 
   Helper(operand);
 }
@@ -2424,13 +2424,13 @@ std::string XCH_C5::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XCH A, ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void XCH_C5::Execute() const
 {
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
   std::uint8_t temp = alu.GetA();
 
   alu.SetA(alu.Read(addr));
@@ -2542,7 +2542,7 @@ std::string XRL_62::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL ";
-  ss << (int) alu.flash->Get(address+1) << ", A";
+  ss << (int) alu.flash.Read(address+1) << ", A";
   return ss.str();
 }
 
@@ -2558,13 +2558,13 @@ std::string XRL_64::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL A, #";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void XRL_64::Execute() const
 {
-  std::uint8_t data = alu.flash->Get(alu.GetPC() + 1);
+  std::uint8_t data = alu.flash.Read(alu.GetPC() + 1);
 
   alu.SetA(alu.GetA() | data);
   IncPC();
@@ -2582,7 +2582,7 @@ std::string XRL_65::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL A, ";
-  ss << (int) alu.flash->Get(address+1);
+  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
@@ -2598,14 +2598,14 @@ std::string XRL_63::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL ";
-  ss << (int) alu.flash->Get(address+1) << ", #" << (int) alu.flash->Get(address+2);
+  ss << (int) alu.flash.Read(address+1) << ", #" << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
 void XRL_63::Execute() const
 {
-  std::uint8_t addr = alu.flash->Get(alu.GetPC() + 1);
-  std::uint8_t data = alu.flash->Get(alu.GetPC() + 2);
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
+  std::uint8_t data = alu.flash.Read(alu.GetPC() + 2);
 
   alu.Write(addr, data | alu.Read(addr));
   IncPC();

@@ -36,13 +36,13 @@ class Alu : public Block
   friend class SfrSp;
   friend class SfrDpl;
   public:
-    Flash *flash;
+    Flash flash;
     Memory xram;
     Memory iram;
     std::string Disassemble(std::uint16_t address);
     std::uint8_t GetOperands(std::uint16_t address);
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address);
-    Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize);
+    Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize, std::uint16_t flashSize);
     void Reset();
     std::uint16_t GetPC();
     std::uint8_t GetSP();
@@ -80,8 +80,6 @@ class Alu : public Block
     bool GetTraceSfr();
     void SetTraceSfr(bool val);
 
-    Memory *GetIRam() const;
-    void SetFlash(Flash *flash);
     void RegisterCallback(Cpu8051Callbacks *cb, Cpu8051* cpu);
     Cpu8051Callbacks *GetCallback() const;
     Cpu8051* GetCallbackCpu() const;
@@ -105,6 +103,9 @@ class Alu : public Block
     SfrBitAddressable sfrACC;
     Sfr sfrPCON;
     Sfr sfrPSCTL;
+    Sfr sfrFLSCL;
+    Sfr sfrFLKEY;
+    Sfr sfrFLWR;
     bool traceSfr;
     int tickCount;
     Cpu8051Callbacks *callbacks;

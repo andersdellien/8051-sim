@@ -43,7 +43,7 @@ void InstructionCoverage::Initialize(Alu &alu)
   for (std::uint16_t vector : {0x3, 0xb, 0x13, 0x1b, 0x23, 0x2b})
   {
     // Let's assume an unused interrupt vector entry is zeroed out.
-    if (alu.flash->Get(vector) || alu.flash->Get(vector+1))
+    if (alu.flash.Read(vector) || alu.flash.Read(vector+1))
     {
       waiting.insert(vector);
     }
@@ -55,7 +55,7 @@ void InstructionCoverage::Initialize(Alu &alu)
     waiting.erase(elt);
     std::uint16_t address = *elt;
 
-    if (address >= alu.flash->GetSize())
+    if (address >= alu.flash.GetSize())
     {
       continue;
     }

@@ -29,10 +29,7 @@
 #include <set>
 #include <queue>
 
-#include "flash.hpp"
-#include "memory.hpp"
 #include "alu.hpp"
-#include "symbol_table.hpp"
 #include "port0.hpp"
 #include "port1.hpp"
 #include "port2.hpp"
@@ -64,7 +61,6 @@ class Cpu8051
     std::set<std::uint16_t> breakpoints;
 
     Alu alu;
-    Flash flash;
     Port0 port0;
     Port1 port1;
     Port2 port2;

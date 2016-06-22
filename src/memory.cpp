@@ -20,15 +20,13 @@
 #include <cstdint>
 #include "memory.hpp"
 #include "exceptions.hpp"
-#include "block.hpp"
 
-Memory::Memory(std::string name, Alu &alu, std::uint16_t s): Block(name, alu)
+Memory::Memory(std::string n, std::uint16_t s) : name(n), size(s)
 {
-  size = s;
   data = new std::uint8_t[s];
 }
 
-std::uint8_t Memory::Get(std::uint16_t address) const
+std::uint8_t Memory::Read(std::uint16_t address) const
 {
   if (address < size)
   {
@@ -41,7 +39,7 @@ std::uint8_t Memory::Get(std::uint16_t address) const
   }
 }
 
-void Memory::Set(std::uint16_t address, std::uint8_t value)
+void Memory::Write(std::uint16_t address, std::uint8_t value)
 {
   if (address < size)
   {

@@ -19,8 +19,7 @@
 #include "cpu8051.hpp"
 
 Cpu8051::Cpu8051() :
-  alu("Alu", 1024, 256),
-  flash("Flash", alu, 8192),
+  alu("Alu", 1024, 256, 8192),
   port0("Port0", alu),
   port1("Port1", alu),
   port2("Port2", alu),
@@ -32,7 +31,6 @@ Cpu8051::Cpu8051() :
   ticks(0)
 {
   blocks.insert(&alu);
-  blocks.insert(&flash);
   blocks.insert(&port0);
   blocks.insert(&port1);
   blocks.insert(&port2);
@@ -41,7 +39,6 @@ Cpu8051::Cpu8051() :
   blocks.insert(&uart);
   blocks.insert(&adc);
   blocks.insert(&timer);
-  alu.SetFlash(&flash);
 }
 
 int Cpu8051::GetTicks()

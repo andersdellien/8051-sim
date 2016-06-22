@@ -32,10 +32,11 @@
 #define INTERRUPT_PENDING_TIMER0 1
 #define INTERRUPT_PENDING_UART0 2
 
-Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
+Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize, std::uint16_t flashSize):
     Block(name, *this),
-    xram("XRAM", *this, xramSize),
-    iram("IRAM", *this, iramSize),
+    xram("XRAM", xramSize),
+    iram("IRAM", iramSize),
+    flash("FLASH", flashSize),
     callbacks(nullptr),
     sfrSP("SP", *this, 0x81, 0x07, {0x0, 0xf}),
     sfrDPL("DPL", *this, 0x82, 0x00, {0x0, 0xf}),
@@ -48,6 +49,9 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
     sfrPCON("PCON", *this, 0x87, 0x00, {0x0, 0xf}),
     sfrPSW("PSW", *this, 0xd0, 0x00, {0x0, 0xf}),
     sfrPSCTL("PSCTL", *this, 0x8f, 0x00, {0x0, 0xf}),
+    sfrFLSCL("FLSCL", *this, 0xb7, 0x00, {0x0}),
+    sfrFLKEY("FLKEY", *this, 0xb6, 0x00, {0x0, 0xf}),
+    sfrFLWR("FLWR", *this, 0xe5, 0x00, {0x0, 0xf}),
     interruptPending(0),
     traceSfr(false)
 {
@@ -437,7 +441,7 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize):
 
 std::string Alu::Disassemble(std::uint16_t address)
 {
-  const std::uint8_t opcode = flash->Get(address);
+  const std::uint8_t opcode = flash.Read(address);
 
   if (instructionSet.find(opcode) == instructionSet.end())
   {
@@ -451,7 +455,7 @@ std::string Alu::Disassemble(std::uint16_t address)
 
 std::uint8_t Alu::GetOperands(std::uint16_t address)
 {
-  const std::uint8_t opcode = flash->Get(address);
+  const std::uint8_t opcode = flash.Read(address);
 
   if (instructionSet.find(opcode) == instructionSet.end())
   {
@@ -465,7 +469,7 @@ std::uint8_t Alu::GetOperands(std::uint16_t address)
 
 std::set<std::uint16_t> Alu::GetNextAddresses(std::uint16_t address)
 {
-  const std::uint8_t opcode = flash->Get(address);
+  const std::uint8_t opcode = flash.Read(address);
 
   if (instructionSet.find(opcode) == instructionSet.end())
   {
@@ -519,12 +523,12 @@ std::uint8_t Alu::GetA()
 
 std::uint8_t Alu::GetReg(std::uint8_t reg)
 {
-  return iram.Get(reg);
+  return iram.Read(reg);
 }
 
 void Alu::SetReg(std::uint8_t reg, std::uint8_t value)
 {
-  return iram.Set(reg, value);
+  return iram.Write(reg, value);
 }
 
 void Alu::SetDPTR(std::uint16_t val)
@@ -596,7 +600,7 @@ void Alu::Write(std::uint8_t address, std::uint8_t data)
 {
   if (address < 0x80)
   {
-    iram.Set(address, data);
+    iram.Write(address, data);
   }
   else if (specialFunctionRegisters[sfrSFRPAGE.data].find(address) != specialFunctionRegisters[sfrSFRPAGE.data].end())
   {
@@ -613,7 +617,7 @@ std::uint8_t Alu::Read(std::uint8_t address)
 {
   if (address < 0x80)
   {
-    return iram.Get(address);
+    return iram.Read(address);
   }
   else if (specialFunctionRegisters[sfrSFRPAGE.data].find(address) != specialFunctionRegisters[sfrSFRPAGE.data].end())
   {
@@ -633,7 +637,7 @@ bool Alu::ReadBit(std::uint8_t address)
     std::uint8_t byteAddr = 0x20 + address / 8;
     std::uint8_t bit = 1 << address % 8;
 
-    return iram.Get(byteAddr) & bit;
+    return iram.Read(byteAddr) & bit;
   }
   else if (bitAddressableSfr.find(address & 0xf8) != bitAddressableSfr.end())
   {
@@ -655,10 +659,10 @@ void Alu::WriteBit(std::uint8_t address, bool value)
 
     bit = 1 << address % 8;
 
-    iram.Set(byteAddr, iram.Get(byteAddr) & ~bit);
+    iram.Write(byteAddr, iram.Read(byteAddr) & ~bit);
     if (value)
     {
-      iram.Set(byteAddr, iram.Get(byteAddr) | bit);
+      iram.Write(byteAddr, iram.Read(byteAddr) | bit);
     }
   }
   else if (bitAddressableSfr.find(address & 0xf8) != bitAddressableSfr.end())
@@ -700,20 +704,15 @@ void Alu::SetTraceSfr(bool value)
   traceSfr = value;
 }
 
-void Alu::SetFlash(Flash *f)
-{
-  flash = f;
-}
-
 void Alu::ClockEvent()
 {
   if (interruptPending & INTERRUPT_PENDING_TIMER0)
   {
     interruptPending &= ~INTERRUPT_PENDING_TIMER0;
     SetSP(alu.GetSP() + 1);
-    alu.iram.Set(alu.GetSP(), (uint8_t) alu.GetPC());
+    iram.Write(alu.GetSP(), (uint8_t) alu.GetPC());
     SetSP(alu.GetSP() + 1);
-    alu.iram.Set(alu.GetSP(), alu.GetPC() / 256);
+    iram.Write(alu.GetSP(), alu.GetPC() / 256);
     SetPC(0xb);
     InstructionCoverage::GetInstance()->InstructionExecuted(0xb);
   }
@@ -721,16 +720,16 @@ void Alu::ClockEvent()
   {
     interruptPending &= ~INTERRUPT_PENDING_UART0;
     SetSP(alu.GetSP() + 1);
-    alu.iram.Set(alu.GetSP(), (uint8_t) alu.GetPC());
+    iram.Write(alu.GetSP(), (uint8_t) alu.GetPC());
     SetSP(alu.GetSP() + 1);
-    alu.iram.Set(alu.GetSP(), alu.GetPC() / 256);
+    iram.Write(alu.GetSP(), alu.GetPC() / 256);
     SetPC(0x23);
     InstructionCoverage::GetInstance()->InstructionExecuted(0x23);
   }
   else
   {
     InstructionCoverage::GetInstance()->InstructionExecuted(pc);
-    instructionSet[flash->Get(pc)]->Execute();
+    instructionSet[flash.Read(pc)]->Execute();
   }
   if (callbacks)
   {
@@ -757,7 +756,7 @@ int Alu::CalculateRemainingTicks()
   }
   else
   {
-    return instructionSet[flash->Get(pc)]->cycles;
+    return instructionSet[flash.Read(pc)]->cycles;
   }
 }
 
@@ -821,17 +820,17 @@ void Alu::WriteX(std::uint16_t address, std::uint8_t value)
       std::uint16_t base = address & 0xff00;
       for (int i = 0; i < 256; i++)
       {
-        flash->Set(base + i, value);
+        flash.Write(base + i, value);
       }
     }
     else
     {
-      flash->Set(address, value);
+      flash.Write(address, value);
     }
     sfrPSCTL.data &= ~(PSWE | PSEE);
   }
   else
   {
-    xram.Set(address, value);
+    xram.Write(address, value);
   }
 }

@@ -18,6 +18,7 @@
 
 #include "command.hpp"
 #include "instruction_coverage.hpp"
+#include "symbol_table.hpp"
 
 std::set<Command*> Command::commands;
 
@@ -225,7 +226,7 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
     std::string sym = "rst";
     if (tokens[1].rfind(hex) + hex.length() == tokens[1].length())
     {
-      handler.flash.ParseHex(tokens[1]);
+      handler.alu.flash.ParseHex(tokens[1]);
     }
     else if (tokens[1].rfind(sym) + sym.length() == tokens[1].length())
     {
@@ -257,7 +258,7 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
     Memory *mem;
     if (tokens[0] == "flash")
     {
-      mem = &handler.flash;
+      mem = &handler.alu.flash;
     }
     else
     {
@@ -270,7 +271,7 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
       {
         std::cout << std::hex << std::setfill('0') << std::setw(4) << address + i << " ";
       }
-      std::cout << std::hex << std::setw(2) << (int) mem->Get(address + i);
+      std::cout << std::hex << std::setw(2) << (int) mem->Read(address + i);
       if (i % itemsPerLine == itemsPerLine - 1)
       {
         std::cout << std::endl;
@@ -326,7 +327,7 @@ void MiscCommand::OnInstructionExecuted(Cpu8051 &handler)
   {
     std::cout << "break at " << std::hex << handler.alu.GetPC() << std::endl;
   }
-  if (traceInstruction.find(handler.alu.flash->Get(handler.alu.GetPC())) != traceInstruction.end() ||
+  if (traceInstruction.find(handler.alu.flash.Read(handler.alu.GetPC())) != traceInstruction.end() ||
       breakCount == breakLimit || instructionLimit > 0)
   {
     std::cout << std::hex << std::setw(4) << std::setfill('0') << handler.alu.GetPC() << " " << handler.alu.Disassemble(handler.alu.GetPC()) << std::endl;

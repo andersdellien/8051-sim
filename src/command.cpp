@@ -21,6 +21,7 @@
 #include "symbol_table.hpp"
 
 std::set<Command*> Command::commands;
+static std::set<std::uint8_t> traceInstruction;
 
 Command::Command()
 {

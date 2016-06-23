@@ -40,7 +40,6 @@ class Command : public Cpu8051Callbacks
     virtual bool executeCommand(Cpu8051 &handler, std::vector<std::string>& tokens) = 0;
     static bool dispatchCommand(Cpu8051 &handler, std::vector<std::string>& tokens);
   protected:
-    std::set<std::uint8_t> traceInstruction;
     int instructionCount;
     int instructionLimit;
     int breakCount;

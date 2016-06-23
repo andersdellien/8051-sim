@@ -94,8 +94,4 @@ void InstructionCoverage::InstructionExecuted(std::uint16_t address)
   {
     executionCount[address]++;
   }
-  else
-  {
-    throw new std::runtime_error("Well this is weird");
-  }
 }

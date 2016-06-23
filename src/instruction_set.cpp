@@ -461,6 +461,11 @@ void CJNE_B5::Execute() const
   }
 }
 
+bool CJNE_B5::IsJump() const
+{
+  return true;
+}
+
 std::set<std::uint16_t> CJNE_B5::GetNextAddresses(std::uint16_t address) const
 {
   std::int8_t reladdr = alu.flash.Read(address + 2);
@@ -536,6 +541,11 @@ void CJNERegister::Execute() const
   {
     alu.ClrC();
   }
+}
+
+bool CJNERegister::IsJump() const
+{
+  return true;
 }
 
 std::set<std::uint16_t> CJNERegister::GetNextAddresses(std::uint16_t address) const
@@ -786,6 +796,11 @@ void DJNZRegister::Execute() const
   }
 }
 
+bool DJNZRegister::IsJump() const
+{
+  return true;
+}
+
 std::set<std::uint16_t> DJNZRegister::GetNextAddresses(std::uint16_t address) const
 {
   std::int8_t reladdr = alu.flash.Read(address + 1);
@@ -901,9 +916,8 @@ void INC_A3::Execute() const
   IncPC();
 }
 
-JB_20::JB_20(Alu &a) : Instruction(a)
+JB_20::JB_20(Alu &a, std::uint8_t opcde) : CondJump(a, opcode)
 {
-  opcode = 0x20;
   operands = 2;
   cycles = 2;
 }
@@ -932,16 +946,24 @@ void JB_20::Execute() const
   }
 }
 
-std::set<std::uint16_t> JB_20::GetNextAddresses(std::uint16_t address) const
+CondJump::CondJump(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  std::int8_t relAddr = alu.flash.Read(address + 2);
+}
+
+std::set<std::uint16_t> CondJump::GetNextAddresses(std::uint16_t address) const
+{
+  std::int8_t relAddr = alu.flash.Read(address + operands);
 
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
 
-JBC_10::JBC_10(Alu &a) : Instruction(a)
+bool CondJump::IsJump() const
 {
-  opcode = 0x10;
+  return true;
+}
+
+JBC_10::JBC_10(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
+{
   operands = 2;
   cycles = 2;
 }
@@ -971,16 +993,8 @@ void JBC_10::Execute() const
   }
 }
 
-std::set<std::uint16_t> JBC_10::GetNextAddresses(std::uint16_t address) const
+JC_40::JC_40(Alu &a, std::uint8_t opcde) : CondJump(a, opcode)
 {
-  std::int8_t relAddr = alu.flash.Read(alu.GetPC() + 2);
-
-  return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
-}
-
-JC_40::JC_40(Alu &a) : Instruction(a)
-{
-  opcode = 0x40;
   operands = 1;
   cycles = 2;
 }
@@ -1007,13 +1021,6 @@ void JC_40::Execute() const
   }
 }
 
-std::set<std::uint16_t> JC_40::GetNextAddresses(std::uint16_t address) const
-{
-  std::int8_t relAddr = alu.flash.Read(address + 1);
-
-  return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
-}
-
 JMP_73::JMP_73(Alu &a) : Instruction(a)
 {
   opcode = 0x73;
@@ -1024,6 +1031,11 @@ JMP_73::JMP_73(Alu &a) : Instruction(a)
 std::string JMP_73::Disassemble(std::uint16_t address) const
 {
   return "JMP @A+DPTR";
+}
+
+bool JMP_73::IsJump() const
+{
+  return true;
 }
 
 void JMP_73::Execute() const
@@ -1037,9 +1049,8 @@ std::set<std::uint16_t> JMP_73::GetNextAddresses(std::uint16_t address) const
   return {};
 }
 
-JNB_30::JNB_30(Alu &a) : Instruction(a)
+JNB_30::JNB_30(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
 {
-  opcode = 0x30;
   operands = 2;
   cycles = 2;
 }
@@ -1068,16 +1079,8 @@ void JNB_30::Execute() const
   }
 }
 
-std::set<std::uint16_t> JNB_30::GetNextAddresses(std::uint16_t address) const
+JNC_50::JNC_50(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
 {
-  std::int8_t relAddr = alu.flash.Read(address + 2);
-
-  return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
-}
-
-JNC_50::JNC_50(Alu &a) : Instruction(a)
-{
-  opcode = 0x50;
   operands = 1;
   cycles = 2;
 }
@@ -1104,16 +1107,8 @@ void JNC_50::Execute() const
   }
 }
 
-std::set<std::uint16_t> JNC_50::GetNextAddresses(std::uint16_t address) const
+JNZ_70::JNZ_70(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
 {
-  std::int8_t relAddr = alu.flash.Read(address + 1);
-
-  return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
-}
-
-JNZ_70::JNZ_70(Alu &a) : Instruction(a)
-{
-  opcode = 0x70;
   operands = 1;
   cycles = 2;
 }
@@ -1140,16 +1135,8 @@ void JNZ_70::Execute() const
   }
 }
 
-std::set<std::uint16_t> JNZ_70::GetNextAddresses(std::uint16_t address) const
+JZ_60::JZ_60(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
 {
-  std::int8_t relAddr = alu.flash.Read(address + 1);
-
-  return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
-}
-
-JZ_60::JZ_60(Alu &a) : Instruction(a)
-{
-  opcode = 0x60;
   operands = 1;
   cycles = 2;
 }
@@ -1174,13 +1161,6 @@ void JZ_60::Execute() const
   {
     IncPC();
   }
-}
-
-std::set<std::uint16_t> JZ_60::GetNextAddresses(std::uint16_t address) const
-{
-  std::int8_t relAddr = alu.flash.Read(address + 1);
-
-  return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
 
 LCALL_12::LCALL_12(Alu &a) : Instruction(a)
@@ -1212,6 +1192,11 @@ void LCALL_12::Execute() const
   alu.SetPC(low + 256 * high);
 }
 
+bool LCALL_12::IsJump() const
+{
+  return true;
+}
+
 std::set<std::uint16_t> LCALL_12::GetNextAddresses(std::uint16_t address) const
 { 
   return {(std::uint16_t) (address + 1 + operands), (std::uint16_t) (256 * alu.flash.Read(address + 1) + alu.flash.Read(address + 2))};
@@ -1236,6 +1221,11 @@ std::string LJMP_2::Disassemble(std::uint16_t address) const
 void LJMP_2::Execute() const
 {
   alu.SetPC(256 * alu.flash.Read(alu.GetPC() + 1) + alu.flash.Read(alu.GetPC() + 2));
+}
+
+bool LJMP_2::IsJump() const
+{
+  return true;
 }
 
 std::set<std::uint16_t> LJMP_2::GetNextAddresses(std::uint16_t address) const
@@ -2257,6 +2247,11 @@ void SJMP_80::Execute() const
 {
   std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
   alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+}
+
+bool SJMP_80::IsJump() const
+{
+  return true;
 }
 
 std::set<std::uint16_t> SJMP_80::GetNextAddresses(std::uint16_t address) const

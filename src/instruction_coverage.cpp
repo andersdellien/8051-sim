@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <iostream>
 #include <map>
 #include <set>
 #include <stdexcept>
@@ -26,48 +27,99 @@
 
 static InstructionCoverage instructionCoverage;
 
+BasicBlock::BasicBlock(int n, std::uint16_t address) : number(n), firstAddress(address), lastAddress(0)
+{
+}
+
 InstructionCoverage* InstructionCoverage::GetInstance()
 {
   return &instructionCoverage;
 }
 
-
-#include <iostream>
-
 void InstructionCoverage::Initialize(Alu &alu)
 {
-  std::set<std::uint16_t> waiting = {0x00}; // Reset address
+  std::set<std::pair<BasicBlock*, std::uint16_t> > waiting;
 
+  basicBlockCount = 0;
+  basicBlocks.erase(basicBlocks.begin(), basicBlocks.end());
   reachable.erase(reachable.begin(), reachable.end());
   executionCount.erase(executionCount.begin(), executionCount.end());
-  for (std::uint16_t vector : {0x3, 0xb, 0x13, 0x1b, 0x23, 0x2b})
+  for (std::uint16_t vector : {0x0, 0x3, 0xb, 0x13, 0x1b, 0x23, 0x2b})
   {
     // Let's assume an unused interrupt vector entry is zeroed out.
     if (alu.flash.Read(vector) || alu.flash.Read(vector+1))
     {
-      waiting.insert(vector);
+      int n = basicBlockCount++;
+      BasicBlock *b = new BasicBlock(n, vector);
+      basicBlocks[n] = b;
+      waiting.insert(std::make_pair(b, vector));
     }
   }
   while (!waiting.empty())
   {
-    std::set<std::uint16_t>::iterator elt = waiting.begin(); // Pick an arbitrary element
+    std::set<std::pair<BasicBlock*, std::uint16_t> >::iterator elt = waiting.begin(); // Pick an arbitrary element
 
     waiting.erase(elt);
-    std::uint16_t address = *elt;
-
+    std::uint16_t address = elt->second;
+    BasicBlock *currentBlock = elt->first;
     if (address >= alu.flash.GetSize())
     {
       continue;
     }
 
     reachable.insert(address);
+    currentBlock->lastAddress = address;
 
-    std::set<std::uint16_t> nextAddr = alu.GetNextAddresses(address);
-    for (std::set<std::uint16_t>::iterator i = nextAddr.begin(); i != nextAddr.end(); i++)
+    std::set<std::uint16_t> nextAddresses = alu.GetNextAddresses(address);
+    for (std::set<std::uint16_t>::iterator i = nextAddresses.begin(); i != nextAddresses.end(); i++)
     {
-      if (reachable.find(*i) == reachable.end())
+      std::uint16_t nextAddress = *i;
+      // Jump -> we create a new basic block or split existing if needed
+      // Not jump -> still in the same basic block
+      if (alu.IsJump(address))
       {
-        waiting.insert(*i);
+        if (reachable.find(nextAddress) == reachable.end())
+        {
+          int newBlockNumber = basicBlockCount++;
+
+          BasicBlock *newBlock = new BasicBlock(newBlockNumber, nextAddress);
+          basicBlocks[newBlockNumber] = newBlock;
+          currentBlock->edges.insert(newBlockNumber);
+          waiting.insert(std::make_pair(newBlock, nextAddress));
+        }
+        else
+        {
+          // Find the referenced block
+          std::map<int, BasicBlock*>::iterator it;
+          BasicBlock *referencedBlock = nullptr;
+          for (it = basicBlocks.begin(); it != basicBlocks.end(); it++)
+          {
+            if ((it->second->firstAddress <= nextAddress) && (it->second->lastAddress >= nextAddress))
+            {
+              referencedBlock = it->second;
+            }
+          }
+
+          currentBlock->edges.insert(referencedBlock->number);
+          // Check if we need to split it
+          if (referencedBlock->firstAddress != nextAddress)
+          {
+            int newBlockNumber = basicBlockCount++;
+
+            BasicBlock *newBlock = new BasicBlock(referencedBlock->number, referencedBlock->firstAddress);
+            newBlock->lastAddress = nextAddress - 1;
+            newBlock->edges.insert(newBlockNumber);
+            referencedBlock->number = newBlockNumber;
+            currentBlock->edges.insert(newBlockNumber);
+          }
+        }
+      }
+      else
+      {
+        if (reachable.find(nextAddress) == reachable.end())
+        {
+          waiting.insert(std::make_pair(currentBlock, nextAddress));
+        }
       }
     }
   }

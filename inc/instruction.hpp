@@ -36,6 +36,7 @@ class Instruction
     Instruction(Alu&, std::uint8_t opcode, std::uint8_t reg);
     Instruction(Alu&, std::uint8_t opcode);
     Instruction(Alu&);
+    virtual bool IsJump() const;
     virtual std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
     virtual std::string Disassemble(std::uint16_t address) const = 0;
     virtual void Execute() const;

@@ -209,22 +209,17 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize, std::
 
   INC_A3 *inc_a3 = new INC_A3(*this);
   instructionSet[inc_a3->GetOpcode()] = inc_a3;
-  JB_20 *jb_20 = new JB_20(*this);
-  instructionSet[jb_20->GetOpcode()] = jb_20;
-  JBC_10 *jbc_10 = new JBC_10(*this);
-  instructionSet[jbc_10->GetOpcode()] = jbc_10;
-  JC_40 *jc_40 = new JC_40(*this);
-  instructionSet[jc_40->GetOpcode()] = jc_40;
+
+  instructionSet[0x10] = new JBC_10(*this, 0x10);
+  instructionSet[0x20] = new JB_20(*this, 0x20);
+  instructionSet[0x30] = new JNB_30(*this, 0x30);
+  instructionSet[0x40] = new JC_40(*this, 0x40);
+  instructionSet[0x50] = new JNC_50(*this, 0x50);
+  instructionSet[0x60] = new JZ_60(*this, 0x60);
+  instructionSet[0x70] = new JNZ_70(*this, 0x70);
+
   JMP_73 *jmp_73 = new JMP_73(*this);
   instructionSet[jmp_73->GetOpcode()] = jmp_73;
-  JNB_30 *jnb_30 = new JNB_30(*this);
-  instructionSet[jnb_30->GetOpcode()] = jnb_30;
-  JNC_50 *jnc_50 = new JNC_50(*this);
-  instructionSet[jnc_50->GetOpcode()] = jnc_50;
-  JNZ_70 *jnz_70 = new JNZ_70(*this);
-  instructionSet[jnz_70->GetOpcode()] = jnz_70;
-  JZ_60 *jz_60 = new JZ_60(*this);
-  instructionSet[jz_60->GetOpcode()] = jz_60;
   LCALL_12 *lcall_12 = new LCALL_12(*this);
   instructionSet[lcall_12->GetOpcode()] = lcall_12;
   LJMP_2 *ljmp_2 = new LJMP_2(*this);
@@ -464,6 +459,20 @@ std::uint8_t Alu::GetOperands(std::uint16_t address)
   else
   {
     return instructionSet[opcode]->GetOperands();
+  }
+}
+
+bool Alu::IsJump(std::uint16_t address)
+{
+  const std::uint8_t opcode = flash.Read(address);
+
+  if (instructionSet.find(opcode) == instructionSet.end())
+  {
+    throw new IllegalInstructionException();
+  }
+  else
+  {
+    return instructionSet[opcode]->IsJump();
   }
 }
 

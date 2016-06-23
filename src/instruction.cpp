@@ -55,6 +55,11 @@ void Instruction::IncPC() const
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
+bool Instruction::IsJump() const
+{
+  return false;
+}
+
 std::set<std::uint16_t> Instruction::GetNextAddresses(std::uint16_t address) const
 {
   return {(std::uint16_t) (address + 1 + operands)};

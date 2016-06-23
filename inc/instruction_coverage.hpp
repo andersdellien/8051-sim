@@ -19,16 +19,28 @@
 #ifndef _INSTRUCTION_COVERAGE_HPP
 #define _INSTRUCTION_COVERAGE_HPP
 
+#include <climits>
 #include <map>
 #include <set>
 
 #include "alu.hpp"
+
+class BasicBlock
+{
+  public:
+    BasicBlock(int num, std::uint16_t address);
+    int number;
+    std::uint16_t firstAddress, lastAddress;
+    std::set<int> edges;
+};
 
 class InstructionCoverage
 {
   private:
     std::map<std::uint16_t, int> executionCount;
     std::set<std::uint16_t> reachable;
+    std::map<int, BasicBlock*> basicBlocks;
+    int basicBlockCount;
   public:
     static InstructionCoverage *GetInstance();
     void Initialize(Alu &alu);

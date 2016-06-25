@@ -246,7 +246,7 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
     std::uint16_t limit = address + length;
     while (address <= limit)
     {
-      std::cout << handler.alu.Disassemble(address) << std::endl;
+      std::cout << std::hex << std::setfill('0') << std::setw(4) << address << " " << handler.alu.Disassemble(address) << std::endl;
       address += 1 + handler.alu.GetOperands(address);
     }
   }

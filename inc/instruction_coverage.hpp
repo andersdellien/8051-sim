@@ -31,14 +31,14 @@ class BasicBlock
     BasicBlock(int num, std::uint16_t address);
     int number;
     std::uint16_t firstAddress, lastAddress;
-    std::set<int> edges;
+    std::set<int> outEdges, inEdges;
 };
 
 class InstructionCoverage
 {
   private:
     std::map<std::uint16_t, int> executionCount;
-    std::set<std::uint16_t> reachable;
+    std::map<std::uint16_t, int> reachable;
     std::map<int, BasicBlock*> basicBlocks;
     int basicBlockCount;
   public:

@@ -249,6 +249,7 @@ class RET_22: public Instruction
     RET_22(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    bool IsJump() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
@@ -320,6 +321,7 @@ class RETI_32: public Instruction
     RETI_32(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    bool IsJump() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 

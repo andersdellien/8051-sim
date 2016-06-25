@@ -2075,6 +2075,11 @@ void RET_22::Execute() const
   alu.SetSP(sp - 2);
 }
 
+bool RET_22::IsJump() const
+{
+  return true;
+}
+
 std::set<std::uint16_t> RET_22::GetNextAddresses(std::uint16_t address) const
 { 
   return {};
@@ -2095,6 +2100,11 @@ void RETI_32::Execute() const
 
   alu.SetPC(low + high * 256);
   alu.SetSP(sp - 2);
+}
+
+bool RETI_32::IsJump() const
+{
+  return true;
 }
 
 std::set<std::uint16_t> RETI_32::GetNextAddresses(std::uint16_t address) const

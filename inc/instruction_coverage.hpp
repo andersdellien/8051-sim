@@ -24,6 +24,7 @@
 #include <set>
 
 #include "alu.hpp"
+#include "instruction.hpp"
 
 class BasicBlock
 {
@@ -32,6 +33,7 @@ class BasicBlock
     int number;
     std::uint16_t firstAddress, lastAddress;
     std::set<int> outEdges, inEdges;
+    RegisterConstraints c;
 };
 
 class InstructionCoverage

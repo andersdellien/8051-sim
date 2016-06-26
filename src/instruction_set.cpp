@@ -115,6 +115,34 @@ std::string AddImmediate::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
+void AddImmediate::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  if (carry)
+  {
+    c.c.type = ConstraintType::None;
+  }
+  else if (c.r[8].type == ConstraintType::Alias)
+  {
+    c.c.type = ConstraintType::RegisterInterval;
+    c.c.reg = c.r[8].reg;
+    c.c.low = 0xff - alu.flash.Read(address+1) + 1;    
+    c.c.high = 0xff;
+  }
+  if (c.r[8].type == ConstraintType::Interval)
+  {
+    c.r[8].low += alu.flash.Read(address + 1);
+    c.r[8].high += alu.flash.Read(address + 1);
+    if (c.r[8].low > 255 || c.r[8].high > 255)
+    {
+      c.r[8].type = ConstraintType::None;
+    }
+  }
+  else
+  {
+    c.r[8].type = ConstraintType::None;
+  }
+}
+
 void AddImmediate::Execute() const
 {
   Helper(alu.flash.Read(alu.GetPC() + 1));
@@ -614,6 +642,13 @@ void CLR_E4::Execute(void) const
   IncPC();
 }
 
+void CLR_E4::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  c.r[8].type = ConstraintType::Interval;
+  c.r[8].low = 0;
+  c.r[8].high = 0;
+}
+
 CPL_F4::CPL_F4(Alu &a) : Instruction(a)
 {
   opcode = 0xF4;
@@ -1107,6 +1142,31 @@ void JNC_50::Execute() const
   }
 }
 
+void JNC_50::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  if (c.c.type == ConstraintType::RegisterInterval)
+  {
+    std::int8_t reladdr = alu.flash.Read(address + 1);
+
+    c.c.type = ConstraintType::None;
+    if (address + 1 + operands + reladdr == destination)
+    {
+      if (c.c.high == 0xff)
+      {
+        c.r[c.c.reg].type = ConstraintType::Interval;
+        c.r[c.c.reg].low = 0;
+        c.r[c.c.reg].high = c.c.low - 1;
+      }
+    }
+    else if (address + 1 + operands == destination)
+    {
+      c.r[c.c.reg].type = ConstraintType::Interval;
+      c.r[c.c.reg].low = c.c.low;
+      c.r[c.c.reg].high = c.c.high;
+    }  
+  }
+}
+
 JNZ_70::JNZ_70(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
 {
   operands = 1;
@@ -1254,6 +1314,16 @@ void MOV_90::Execute() const
 {
   alu.SetDPTR(alu.flash.Read(alu.GetPC() + 1) * 256 + alu.flash.Read(alu.GetPC() + 2));
   alu.SetPC(alu.GetPC() + 1 + operands);
+}
+
+void MOV_90::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  c.dpl.type = ConstraintType::Interval;
+  c.dpl.low = alu.flash.Read(address+1);
+  c.dpl.high = c.dpl.low;
+  c.dph.type = ConstraintType::Interval;
+  c.dph.low = alu.flash.Read(address+2);
+  c.dph.high = c.dpl.low;
 }
 
 MOV_75::MOV_75(Alu &a) : Instruction(a)
@@ -1443,6 +1513,15 @@ void MovRegisterA::Execute() const
   IncPC();
 }
 
+void MovRegisterA::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  if (c.r[8].type == ConstraintType::None)
+  {
+    c.r[8].type = ConstraintType::Alias;
+    c.r[8].reg = reg;
+  }
+}
+
 MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
 {
   operands = 1;
@@ -1542,6 +1621,21 @@ std::string MovARegister::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
+void MovARegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  if (c.r[reg].type == ConstraintType::Interval)
+  {
+    c.r[8].type = ConstraintType::Interval;
+    c.r[8].low = c.r[reg].low;
+    c.r[8].high = c.r[reg].high;
+  }
+  else
+  {
+    c.r[8].type = ConstraintType::Alias;
+    c.r[8].reg = reg;
+  }
+}
+
 void MovARegister::Execute() const
 {
   alu.SetA(alu.GetReg(reg));
@@ -1571,6 +1665,20 @@ void MOV_F5::Execute() const
 
   alu.Write(addr, alu.GetA());
   IncPC();
+}
+
+void MOV_F5::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  std::uint8_t addr = alu.flash.Read(address + 1);
+
+  if (addr == alu.sfrDPL.address)
+  {
+    c.dpl = c.r[8];
+  }
+  else if (addr == alu.sfrDPH.address)
+  {
+    c.dph = c.r[8];
+  }
 }
 
 MovIndirect::MovIndirect(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
@@ -1671,6 +1779,16 @@ void MOVC_83::Execute() const
 {
   alu.SetA(alu.flash.Read(alu.GetA() + 1 + alu.GetPC()));
   IncPC();
+}
+
+void MOVC_83::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  if (c.r[8].type == ConstraintType::Interval)
+  {
+    c.r[8].type = ConstraintType::Memory;
+    c.r[8].low += address + 1;
+    c.r[8].high += address + 1;
+  }
 }
 
 MOVX_F0::MOVX_F0(Alu &a) : Instruction(a)

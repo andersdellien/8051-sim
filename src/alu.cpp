@@ -23,6 +23,7 @@
 #include "flash.hpp"
 #include "alu.hpp"
 #include "cpu8051.hpp"
+#include "instruction.hpp"
 #include "instruction_coverage.hpp"
 #include "instruction_set.hpp"
 #include "exceptions.hpp"
@@ -445,6 +446,20 @@ std::string Alu::Disassemble(std::uint16_t address)
   else
   {
     return instructionSet[opcode]->Disassemble(address);
+  }
+}
+
+void Alu::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  const std::uint8_t opcode = flash.Read(address);
+
+  if (instructionSet.find(opcode) == instructionSet.end())
+  {
+    throw new IllegalInstructionException();
+  }
+  else
+  {
+    return instructionSet[opcode]->UpdateConstraints(c, address, destination);
   }
 }
 

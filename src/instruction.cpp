@@ -20,7 +20,42 @@
 #include <iostream>
 #include <set>
 #include <stdexcept>
+#include <sstream>
 #include "instruction.hpp"
+
+void Constraint::Print(std::string name)
+{
+  if (type == ConstraintType::Memory)
+  {
+    std::cout << name << " Memory: " << low << " " << high << std::endl;
+  }
+  else if (type == ConstraintType::Interval)
+  {
+    std::cout << name << " Interval: " << low << " " << high << std::endl;
+  }
+  else if (type == ConstraintType::RegisterInterval)
+  {
+    std::cout << name << " Register " << reg << " Interval: " << low << " " << high << std::endl;
+  }
+  else if (type == ConstraintType::Alias)
+  {
+    std::cout << name << " Alias " << reg << std::endl;
+  }
+}
+
+void RegisterConstraints::Print()
+{
+  r[8].Print("A");
+  dpl.Print("DPL");
+  dph.Print("DPH");
+  c.Print("C");
+  for (int i = 0; i < 8; i++)
+  {
+    std::stringstream ss;
+    ss << "R" << i;
+    r[i].Print(ss.str());
+  }
+}
 
 Instruction::Instruction(Alu& a, std::uint8_t o, std::uint8_t r) : alu(a), opcode(o), reg(r)
 {
@@ -63,4 +98,16 @@ bool Instruction::IsJump() const
 std::set<std::uint16_t> Instruction::GetNextAddresses(std::uint16_t address) const
 {
   return {(std::uint16_t) (address + 1 + operands)};
+}
+
+void Instruction::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  c.r[8].type = ConstraintType::None;
+  c.c.type = ConstraintType::None;
+  c.dpl.type = ConstraintType::None;
+  c.dph.type = ConstraintType::None;
+  for (int i = 0; i < 8; i++)
+  {
+    c.r[i].type = ConstraintType::None;
+  }
 }

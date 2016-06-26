@@ -30,6 +30,7 @@
 class Cpu8051Callbacks;
 class Cpu8051;
 class Instruction;
+class RegisterConstraints;
 
 class Alu : public Block
 {
@@ -40,6 +41,7 @@ class Alu : public Block
     Memory xram;
     Memory iram;
     std::string Disassemble(std::uint16_t address);
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
     std::uint8_t GetOperands(std::uint16_t address);
     bool IsJump(std::uint16_t address);
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address);
@@ -90,12 +92,12 @@ class Alu : public Block
     void UartInterrupt();
     std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
     std::map<std::uint8_t, SfrBitAddressable*> bitAddressableSfr;
+    Sfr sfrDPL;
+    Sfr sfrDPH;
   private:
     std::map<std::uint8_t, Instruction*> instructionSet;
     std::uint16_t pc;
     Sfr sfrSP;
-    Sfr sfrDPL;
-    Sfr sfrDPH;
     Sfr sfrIP;
     Sfr sfrPSW;
     SfrBitAddressable sfrIE;

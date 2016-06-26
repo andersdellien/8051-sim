@@ -25,6 +25,23 @@
 #include "memory.hpp"
 #include "alu.hpp"
 
+enum class ConstraintType {None, Alias, Interval, RegisterInterval, Memory};
+
+class Constraint
+{
+  public:
+    int low, high, reg;
+    ConstraintType type;
+    void Print(std::string name);
+};
+
+class RegisterConstraints
+{
+  public:
+    Constraint dpl, dph, r[9], c; // 'A' is register number 8
+    void Print();
+};
+
 class Instruction
 {
   protected:
@@ -40,6 +57,7 @@ class Instruction
     virtual std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
     virtual std::string Disassemble(std::uint16_t address) const = 0;
     virtual void Execute() const;
+    virtual void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
     std::uint8_t GetOperands() const;
     std::uint8_t GetOpcode() const;
     void IncPC() const;

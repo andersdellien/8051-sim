@@ -277,6 +277,7 @@ class AddImmediate: public AdditionHelper
     AddImmediate(Alu&, std::uint8_t opcode, bool carry);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 // 0x25 and 0x35
@@ -424,6 +425,7 @@ class JNC_50: public CondJump
     JNC_50(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 class ANL_52: public Instruction
@@ -707,6 +709,7 @@ class MovRegisterA: public Instruction
     MovRegisterA(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 class SJMP_80: public Instruction
@@ -732,6 +735,7 @@ class MOVC_83: public Instruction
     MOVC_83(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 class DIV_84: public Instruction
@@ -763,6 +767,7 @@ class MovARegister: public Instruction
     MovARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 class MovAddressRegister: public Instruction
@@ -779,6 +784,7 @@ class MOV_90: public Instruction
     MOV_90(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 class MOV_92: public Instruction
@@ -1110,6 +1116,7 @@ class CLR_E4: public Instruction
     CLR_E4(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 class MOV_E5: public Instruction
@@ -1164,6 +1171,7 @@ class MOV_F5: public Instruction
     MOV_F5(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 // 0xf6 and 0xf7

@@ -30,6 +30,7 @@ void Shell::CommandLoop()
 
     do
     {
+      std::cout << "$ ";
       std::getline(std::cin, line);
       std::stringstream ss(line);
       while (std::getline(ss, token, ' '))

@@ -54,7 +54,6 @@ void TestSuite::Add(TestCase &t)
 
 void TestSuite::Run()
 {
-  cpu.Reset();
   cpu.alu.flash.ParseHex(hexFile);
   SymbolTable::GetInstance()->ParseFile(symFile);
   InstructionCoverage::GetInstance()->Initialize(cpu.alu);
@@ -63,6 +62,7 @@ void TestSuite::Run()
 
   for (i = tests.begin(); i != tests.end(); i++)
   {
+    cpu.Reset();
     cpu.alu.RegisterCallback(*i, &cpu);
     if ((*i)->Run(cpu))
     {

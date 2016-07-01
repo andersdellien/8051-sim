@@ -231,18 +231,15 @@ void InstructionCoverage::GetCoverage(int &totalInstructions, int &executedInstr
     if (reachable[i])
     {
       totalInstructions++;
-      if (executionCount[i])
-      {
-        executedInstructions++;
-      }
+    }
+    if (executionCount[i])
+    {
+      executedInstructions++;
     }
   }
 }
 
 void InstructionCoverage::InstructionExecuted(std::uint16_t address)
 {
-  if (reachable.find(address) != reachable.end())
-  {
-    executionCount[address]++;
-  }
+  executionCount[address]++;
 }

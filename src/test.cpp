@@ -25,13 +25,17 @@
 #include "symbol_table.hpp"
 #include "test.hpp"
 
-TestCase::TestCase(std::string s) : name(s)
+TestCase::TestCase(std::string s) : name(s), trace(false)
+{
+}
+
+TestCase::TestCase(std::string s, bool t) : name(s), trace(t)
 {
 }
 
 void TestCase::OnInstructionExecuted(Cpu8051 &handler)
 {
-  if (handler.alu.flash.Read(handler.alu.GetPC()) == 0x12)
+  if (trace && handler.alu.flash.Read(handler.alu.GetPC()) == 0x12)
   {
     std::cout << std::dec << handler.GetTicks() << " " << std::hex << std::setw(4) << std::setfill('0') << handler.alu.GetPC();
     std::cout << " " << handler.alu.Disassemble(handler.alu.GetPC()) << std::endl;

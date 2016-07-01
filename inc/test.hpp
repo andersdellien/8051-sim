@@ -28,6 +28,7 @@ class TestCase: public Cpu8051Callbacks
 {
   public:
     TestCase(std::string name);
+    TestCase(std::string name, bool trace);
     virtual bool Run(Cpu8051 &cpu) = 0;
     void OnInstructionExecuted(Cpu8051 &handler);
     virtual bool OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit) = 0;
@@ -35,6 +36,7 @@ class TestCase: public Cpu8051Callbacks
     std::string GetName();
   private:
     std::string name;
+    bool trace;
 };
 
 class TestSuite

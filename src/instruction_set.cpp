@@ -730,6 +730,12 @@ std::string DEC_15::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
+void DEC_15::Execute() const
+{
+  alu.flash.Write(alu.GetPC() + 1, alu.flash.Read(alu.GetPC() + 1) - 1);
+  IncPC();
+}
+
 DEC_14::DEC_14(Alu &a) : Instruction(a)
 {
   opcode = 0x14;

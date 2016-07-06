@@ -155,6 +155,7 @@ class DEC_15: public Instruction
   public:
     DEC_15(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DEC_16: public Instruction

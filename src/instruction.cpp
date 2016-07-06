@@ -81,7 +81,7 @@ std::uint8_t Instruction::GetOperands() const
 
 void Instruction::Execute() const
 {
-  std::cout << "Instruction " << (int) opcode << " not implemented" << std::endl;
+  std::cout << "Instruction " << std::hex << (int) opcode << " at address " << alu.GetPC() << " not implemented" << std::endl;
   throw new std::runtime_error("instruction not implemented");
 }
 

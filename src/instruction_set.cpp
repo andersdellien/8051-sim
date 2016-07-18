@@ -2149,7 +2149,7 @@ std::string POP_D0::Disassemble(std::uint16_t address) const
 
 void POP_D0::Execute() const
 {
-  alu.iram.Write(alu.flash.Read(alu.GetPC() + 1), alu.iram.Read(alu.GetSP()));
+  alu.Write(alu.flash.Read(alu.GetPC() + 1), alu.iram.Read(alu.GetSP()));
   alu.SetSP(alu.GetSP() - 1);
   IncPC();
 }

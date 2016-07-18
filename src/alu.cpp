@@ -54,7 +54,8 @@ Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize, std::
     sfrFLKEY("FLKEY", *this, 0xb6, 0x00, {0x0, 0xf}),
     sfrFLWR("FLWR", *this, 0xe5, 0x00, {0x0, 0xf}),
     interruptPending(0),
-    traceSfr(false)
+    traceSfr(false),
+    instructionSet(256)
 {
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
@@ -439,7 +440,7 @@ std::string Alu::Disassemble(std::uint16_t address)
 {
   const std::uint8_t opcode = flash.Read(address);
 
-  if (instructionSet.find(opcode) == instructionSet.end())
+  if (instructionSet[opcode] == nullptr)
   {
     throw new IllegalInstructionException();
   }
@@ -453,7 +454,7 @@ void Alu::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::
 {
   const std::uint8_t opcode = flash.Read(address);
 
-  if (instructionSet.find(opcode) == instructionSet.end())
+  if (instructionSet[opcode] == nullptr)
   {
     throw new IllegalInstructionException();
   }
@@ -467,7 +468,7 @@ std::uint8_t Alu::GetOperands(std::uint16_t address)
 {
   const std::uint8_t opcode = flash.Read(address);
 
-  if (instructionSet.find(opcode) == instructionSet.end())
+  if (instructionSet[opcode] == nullptr)
   {
     throw new IllegalInstructionException();
   }
@@ -481,7 +482,7 @@ bool Alu::IsJump(std::uint16_t address)
 {
   const std::uint8_t opcode = flash.Read(address);
 
-  if (instructionSet.find(opcode) == instructionSet.end())
+  if (instructionSet[opcode] == nullptr)
   {
     throw new IllegalInstructionException();
   }
@@ -495,7 +496,7 @@ std::set<std::uint16_t> Alu::GetNextAddresses(std::uint16_t address)
 {
   const std::uint8_t opcode = flash.Read(address);
 
-  if (instructionSet.find(opcode) == instructionSet.end())
+  if (instructionSet[opcode] == nullptr)
   {
     throw new IllegalInstructionException();
   }

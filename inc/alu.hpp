@@ -20,7 +20,7 @@
 #define _ALU_HPP
 
 #include <cstdint>
-#include <map>
+#include <vector>
 #include <set>
 #include <string>
 #include "block.hpp"
@@ -95,7 +95,7 @@ class Alu : public Block
     Sfr sfrDPL;
     Sfr sfrDPH;
   private:
-    std::map<std::uint8_t, Instruction*> instructionSet;
+    std::vector<Instruction*> instructionSet;
     std::uint16_t pc;
     Sfr sfrSP;
     Sfr sfrIP;

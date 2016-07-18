@@ -71,9 +71,10 @@ Timer::Timer(std::string name, Alu &a) :
 
 void Timer::ClockEvent()
 {
-  // One-shot semantics assumed (need to check an actual 8051 here), disable the timer after it has triggered
-
-  tcon.data &= ~TR0;
+  // Timer wraps, recalculate the time to the next event
+  tl0.Write(0);
+  th0.Write(0);
+  ConfigurationChanged();
   alu.TimerInterrupt(0);
 }
 

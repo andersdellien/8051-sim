@@ -21,7 +21,7 @@
 #include "symbol_table.hpp"
 
 std::set<Command*> Command::commands;
-static std::set<std::uint8_t> traceInstruction;
+std::vector<bool> traceInstruction(256);
 
 Command::Command()
 {
@@ -128,22 +128,25 @@ bool TraceCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& to
     {
       for (std::uint16_t i = 0x00; i <= 0x255; i++)
       {
-        traceInstruction.insert((uint8_t) i);
+        traceInstruction[i] = true;
       }
     }
     else if (tokens[1] == "none")
     {
-      traceInstruction.clear();
+      for (std::uint16_t i = 0x00; i <= 0x255; i++)
+      {
+        traceInstruction[i] = true;
+      }
     }
     else
     {
-      traceInstruction.insert(stoi(tokens[1], nullptr, 16));
+      traceInstruction[stoi(tokens[1], nullptr, 16)] = true;
     }
   }
   return retVal;
 }
 
-MiscCommand::MiscCommand() : Command() {}
+MiscCommand::MiscCommand() : Command() {breakLimit = -1;}
 
 bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
 {
@@ -332,7 +335,7 @@ void MiscCommand::OnInstructionExecuted(Cpu8051 &handler)
   {
     std::cout << "break at " << std::hex << handler.alu.GetPC() << std::endl;
   }
-  if (traceInstruction.find(handler.alu.flash.Read(handler.alu.GetPC())) != traceInstruction.end() ||
+  if (traceInstruction[handler.alu.flash.Read(handler.alu.GetPC())] ||
       breakCount == breakLimit || instructionLimit > 0)
   {
     std::cout << std::hex << std::setw(4) << std::setfill('0') << handler.alu.GetPC() << " " << handler.alu.Disassemble(handler.alu.GetPC()) << std::endl;

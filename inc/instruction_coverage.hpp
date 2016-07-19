@@ -22,6 +22,7 @@
 #include <climits>
 #include <map>
 #include <set>
+#include <vector>
 
 #include "alu.hpp"
 #include "instruction.hpp"
@@ -39,11 +40,11 @@ class BasicBlock
 class InstructionCoverage
 {
   private:
-    std::map<std::uint16_t, int> executionCount;
+    std::vector<int> executionCount;
     std::map<std::uint16_t, int> reachable;
     std::map<int, BasicBlock*> basicBlocks;
     int basicBlockCount;
-    InstructionCoverage() {};
+    InstructionCoverage(): executionCount(65536) {};
   public:
     static InstructionCoverage& GetInstance()
     {

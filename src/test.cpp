@@ -59,8 +59,8 @@ void TestSuite::Add(TestCase &t)
 void TestSuite::Run()
 {
   cpu.alu.flash.ParseHex(hexFile);
-  SymbolTable::GetInstance()->ParseFile(symFile);
-  InstructionCoverage::GetInstance()->Initialize(cpu.alu);
+  SymbolTable::GetInstance().ParseFile(symFile);
+  InstructionCoverage::GetInstance().Initialize(cpu.alu);
 
   std::list<TestCase*>::iterator i;
 
@@ -77,7 +77,7 @@ void TestSuite::Run()
       std::cout << (*i)->GetName() << " failed" << std::endl;
     }
     int total, executed;
-    InstructionCoverage::GetInstance()->GetCoverage(total, executed);
+    InstructionCoverage::GetInstance().GetCoverage(total, executed);
     std::cout << std::dec << "Total: " << total << " executed: " << executed << " percentage: " << std::setw(2) <<  (100.0*executed) / total << std::endl; 
   }
 }

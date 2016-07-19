@@ -43,8 +43,14 @@ class InstructionCoverage
     std::map<std::uint16_t, int> reachable;
     std::map<int, BasicBlock*> basicBlocks;
     int basicBlockCount;
+    InstructionCoverage() {};
   public:
-    static InstructionCoverage *GetInstance();
+    static InstructionCoverage& GetInstance()
+    {
+      static InstructionCoverage instance;
+
+      return instance;
+    }
     void Initialize(Alu &alu);
     void GetCoverage(int &totalInstructions, int &executedInstructions);
     void InstructionExecuted(std::uint16_t address);

@@ -739,7 +739,7 @@ void Alu::ClockEvent()
     SetSP(alu.GetSP() + 1);
     iram.Write(alu.GetSP(), alu.GetPC() / 256);
     SetPC(0xb);
-    InstructionCoverage::GetInstance()->InstructionExecuted(0xb);
+    InstructionCoverage::GetInstance().InstructionExecuted(0xb);
   }
   else if (interruptPending & INTERRUPT_PENDING_UART0)
   {
@@ -749,11 +749,11 @@ void Alu::ClockEvent()
     SetSP(alu.GetSP() + 1);
     iram.Write(alu.GetSP(), alu.GetPC() / 256);
     SetPC(0x23);
-    InstructionCoverage::GetInstance()->InstructionExecuted(0x23);
+    InstructionCoverage::GetInstance().InstructionExecuted(0x23);
   }
   else
   {
-    InstructionCoverage::GetInstance()->InstructionExecuted(pc);
+    InstructionCoverage::GetInstance().InstructionExecuted(pc);
     instructionSet[flash.Read(pc)]->Execute();
   }
   if (callbacks)

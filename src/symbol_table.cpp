@@ -21,8 +21,6 @@
 #include "symbol_table.hpp"
 #include <map>
 
-static SymbolTable symbolTable;
-
 void SymbolTable::ParseFile(const std::string &fileName)
 {
   std::string line;
@@ -113,8 +111,4 @@ void SymbolTable::RegisterSymbol(std::uint16_t address, std::string name)
   symbolMap[name] = address;
 }
 
-SymbolTable *SymbolTable::GetInstance()
-{
-  return &symbolTable;
-}
 

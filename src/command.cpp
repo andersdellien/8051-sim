@@ -168,14 +168,14 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
     {
       int total, executed;
 
-      InstructionCoverage::GetInstance()->Initialize(handler.alu);
-      InstructionCoverage::GetInstance()->GetCoverage(total, executed);
+      InstructionCoverage::GetInstance().Initialize(handler.alu);
+      InstructionCoverage::GetInstance().GetCoverage(total, executed);
       std::cout << "Found " << total << " instructions" << std::endl;
     }
     else if (tokens[1] == "list")
     {
       int total, executed;
-      InstructionCoverage::GetInstance()->GetCoverage(total, executed);
+      InstructionCoverage::GetInstance().GetCoverage(total, executed);
       std::cout << std::dec << "Total: " << total << " executed: " << executed << " percentage: " << std::setw(2) <<  (100.0*executed) / total << std::endl;      
     }
   }
@@ -248,7 +248,7 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
     }
     else if (tokens[1].rfind(sym) + sym.length() == tokens[1].length())
     {
-      SymbolTable::GetInstance()->ParseFile(tokens[1]);
+      SymbolTable::GetInstance().ParseFile(tokens[1]);
     }
     else
     {

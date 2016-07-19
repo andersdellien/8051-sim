@@ -28,7 +28,7 @@
 Sfr::Sfr(std::string n, Block &b, std::uint8_t addr, std::uint8_t r, std::set<std::uint8_t> p) :
   name(n), block(b), address(addr), resetValue(r), pages(p)
 {
-  SymbolTable::GetInstance()->RegisterSymbol(address, name);
+  SymbolTable::GetInstance().RegisterSymbol(address, name);
   block.RegisterSfr(this);
 }
 

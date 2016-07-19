@@ -25,15 +25,8 @@
 #include "instruction_coverage.hpp"
 #include "symbol_table.hpp"
 
-static InstructionCoverage instructionCoverage;
-
 BasicBlock::BasicBlock(int n, std::uint16_t address) : number(n), firstAddress(address), lastAddress(address)
 {
-}
-
-InstructionCoverage* InstructionCoverage::GetInstance()
-{
-  return &instructionCoverage;
 }
 
 void InstructionCoverage::Initialize(Alu &alu)
@@ -43,7 +36,10 @@ void InstructionCoverage::Initialize(Alu &alu)
   basicBlockCount = 0;
   basicBlocks.erase(basicBlocks.begin(), basicBlocks.end());
   reachable.erase(reachable.begin(), reachable.end());
-  executionCount.erase(executionCount.begin(), executionCount.end());
+  for (int i = 0; i < 65536; i++)
+  {
+    executionCount[i] = 0;
+  }
   for (std::uint16_t vector : {0x0, 0x3, 0xb, 0x13, 0x1b, 0x23, 0x2b})
   {
     // Let's assume an unused interrupt vector entry is zeroed out.

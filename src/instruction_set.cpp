@@ -29,7 +29,7 @@ static void PrintAddress(std::stringstream &ss, std::uint8_t address)
   bool found;
   std::string name;
 
-  SymbolTable::GetInstance()->LookupAddress(address, name, found);
+  SymbolTable::GetInstance().LookupAddress(address, name, found);
   if (found)
   {
     ss << name;
@@ -45,7 +45,7 @@ static void PrintAddress(std::stringstream &ss, std::uint16_t address)
   bool found;
   std::string name;
 
-  SymbolTable::GetInstance()->LookupAddress(address, name, found);
+  SymbolTable::GetInstance().LookupAddress(address, name, found);
   if (found)
   {
     ss << name;

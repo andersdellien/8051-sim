@@ -26,7 +26,6 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <set>
 #include <queue>
 
 #include "alu.hpp"
@@ -59,7 +58,7 @@ class Cpu8051
     void Tick();
     int GetTicks();
     void InjectEvent(int deltaTicks, char c);
-    std::set<Block*> blocks;
+    std::vector<Block*> blocks;
     int breakpoints[NumBreakpoints];
 
     Alu alu;

@@ -58,7 +58,7 @@ bool BlockCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& to
   if (tokens[0] == "block")
   {
     retVal = true;
-    for (std::set<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
+    for (std::vector<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
     {
       int t = (*i)->GetRemainingTicks();
       std::cout << (*i)->GetName();

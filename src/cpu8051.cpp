@@ -30,15 +30,15 @@ Cpu8051::Cpu8051() :
   timer("Timer", alu),
   ticks(0)
 {
-  blocks.insert(&alu);
-  blocks.insert(&port0);
-  blocks.insert(&port1);
-  blocks.insert(&port2);
-  blocks.insert(&pca);
-  blocks.insert(&system);
-  blocks.insert(&uart);
-  blocks.insert(&adc);
-  blocks.insert(&timer);
+  blocks.push_back(&alu);
+  blocks.push_back(&port0);
+  blocks.push_back(&port1);
+  blocks.push_back(&port2);
+  blocks.push_back(&pca);
+  blocks.push_back(&system);
+  blocks.push_back(&uart);
+  blocks.push_back(&adc);
+  blocks.push_back(&timer);
   for (int i = 0; i < NumBreakpoints; i++)
   {
     breakpoints[i] = -1;
@@ -52,7 +52,7 @@ int Cpu8051::GetTicks()
 
 void Cpu8051::Reset()
 {
-  for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
+  for (std::vector<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
   {
     (*i)->Reset();
   }
@@ -66,13 +66,15 @@ void Cpu8051::InjectEvent(int deltaTicks, char c)
 void Cpu8051::Tick()
 {
   int smallestTick = std::numeric_limits<int>::max();
-  for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
+  for (int i = 0; i < blocks.size(); i++)
   {
-    if ((*i)->GetRemainingTicks() < smallestTick)
+    int tick = blocks[i]->GetRemainingTicks();
+    if (tick < smallestTick)
     {
-      smallestTick = (*i)->GetRemainingTicks();
+      smallestTick = tick;
     }
   }
+
   if (externalEvents.size() == 0 && (smallestTick == 0 || smallestTick == std::numeric_limits<int>::max()))
   {
     std::cout << "No upcoming event " << alu.GetPC() << std::endl;
@@ -90,9 +92,9 @@ void Cpu8051::Tick()
       smallestTick = event.first - ticks;
     }
   }
-  for (std::set<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
+  for (int i = 0; i < blocks.size(); i++)
   {
-    (*i)->Tick(smallestTick);
+    blocks[i]->Tick(smallestTick);
   }
   ticks += smallestTick;
   if (hasExternalEvent)

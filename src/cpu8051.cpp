@@ -39,6 +39,10 @@ Cpu8051::Cpu8051() :
   blocks.insert(&uart);
   blocks.insert(&adc);
   blocks.insert(&timer);
+  for (int i = 0; i < NumBreakpoints; i++)
+  {
+    breakpoints[i] = -1;
+  }
 }
 
 int Cpu8051::GetTicks()

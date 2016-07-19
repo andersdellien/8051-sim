@@ -49,6 +49,8 @@ class Cpu8051Callbacks
 
 typedef std::pair<int,char> ExternalEvent;
 
+constexpr int NumBreakpoints = 4;
+
 class Cpu8051
 {
   public:
@@ -58,7 +60,7 @@ class Cpu8051
     int GetTicks();
     void InjectEvent(int deltaTicks, char c);
     std::set<Block*> blocks;
-    std::set<std::uint16_t> breakpoints;
+    int breakpoints[NumBreakpoints];
 
     Alu alu;
     Port0 port0;

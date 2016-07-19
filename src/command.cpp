@@ -85,20 +85,30 @@ bool BreakCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& to
   if (tokens[0] == "break") {
     if (tokens[1] == "list")
     {
-      for (std::set<std::uint16_t>::iterator i = handler.breakpoints.begin();
-           i != handler.breakpoints.end();
-           i++)
+      for (int i = 0; i < NumBreakpoints; i++)
       {
-        std::cout << std::hex << *i << std::endl;
+        if (handler.breakpoints[i] != -1)
+        {
+          std::cout << std::hex << handler.breakpoints[i] << std::endl;
+        }
       }
     }
     else if (tokens[1] == "clear")
     {
-      handler.breakpoints.clear();
+      for (int i = 0; i < NumBreakpoints; i++)
+      {
+        handler.breakpoints[i] = -1;
+      }
     }
     else if (tokens[1] == "set")
     {
-      handler.breakpoints.insert(stoi(tokens[2], nullptr, 16));
+      for (int i = 0; i < NumBreakpoints; i++)
+      {
+        if (handler.breakpoints[i] == -1)
+        {
+          handler.breakpoints[i] = stoi(tokens[2], nullptr, 16);
+        }
+      }
     }
   }
 
@@ -327,9 +337,13 @@ bool MiscCommand::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t b
 void MiscCommand::OnInstructionExecuted(Cpu8051 &handler)
 {
   instructionCount++;
-  if (handler.breakpoints.find(handler.alu.GetPC()) != handler.breakpoints.end())
+  for (int i = 0; i < NumBreakpoints; i++)
   {
-     breakCount++;
+    if (handler.breakpoints[i] != -1 && handler.breakpoints[i] == handler.alu.GetPC())
+    {
+      breakCount++;
+      break;
+    }
   }
   if (breakCount == breakLimit)
   {

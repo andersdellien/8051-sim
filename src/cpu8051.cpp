@@ -65,17 +65,17 @@ void Cpu8051::InjectEvent(int deltaTicks, char c)
 
 void Cpu8051::Tick()
 {
-  int smallestTick = std::numeric_limits<int>::max();
+  int smallestTick = -1;
   for (int i = 0; i < blocks.size(); i++)
   {
     int tick = blocks[i]->GetRemainingTicks();
-    if (tick < smallestTick)
+    if (tick != -1 && (smallestTick == -1 || tick < smallestTick))
     {
       smallestTick = tick;
     }
   }
 
-  if (externalEvents.size() == 0 && (smallestTick == 0 || smallestTick == std::numeric_limits<int>::max()))
+  if (externalEvents.size() == 0 && smallestTick <= 0)
   {
     std::cout << "No upcoming event " << alu.GetPC() << std::endl;
     throw new std::runtime_error("No next event");

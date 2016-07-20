@@ -118,6 +118,6 @@ int Timer::CalculateRemainingTicks()
   }
   else
   {
-    return std::numeric_limits<int>::max();
+    return -1;
   }
 }

@@ -19,7 +19,6 @@
 #ifndef _INSTRUCTION_COVERAGE_HPP
 #define _INSTRUCTION_COVERAGE_HPP
 
-#include <climits>
 #include <map>
 #include <set>
 #include <vector>

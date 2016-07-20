@@ -18,7 +18,6 @@
 
 #include <exception>
 #include <iostream>
-#include <limits>
 #include "block.hpp"
 #include "alu.hpp"
 
@@ -48,14 +47,16 @@ int Block::GetRemainingTicks()
 
 void Block::Tick(int ticks)
 {
+  // '-1' indicates inactive block
+  if (remainingTicks == -1)
+  {
+    return;
+  }
   if (ticks > remainingTicks)
   {
     throw new std::runtime_error("Invalid tick");
   }
-  else if (remainingTicks < std::numeric_limits<int>::max())
-  {
-    remainingTicks -= ticks;
-  }
+  remainingTicks -= ticks;
   if (remainingTicks == 0)
   {
     ClockEvent();
@@ -69,7 +70,7 @@ void Block::Reset()
   {
     i->second->Reset();
   }
-  remainingTicks = std::numeric_limits<int>::max();
+  remainingTicks = -1;
 }
 
 void Block::RegisterSfr(Sfr *sfr)
@@ -80,7 +81,7 @@ void Block::RegisterSfr(Sfr *sfr)
 
 int Block::CalculateRemainingTicks()
 {
-  return std::numeric_limits<int>::max();
+  return -1;
 }
 
 void Block::ClockEvent()

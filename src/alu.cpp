@@ -18,7 +18,6 @@
 
 #include <sstream>
 #include <iostream>
-#include <limits>
 #include <string>
 #include "flash.hpp"
 #include "alu.hpp"
@@ -769,10 +768,10 @@ void Alu::ClockEvent()
 
 int Alu::CalculateRemainingTicks()
 {
-  // If any sleep mode bit is set, code execution stops. So we return infinity here
+  // If any sleep mode bit is set, code execution stops. So we return -1 here
   if (sfrPCON.data & (IDLE_MODE | STOP_MODE | SUSPEND_MODE | SLEEP_MODE))
   {
-    return std::numeric_limits<int>::max();
+    return -1;
   }
   else if (interruptPending)
   {

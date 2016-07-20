@@ -17,7 +17,6 @@
  */
 
 #include <iostream>
-#include <limits>
 #include <set>
 #include "uart.hpp"
 #include "sfr.hpp"
@@ -96,7 +95,7 @@ int Uart::CalculateRemainingTicks()
   }
   else
   {
-    return std::numeric_limits<int>::max();
+    return -1;
   }
 }
 

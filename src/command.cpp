@@ -61,15 +61,16 @@ bool BlockCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& to
     for (std::vector<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
     {
       int t = (*i)->GetRemainingTicks();
-      std::cout << (*i)->GetName();
-      if (t < std::numeric_limits<int>::max())
+      std::cout << (*i)->GetName() << " ";
+      if (t == -1)
       {
-        std::cout << " " << (*i)->GetRemainingTicks() << std::endl;
+        std::cout << "idle";
       }
       else
       {
-        std::cout << " idle" << std::endl;
+        std::cout << t;
       }
+      std::cout << std::endl;
     }
   }
 

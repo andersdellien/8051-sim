@@ -37,6 +37,6 @@ void SfrIO::WriteBit(std::uint8_t bit, bool value)
   return block.alu.GetCallback()->OnGPIOWrite(*block.alu.GetCallbackCpu(), port, bit, value);
 }
 
-Port::Port(std::string name, Alu &a): Block(name, a)
+Port::Port(std::string name, Scheduler &s, Alu &a): Block(name, s, a)
 {
 }

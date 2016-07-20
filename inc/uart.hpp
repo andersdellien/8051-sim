@@ -42,14 +42,12 @@ class SCON0: public SfrBitAddressable
 class Uart: public Block
 {
   public:
-    Uart(std::string name, Alu &alu);
+    Uart(std::string name, Scheduler &s, Alu &alu);
     void SimulateRx(char c);
-    bool interruptPending;
-  private:
-    int CalculateRemainingTicks();
-    void ClockEvent();
     SBUF0 sbuf0;
     SCON0 scon0;
+  private:
+    void ClockEvent();
 };
 
 #endif

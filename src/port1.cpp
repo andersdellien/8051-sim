@@ -22,8 +22,8 @@
 #include "sfr.hpp"
 #include "command.hpp"
 
-Port1::Port1(std::string name, Alu &a) :
-  Port(name, a),
+Port1::Port1(std::string name, Scheduler &s, Alu &a) :
+  Port(name, s, a),
   p1mdin("P1MDIN", *this, 0xf2, 0xff, {0x0}),
   p1mdout("P1MDOUT", *this, 0xa5, 0x00, {0x0}),
   p1("P1", *this, 0x90, 0xff, {0x0,0xf}, 1),

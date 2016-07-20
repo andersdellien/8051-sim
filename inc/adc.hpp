@@ -24,7 +24,7 @@
 class Adc: public Block
 {
   public:
-    Adc(std::string name, Alu &alu);
+    Adc(std::string name, Scheduler &s, Alu &alu);
   private:
     Sfr toffh;
     Sfr toffl;

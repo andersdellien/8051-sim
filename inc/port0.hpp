@@ -26,7 +26,7 @@
 class Port0 : public Port
 {
   public:
-    Port0(std::string name, Alu &alu);
+    Port0(std::string name, Scheduler &s, Alu &alu);
   private:
     Sfr p0mdin;
     Sfr p0mdout;

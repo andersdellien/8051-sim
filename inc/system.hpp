@@ -33,7 +33,7 @@ class CLKSEL: public Sfr
 class System: public Block
 {
   public:
-    System(std::string name, Alu &alu);
+    System(std::string name, Scheduler &s, Alu &alu);
   private:
     CLKSEL clksel;
     Sfr oscicn;

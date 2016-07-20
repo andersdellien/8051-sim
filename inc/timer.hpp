@@ -34,7 +34,7 @@ class TCON: public SfrBitAddressable
 class Timer: public Block
 {
   public:
-    Timer(std::string name, Alu &alu);
+    Timer(std::string name, Scheduler &s, Alu &alu);
     int CalculateRemainingTicks();
     void ClockEvent();
   private:

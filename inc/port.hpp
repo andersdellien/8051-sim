@@ -37,7 +37,7 @@ class SfrIO: public SfrBitAddressable
 class Port: public Block
 {
   public:
-    Port(std::string name, Alu &a);
+    Port(std::string name, Scheduler &s, Alu &a);
 };
 
 #endif

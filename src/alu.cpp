@@ -32,8 +32,8 @@
 #define INTERRUPT_PENDING_TIMER0 1
 #define INTERRUPT_PENDING_UART0 2
 
-Alu::Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize, std::uint16_t flashSize):
-    Block(name, *this),
+Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t iramSize, std::uint16_t flashSize):
+    Block(name, s, *this),
     xram("XRAM", xramSize),
     iram("IRAM", iramSize),
     flash("FLASH", flashSize),
@@ -514,6 +514,8 @@ void Alu::Reset()
   {
      SetReg(i, 0);
   }
+  remainingTicks = CalculateRemainingTicks();
+  ReportActive();
 }
 
 std::uint16_t Alu::GetPC()
@@ -755,6 +757,7 @@ void Alu::ClockEvent()
     InstructionCoverage::GetInstance().InstructionExecuted(pc);
     instructionSet[flash.Read(pc)]->Execute();
   }
+  remainingTicks = CalculateRemainingTicks();
   if (callbacks)
   {
     callbacks->OnInstructionExecuted(*callbackCpu);
@@ -812,7 +815,8 @@ void Alu::TimerInterrupt(int timer)
   {
     interruptPending |= INTERRUPT_PENDING_TIMER0;
   }
-  ConfigurationChanged();
+  remainingTicks = CalculateRemainingTicks();
+  ReportActive();
 }
 
 void Alu::UartInterrupt()
@@ -824,7 +828,8 @@ void Alu::UartInterrupt()
   {
     interruptPending |= INTERRUPT_PENDING_UART0;
   }
-  ConfigurationChanged();
+  remainingTicks = CalculateRemainingTicks();
+  ReportActive();
 }
 
 std::uint8_t Alu::GetB() const

@@ -31,26 +31,26 @@
  */
 
 class Alu;
+class Scheduler;
 
 class Block
 {
   public:
-    Block(std::string name, Alu &alu);
+    Block(std::string name, Scheduler &scheduler, Alu &alu);
     virtual void Reset();
     void Tick(int ticks);
     void RegisterSfr(Sfr *sfr);
-    int GetRemainingTicks();
-    void ConfigurationChanged();
     Alu &alu;
     const std::string &GetName() const;
+    int GetTicks();
+    virtual int CalculateRemainingTicks();
+    void ReportActive();
+    int remainingTicks;
   protected:
+    Scheduler &scheduler;
     std::string name;
     std::map<std::string, Sfr*> sfrRegisters;
-    int remainingTicks;
-    virtual int CalculateRemainingTicks();
     virtual void ClockEvent();
-  public:
-    bool configurationChanged;
 };
 
 #endif

@@ -21,8 +21,8 @@
 #include "sfr.hpp"
 #include "command.hpp"
 
-Port2::Port2(std::string name, Alu &a) :
-  Port(name, a),
+Port2::Port2(std::string name, Scheduler &s, Alu &a) :
+  Port(name, s, a),
   p2("P2", *this, 0xa0, 0x80, {0x0, 0xf}, 2),
   xbr2("XBR2", *this, 0xe3, 0x00, {0x0})
 {

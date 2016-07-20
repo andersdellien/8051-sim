@@ -20,6 +20,7 @@
 #define _CPU8051_HPP
 
 #include <iostream>
+#include <list>
 #include <stdexcept>
 #include <vector>
 #include <string>
@@ -35,6 +36,7 @@
 #include "system.hpp"
 #include "uart.hpp"
 #include "adc.hpp"
+#include "scheduler.hpp"
 #include "timer.hpp"
 
 class Cpu8051Callbacks
@@ -49,7 +51,7 @@ typedef std::pair<int,char> ExternalEvent;
 
 constexpr int NumBreakpoints = 4;
 
-class Cpu8051
+class Cpu8051: public Scheduler
 {
   public:
     Cpu8051();
@@ -57,6 +59,7 @@ class Cpu8051
     void Tick();
     int GetTicks();
     void InjectEvent(int deltaTicks, char c);
+    void ReportActive(Block *b);
     std::vector<Block*> blocks;
     int breakpoints[NumBreakpoints];
 
@@ -72,6 +75,9 @@ class Cpu8051
   private:
     std::priority_queue<ExternalEvent, std::vector<ExternalEvent>, std::greater<ExternalEvent> > externalEvents;
     int ticks;
+    bool activatedBlock;
+    std::list<Block*> activeBlocks;
+    std::list<Block*> activatedBlocks;
 };
 
 #endif

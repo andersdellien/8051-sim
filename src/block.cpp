@@ -20,8 +20,9 @@
 #include <iostream>
 #include "block.hpp"
 #include "alu.hpp"
+#include "scheduler.hpp"
 
-Block::Block(std::string n, Alu &a) : name(n), alu(a), configurationChanged(true)
+Block::Block(std::string n, Scheduler &s, Alu &a) : name(n), alu(a), scheduler(s)
 {
 }
 
@@ -30,18 +31,13 @@ const std::string &Block::GetName() const
   return name;
 }
 
-void Block::ConfigurationChanged()
+void Block::ReportActive()
 {
-  configurationChanged = true;
+  scheduler.ReportActive(this);
 }
 
-int Block::GetRemainingTicks()
+int Block::GetTicks()
 {
-  if (configurationChanged)
-  {
-    remainingTicks = CalculateRemainingTicks();
-    configurationChanged = false;
-  }
   return remainingTicks;
 }
 
@@ -54,13 +50,13 @@ void Block::Tick(int ticks)
   }
   if (ticks > remainingTicks)
   {
+    std::cout << "Block " << name << " remaining " << remainingTicks << " tick " << ticks << std::endl;
     throw new std::runtime_error("Invalid tick");
   }
   remainingTicks -= ticks;
   if (remainingTicks == 0)
   {
     ClockEvent();
-    configurationChanged = true;
   }
 }
 

@@ -34,8 +34,8 @@ std::uint8_t CLKSEL::Read()
   return data | 0x80;
 }
 
-System::System(std::string name, Alu &a) :
-  Block(name, a),
+System::System(std::string name, Scheduler &s, Alu &a) :
+  Block(name, s, a),
   clksel("CLKSEL", *this, 0xa9, 0x82, {0x0, 0xf}),
   oscicn("OSCICN", *this, 0xb2, 0x00, {0x0}),
   rstsrc("RSTSRC", *this, 0xef, 0x00, {0x0}),

@@ -19,16 +19,17 @@
 #include "cpu8051.hpp"
 
 Cpu8051::Cpu8051() :
-  alu("Alu", 1024, 256, 8192),
-  port0("Port0", alu),
-  port1("Port1", alu),
-  port2("Port2", alu),
-  pca("Pca", alu),
-  system("System", alu),
-  uart("Uart", alu),
-  adc("Adc", alu),
-  timer("Timer", alu),
-  ticks(0)
+  alu("Alu", *this, 1024, 256, 8192),
+  port0("Port0", *this, alu),
+  port1("Port1", *this, alu),
+  port2("Port2", *this, alu),
+  pca("Pca", *this, alu),
+  system("System", *this, alu),
+  uart("Uart", *this, alu),
+  adc("Adc", *this, alu),
+  timer("Timer", *this, alu),
+  ticks(0),
+  activatedBlock(false)
 {
   blocks.push_back(&alu);
   blocks.push_back(&port0);
@@ -39,10 +40,21 @@ Cpu8051::Cpu8051() :
   blocks.push_back(&uart);
   blocks.push_back(&adc);
   blocks.push_back(&timer);
+  for (int i = 0; i < blocks.size(); i++)
+  {
+    activeBlocks.push_back(blocks[i]);
+  }
   for (int i = 0; i < NumBreakpoints; i++)
   {
     breakpoints[i] = -1;
   }
+  Reset();
+}
+
+void Cpu8051::ReportActive(Block *b)
+{
+  activatedBlock = true;
+  activatedBlocks.push_back(b);
 }
 
 int Cpu8051::GetTicks()
@@ -66,10 +78,17 @@ void Cpu8051::InjectEvent(int deltaTicks, char c)
 void Cpu8051::Tick()
 {
   int smallestTick = -1;
-  for (int i = 0; i < blocks.size(); i++)
+  std::list<Block*>::iterator i = activeBlocks.begin();
+  while (i != activeBlocks.end())
   {
-    int tick = blocks[i]->GetRemainingTicks();
-    if (tick != -1 && (smallestTick == -1 || tick < smallestTick))
+    std::list<Block*>::iterator j = i;
+    int tick = (*i)->GetTicks();
+    i++;
+    if (tick == -1)
+    {
+      activeBlocks.erase(j);
+    }
+    else if ((smallestTick == -1 || tick < smallestTick))
     {
       smallestTick = tick;
     }
@@ -92,14 +111,36 @@ void Cpu8051::Tick()
       smallestTick = event.first - ticks;
     }
   }
-  for (int i = 0; i < blocks.size(); i++)
+  for (std::list<Block*>::iterator i = activeBlocks.begin(); i != activeBlocks.end(); i++)
   {
-    blocks[i]->Tick(smallestTick);
+    (*i)->Tick(smallestTick);
   }
   ticks += smallestTick;
   if (hasExternalEvent)
   {
     std::cout << "Injecting " << event.second << std::endl;
     uart.SimulateRx(event.second);
+  }
+  if (activatedBlock)
+  {
+    // Move any blocks that became active to the active list
+    for (std::list<Block*>::iterator i = activatedBlocks.begin(); i != activatedBlocks.end(); i++)
+    {
+      bool found = false;
+      for (std::list<Block*>::iterator j = activeBlocks.begin(); j != activeBlocks.end(); j++)
+      {
+        if (*i == *j)
+        {
+          found = true;
+          break;
+        }
+      }
+      if (!found)
+      {
+        activeBlocks.push_back(*i);
+      }
+    }
+    activatedBlock = false;
+    activatedBlocks.erase(activatedBlocks.begin(), activatedBlocks.end());
   }
 }

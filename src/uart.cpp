@@ -37,35 +37,26 @@ SCON0::SCON0(std::string name, Block &block, std::uint8_t address, std::uint8_t 
 
 void SCON0::Write(std::uint8_t value)
 {
-  if ((data & TI0) && !(value & TI0))
-  {
-    block.ConfigurationChanged();
-  }
   data = value;
 }
 
 void SCON0::WriteBit(std::uint8_t bit, bool value)
 {
-  if ((data & TI0) && (bit == TI0_BIT) & !value)
-  {
-    block.ConfigurationChanged();
-  }
   SfrBitAddressable::WriteBit(bit, value);
 }
 
 void SBUF0::Write(std::uint8_t tx)
 {
-  std::cout << "UART0 output: " << tx << std::endl;
   Uart *u = dynamic_cast<Uart*>(&block);
-  u->interruptPending = true;
-  block.ConfigurationChanged();
+  std::cout << "UART0 output: " << tx << std::endl;
+  u->remainingTicks = 100; // This will work for now, calculate a better value later
+  u->ReportActive();
 }
 
-Uart::Uart(std::string name, Alu &a) :
-  Block(name, a),
+Uart::Uart(std::string name, Scheduler &s, Alu &a) :
+  Block(name, s, a),
   scon0("SCON0", *this, 0x98, 0x40, {0x0}),
-  sbuf0("SBUF0", *this, 0x99, 0x00, {0x0}),
-  interruptPending(false)
+  sbuf0("SBUF0", *this, 0x99, 0x00, {0x0})
 {
 }
 
@@ -82,20 +73,7 @@ void Uart::SimulateRx(char c)
   }
   else
   {
-    std::cout << "UART disabled" << std::endl;
-  }
-}
-
-int Uart::CalculateRemainingTicks()
-{
-  if (interruptPending)
-  {
-    interruptPending = false;
-    return 100; // This will work for now, let's calculate a better value later
-  }
-  else
-  {
-    return -1;
+    std::cout << "UART input with RX disabled" << std::endl;
   }
 }
 
@@ -103,4 +81,6 @@ void Uart::ClockEvent()
 {
   scon0.data |= TI0;
   alu.UartInterrupt();
+  // After retrieving RX buffer, UART goes back to being idle
+  remainingTicks = -1;
 }

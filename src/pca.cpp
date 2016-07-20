@@ -21,8 +21,8 @@
 #include "sfr.hpp"
 #include "block.hpp"
 
-Pca::Pca(std::string name, Alu &a):
-  Block(name, a),
+Pca::Pca(std::string name, Scheduler &s, Alu &a):
+  Block(name, s, a),
   pca0cpl2("PCA0CPL2", *this, 0xeb, 0x00, {0x0}),
   pca0h("PCA0H", *this, 0xfa, 0x00, {0x0}),
   pca0l("PCA0L", *this, 0xf9, 0x00, {0x0}),

@@ -34,26 +34,34 @@ TCON::TCON(std::string name, Block &block, std::uint8_t address, std::uint8_t re
 
 void TCON::Write(std::uint8_t value)
 {
-  if (!(data & TR0) & (value & TR0))
+  bool isEnabled = (!(data & TR0) & (value & TR0));
+
+  Sfr::Write(value);
+  block.remainingTicks = block.CalculateRemainingTicks();
+
+  if (isEnabled)
   {
     // If we're enabling the timer, we need to report that we have an upcoming event
-    block.ConfigurationChanged();
+    block.ReportActive();
   }
-  Sfr::Write(value);
 }
 
 void TCON::WriteBit(std::uint8_t bit, bool value)
 {
-  if (!(data & TR0) && (bit == TR0_BIT) && value)
+  bool isEnabled = (!(data & TR0) && (bit == TR0_BIT) && value);
+
+  SfrBitAddressable::WriteBit(bit, value);
+  block.remainingTicks = block.CalculateRemainingTicks();
+
+  if (isEnabled)
   {
     // If we're enabling the timer, we need to report that we have an upcoming event
-    block.ConfigurationChanged();
+    block.ReportActive();
   }  
-  SfrBitAddressable::WriteBit(bit, value);
 }
 
-Timer::Timer(std::string name, Alu &a) :
-  Block(name, a),
+Timer::Timer(std::string name, Scheduler &s, Alu &a) :
+  Block(name, s, a),
   ckcon("CKCON", *this, 0x8e, 0, {0x0}),
   th1("TH1", *this, 0x8d, 0, {0x0}),
   th0("TH0", *this, 0x8c, 0, {0x0}),
@@ -74,7 +82,7 @@ void Timer::ClockEvent()
   // Timer wraps, recalculate the time to the next event
   tl0.Write(0);
   th0.Write(0);
-  ConfigurationChanged();
+  remainingTicks = CalculateRemainingTicks();
   alu.TimerInterrupt(0);
 }
 

@@ -45,7 +45,7 @@ class Alu : public Block
     std::uint8_t GetOperands(std::uint16_t address);
     bool IsJump(std::uint16_t address);
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address);
-    Alu(std::string name, std::uint16_t xramSize, std::uint16_t iramSize, std::uint16_t flashSize);
+    Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t iramSize, std::uint16_t flashSize);
     void Reset();
     std::uint16_t GetPC();
     std::uint8_t GetSP();
@@ -114,6 +114,7 @@ class Alu : public Block
     Cpu8051Callbacks *callbacks;
     Cpu8051* callbackCpu;
     std::uint8_t interruptPending;
+    Instruction *currentInstruction;
 };
 
 #endif

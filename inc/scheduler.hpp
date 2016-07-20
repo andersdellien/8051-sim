@@ -16,19 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _PORT2_HPP
-#define _PORT2_HPP
+#ifndef _SCHEDULER_HPP
+#define _SCHEDULER_HPP
 
-#include "port.hpp"
-#include "alu.hpp"
+#include "block.hpp"
 
-class Port2 : public Port
+class Scheduler
 {
   public:
-    Port2(std::string name, Scheduler &s, Alu &alu);
-  private:
-    SfrIO p2;
-    Sfr xbr2;
+    virtual void ReportActive(Block *b) = 0;
 };
 
 #endif

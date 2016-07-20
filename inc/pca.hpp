@@ -25,7 +25,7 @@
 class Pca: public Block
 {
   public:
-    Pca(std::string name, Alu &alu);
+    Pca(std::string name, Scheduler &s, Alu &alu);
   private:
     Sfr pca0cpl2;
     Sfr pca0h;

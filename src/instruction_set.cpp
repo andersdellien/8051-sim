@@ -1849,11 +1849,18 @@ MOVX_E0::MOVX_E0(Alu &a) : Instruction(a)
 {
   opcode = 0xE0;
   operands = 0;
+  cycles = 2;
 }
 
 std::string MOVX_E0::Disassemble(std::uint16_t address) const
 {
   return "MOVX A, @DPTR";
+}
+
+void MOVX_E0::Execute() const
+{
+  alu.SetA(alu.ReadX(alu.GetDPTR()));
+  IncPC();
 }
 
 MOVX_E2::MOVX_E2(Alu &a) : Instruction(a)

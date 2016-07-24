@@ -73,6 +73,7 @@ class Alu : public Block
     void Write(std::uint8_t address, std::uint8_t value);
     // Handles writes done via 'MOVX' - these can go to either flash or external RAM
     void WriteX(std::uint16_t address, std::uint8_t value);
+    std::uint8_t ReadX(std::uint16_t address);
 
     // Handles bit access to bit-addressable IRAM as well as SFR
     bool ReadBit(std::uint8_t address);

@@ -863,3 +863,8 @@ void Alu::WriteX(std::uint16_t address, std::uint8_t value)
     xram.Write(address, value);
   }
 }
+
+std::uint8_t Alu::ReadX(std::uint16_t address)
+{
+  return xram.Read(address);
+}

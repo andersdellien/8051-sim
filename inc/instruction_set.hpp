@@ -1095,6 +1095,7 @@ class MOVX_E0: public Instruction
   public:
     MOVX_E0(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOVX_E2: public Instruction

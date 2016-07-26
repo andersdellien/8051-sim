@@ -39,10 +39,6 @@ class System: public Block
     Sfr oscicn;
     Sfr rstsrc;
     Sfr ref0cn;
-    Sfr rtc0key;
-    Sfr rtc0dat;
-    Sfr rtc0adr;
-    Sfr pmu0cf;
     Sfr reg0cn;
     Sfr vdm0cn;
 };

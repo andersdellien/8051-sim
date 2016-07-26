@@ -17,6 +17,7 @@
  */
 
 #include "cpu8051.hpp"
+#include "rtc.hpp"
 
 Cpu8051::Cpu8051() :
   alu("Alu", *this, 1024, 256, 8192),
@@ -28,6 +29,7 @@ Cpu8051::Cpu8051() :
   uart("Uart", *this, alu),
   adc("Adc", *this, alu),
   timer("Timer", *this, alu),
+  rtc("Rtc", *this, alu),
   ticks(0),
   activatedBlock(false)
 {

@@ -36,6 +36,7 @@
 #include "system.hpp"
 #include "uart.hpp"
 #include "adc.hpp"
+#include "rtc.hpp"
 #include "scheduler.hpp"
 #include "timer.hpp"
 
@@ -72,6 +73,7 @@ class Cpu8051: public Scheduler
     System system;
     Uart uart;
     Adc adc;
+    Rtc rtc;
     Timer timer;
   private:
     std::priority_queue<ExternalEvent, std::vector<ExternalEvent>, std::greater<ExternalEvent> > externalEvents;

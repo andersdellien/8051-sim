@@ -91,6 +91,7 @@ class Alu : public Block
     void ClockEvent();
     void TimerInterrupt(int timer);
     void UartInterrupt();
+    void RTCWakeup();
     std::map<std::uint8_t, std::map<std::uint8_t, Sfr*> > specialFunctionRegisters;
     std::map<std::uint8_t, SfrBitAddressable*> bitAddressableSfr;
     Sfr sfrDPL;
@@ -105,6 +106,7 @@ class Alu : public Block
     Sfr sfrSFRPAGE;
     SfrBitAddressable sfrB;
     SfrBitAddressable sfrACC;
+    Sfr sfrPMU0CF;
     Sfr sfrPCON;
     Sfr sfrPSCTL;
     Sfr sfrFLSCL;

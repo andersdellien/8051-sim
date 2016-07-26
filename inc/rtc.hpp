@@ -16,31 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
+#ifndef _RTC_HPP
+#define _RTC_HPP
+
 #include <set>
-#include "system.hpp"
-#include "sfr.hpp"
 #include "alu.hpp"
 #include "block.hpp"
 
-CLKSEL::CLKSEL(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages):
-  Sfr(name, block, address, resetValue, pages)
+class RTC0DAT: public Sfr
 {
-}
+  public:
+    RTC0DAT(std::string name, Block &block, std::uint8_t addresss, std::uint8_t resetValue, std::set<std::uint8_t> pages);
+    void Write(std::uint8_t value);
+};
 
-std::uint8_t CLKSEL::Read()
+class Rtc: public Block
 {
-  // Let's always assume the clock is valid
-  return data | 0x80;
-}
+  public:
+    Rtc(std::string name, Scheduler &s, Alu &alu);
+    int CalculateRemainingTicks();
+    void ClockEvent();
+    std::uint8_t rtc0xcn;
+    std::uint8_t rtc0cn;
+    std::uint32_t alarm;
+    Sfr rtc0adr;
+  private:
+    Sfr rtc0key;
+    RTC0DAT rtc0dat;
+};
 
-System::System(std::string name, Scheduler &s, Alu &a) :
-  Block(name, s, a),
-  clksel("CLKSEL", *this, 0xa9, 0x82, {0x0, 0xf}),
-  oscicn("OSCICN", *this, 0xb2, 0x00, {0x0}),
-  rstsrc("RSTSRC", *this, 0xef, 0x00, {0x0}),
-  ref0cn("REF0CN", *this, 0xd1, 0x18, {0x0}),
-  reg0cn("REG0CN", *this, 0xc9, 0x00, {0x0}),
-  vdm0cn("VCM0CN", *this, 0xff, 0x88, {0x0})
-{
-}
+#endif

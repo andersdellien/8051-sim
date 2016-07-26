@@ -47,6 +47,7 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
     sfrIE("IE", *this, 0xa8, 0x00, {0x0, 0xf}),
     sfrACC("ACC", *this, 0xe0, 0x00, {0x0, 0xf}),
     sfrPCON("PCON", *this, 0x87, 0x00, {0x0, 0xf}),
+    sfrPMU0CF("PMU0CF", *this, 0xb5, 0x00, {0x0}),
     sfrPSW("PSW", *this, 0xd0, 0x00, {0x0, 0xf}),
     sfrPSCTL("PSCTL", *this, 0x8f, 0x00, {0x0, 0xf}),
     sfrFLSCL("FLSCL", *this, 0xb7, 0x00, {0x0}),
@@ -772,7 +773,7 @@ void Alu::ClockEvent()
 int Alu::CalculateRemainingTicks()
 {
   // If any sleep mode bit is set, code execution stops. So we return -1 here
-  if (sfrPCON.data & (IDLE_MODE | STOP_MODE | SUSPEND_MODE | SLEEP_MODE))
+  if (sfrPCON.data & (IDLE_MODE | STOP_MODE) || sfrPMU0CF.data & (SUSPEND_MODE | SLEEP_MODE))
   {
     return -1;
   }
@@ -783,7 +784,9 @@ int Alu::CalculateRemainingTicks()
   }
   else
   {
-    return instructionSet[flash.Read(pc)]->cycles;
+    int cycles = instructionSet[flash.Read(pc)]->cycles;
+
+    return cycles;
   }
 }
 
@@ -828,6 +831,15 @@ void Alu::UartInterrupt()
   {
     interruptPending |= INTERRUPT_PENDING_UART0;
   }
+  remainingTicks = CalculateRemainingTicks();
+  ReportActive();
+}
+
+void Alu::RTCWakeup()
+{
+  // Wake-up from Sleep mode
+  // There is no interrupt handler for this event, we just wake up the ALU again.
+  sfrPMU0CF.data &= ~SLEEP_MODE;
   remainingTicks = CalculateRemainingTicks();
   ReportActive();
 }

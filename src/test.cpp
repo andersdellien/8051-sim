@@ -33,6 +33,11 @@ TestCase::TestCase(std::string s, bool t) : name(s), trace(t)
 {
 }
 
+void TestCase::OnUARTTx(Cpu8051 &handler, char tx)
+{
+  std::cout << "UART Tx:" << tx << std::endl;
+}
+
 void TestCase::OnInstructionExecuted(Cpu8051 &handler)
 {
   if (trace && handler.alu.flash.Read(handler.alu.GetPC()) == 0x12)

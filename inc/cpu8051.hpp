@@ -45,6 +45,7 @@ class Cpu8051Callbacks
     virtual void OnInstructionExecuted(Cpu8051 &handler) = 0;
     virtual bool OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit) = 0;
     virtual void OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value) = 0;
+    virtual void OnUARTTx(Cpu8051 &handler, char tx) = 0;
 };
 
 typedef std::pair<int,char> ExternalEvent;

@@ -31,6 +31,7 @@ Command::Command()
 void Command::OnInstructionExecuted(Cpu8051 &handler) {}
 bool Command::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit) { return false; }
 void Command::OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value) {}
+void Command::OnUARTTx(Cpu8051 &handler, char tx) {}
 
 bool Command::dispatchCommand(Cpu8051 &handler, std::vector<std::string>& tokens)
 {
@@ -314,6 +315,11 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
 void MiscCommand::OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value)
 {
   std::cout << "Write " << value << " to port " << (int) port << " bit " << (int) bit << std::endl;
+}
+
+void MiscCommand::OnUARTTx(Cpu8051 &handler, char tx)
+{
+  std::cout << "UART Tx:" << tx << std::endl;
 }
 
 bool MiscCommand::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit)

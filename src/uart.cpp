@@ -21,6 +21,7 @@
 #include "uart.hpp"
 #include "sfr.hpp"
 #include "block.hpp"
+#include "cpu8051.hpp"
 
 SBUF0::SBUF0(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages):
   Sfr(name, block, address, resetValue, pages)
@@ -47,8 +48,8 @@ void SCON0::WriteBit(std::uint8_t bit, bool value)
 
 void SBUF0::Write(std::uint8_t tx)
 {
+  block.alu.GetCallback()->OnUARTTx(*block.alu.GetCallbackCpu(), tx);
   Uart *u = dynamic_cast<Uart*>(&block);
-  std::cout << "UART0 output: " << tx << std::endl;
   u->remainingTicks = 100; // This will work for now, calculate a better value later
   u->ReportActive();
 }

@@ -57,7 +57,7 @@ void Cpu8051::ReportActive(Block *b)
   activatedBlocks.push_back(b);
 }
 
-int Cpu8051::GetTicks()
+unsigned long long Cpu8051::GetTicks()
 {
   return ticks;
 }
@@ -77,12 +77,13 @@ void Cpu8051::InjectEvent(int deltaTicks, char c)
 
 void Cpu8051::Tick()
 {
-  int smallestTick = -1;
+  long long smallestTick = -1;
   std::list<Block*>::iterator i = activeBlocks.begin();
   while (i != activeBlocks.end())
   {
     std::list<Block*>::iterator j = i;
-    int tick = (*i)->GetTicks();
+    long long tick = (*i)->GetTicks();
+
     i++;
     if (tick == -1)
     {

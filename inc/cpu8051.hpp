@@ -48,7 +48,7 @@ class Cpu8051Callbacks
     virtual void OnUARTTx(Cpu8051 &handler, char tx) = 0;
 };
 
-typedef std::pair<int,char> ExternalEvent;
+typedef std::pair<long long,char> ExternalEvent;
 
 constexpr int NumBreakpoints = 4;
 
@@ -58,7 +58,7 @@ class Cpu8051: public Scheduler
     Cpu8051();
     void Reset();
     void Tick();
-    int GetTicks();
+    unsigned long long GetTicks();
     void InjectEvent(int deltaTicks, char c);
     void ReportActive(Block *b);
     std::vector<Block*> blocks;
@@ -75,7 +75,7 @@ class Cpu8051: public Scheduler
     Timer timer;
   private:
     std::priority_queue<ExternalEvent, std::vector<ExternalEvent>, std::greater<ExternalEvent> > externalEvents;
-    int ticks;
+    unsigned long long ticks;
     bool activatedBlock;
     std::list<Block*> activeBlocks;
     std::list<Block*> activatedBlocks;

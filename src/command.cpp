@@ -359,6 +359,6 @@ void MiscCommand::OnInstructionExecuted(Cpu8051 &handler)
   if (traceInstruction[handler.alu.flash.Read(handler.alu.GetPC())] ||
       breakCount == breakLimit || instructionLimit > 0)
   {
-    std::cout << std::hex << std::setw(4) << std::setfill('0') << handler.alu.GetPC() << " " << handler.alu.Disassemble(handler.alu.GetPC()) << std::endl;
+    std::cout << std::dec << handler.GetTicks() << " " << std::hex << std::setw(4) << std::setfill('0') << handler.alu.GetPC() << " " << handler.alu.Disassemble(handler.alu.GetPC()) << std::endl;
   }
 }

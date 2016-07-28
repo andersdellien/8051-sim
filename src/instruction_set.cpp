@@ -750,7 +750,7 @@ std::string DEC_14::Disassemble(std::uint16_t address) const
 
 void DEC_14::Execute() const
 {
-  alu.SetA(alu.GetA() + 1);
+  alu.SetA(alu.GetA() - 1);
   IncPC();
 }
 

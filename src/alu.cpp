@@ -73,9 +73,9 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
     instructionSet[0x18 + i] = new DecRegister(*this, 0x18 + i);
     instructionSet[0x28 + i] = new AddRegister(*this, 0x28 + i, false);
     instructionSet[0x38 + i] = new AddRegister(*this, 0x38 + i, true);
-    instructionSet[0x48 + i] = new OrARegister(*this, 0x48 + i);
-    instructionSet[0x58 + i] = new AndARegister(*this, 0x58 + i);
-    instructionSet[0x68 + i] = new XorARegister(*this, 0x68 + i);
+    instructionSet[0x48 + i] = new BitwiseOperationARegister(*this, 0x48 + i);
+    instructionSet[0x58 + i] = new BitwiseOperationARegister(*this, 0x58 + i);
+    instructionSet[0x68 + i] = new BitwiseOperationARegister(*this, 0x68 + i);
     instructionSet[0x78 + i] = new MovRegisterImmediate(*this, 0x78 + i);
     instructionSet[0x88 + i] = new MovAddressRegister(*this, 0x88 + i);
     instructionSet[0x98 + i] = new SubARegister(*this, 0x98 + i);

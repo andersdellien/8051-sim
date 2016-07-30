@@ -1999,60 +1999,45 @@ std::string ORL_A0::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-OrARegister::OrARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
+BitwiseOperationARegister::BitwiseOperationARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   cycles = 1;
 }
 
-std::string OrARegister::Disassemble(std::uint16_t address) const
+std::string BitwiseOperationARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "ORL A, R";
+  if ((opcode & BitwiseOpMask) == BitwiseAnd)
+  {
+    ss << "ANL";
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseOr)
+  {
+    ss << "ORL";
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseXor)
+  {
+    ss << "XRL";
+  }
+  ss << " A, R";
   ss << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
-void OrARegister::Execute() const
+void BitwiseOperationARegister::Execute() const
 {
-  alu.SetA(alu.GetA() | alu.GetReg(opcode & RegisterMask));
-  IncPC();
-}
-
-AndARegister::AndARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
-{
-  cycles = 1;
-}
-
-std::string AndARegister::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << "ANL A, R";
-  ss << (int) (opcode & RegisterMask);
-  return ss.str();
-}
-
-void AndARegister::Execute() const
-{
-  alu.SetA(alu.GetA() & alu.GetReg(opcode & RegisterMask));
-  IncPC();
-}
-
-XorARegister::XorARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
-{
-  cycles = 1;
-}
-
-std::string XorARegister::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << "XRL A, R";
-  ss << (int) (opcode & RegisterMask);
-  return ss.str();
-}
-
-void XorARegister::Execute() const
-{
-  alu.SetA(alu.GetA() ^ alu.GetReg(opcode & RegisterMask));
+  if ((opcode & BitwiseOpMask) == BitwiseAnd)
+  {
+    alu.SetA(alu.GetA() & alu.GetReg(opcode & RegisterMask));
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseOr)
+  {
+    alu.SetA(alu.GetA() | alu.GetReg(opcode & RegisterMask));
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseXor)
+  {
+    alu.SetA(alu.GetA() ^ alu.GetReg(opcode & RegisterMask));
+  }
   IncPC();
 }
 

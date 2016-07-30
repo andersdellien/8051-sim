@@ -354,26 +354,10 @@ class BitwiseOperationMemory: public Instruction
     void Execute() const;
 };
 
-class OrARegister: public Instruction
+class BitwiseOperationARegister: public Instruction
 {
   public:
-    OrARegister(Alu&, std::uint8_t opcode);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class AndARegister: public Instruction
-{
-  public:
-    AndARegister(Alu&, std::uint8_t opcode);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XorARegister: public Instruction
-{
-  public:
-    XorARegister(Alu&, std::uint8_t opcode);
+    BitwiseOperationARegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

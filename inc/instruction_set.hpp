@@ -362,14 +362,6 @@ class ORL_43: public Instruction
     void Execute() const;
 };
 
-class ORL_45: public Instruction
-{
-  public:
-    ORL_45(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
 class OrARegister: public Instruction
 {
   public:
@@ -414,14 +406,6 @@ class ANL_53: public Instruction
 {
   public:
     ANL_53(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class ANL_55: public Instruction
-{
-  public:
-    ANL_55(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -511,13 +495,6 @@ class XRL_63: public Instruction
     XRL_63(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-};
-
-class XRL_65: public Instruction
-{
-  public:
-    XRL_65(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
 };
 
 class XRL_66: public Instruction

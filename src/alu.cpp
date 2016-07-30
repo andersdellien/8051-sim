@@ -101,18 +101,13 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[anl_52->GetOpcode()] = anl_52;
   ANL_53 *anl_53 = new ANL_53(*this);
   instructionSet[anl_53->GetOpcode()] = anl_53;
-  ANL_55 *anl_55 = new ANL_55(*this);
-  instructionSet[anl_55->GetOpcode()] = anl_55;
 
-  instructionSet[0x44] = new BitwiseOperation(*this, 0x44);
-  instructionSet[0x46] = new BitwiseOperation(*this, 0x46);
-  instructionSet[0x47] = new BitwiseOperation(*this, 0x47);
-  instructionSet[0x54] = new BitwiseOperation(*this, 0x54);
-  instructionSet[0x56] = new BitwiseOperation(*this, 0x56);
-  instructionSet[0x57] = new BitwiseOperation(*this, 0x57);
-  instructionSet[0x64] = new BitwiseOperation(*this, 0x64);
-  instructionSet[0x66] = new BitwiseOperation(*this, 0x66);
-  instructionSet[0x67] = new BitwiseOperation(*this, 0x67);
+  for (auto i = 4; i <= 7; i++)
+  {
+    instructionSet[0x40 + i] = new BitwiseOperation(*this, 0x40 + i);
+    instructionSet[0x50 + i] = new BitwiseOperation(*this, 0x50 + i);
+    instructionSet[0x60 + i] = new BitwiseOperation(*this, 0x60 + i);
+  }
 
   ANL_82 *anl_82 = new ANL_82(*this);
   instructionSet[anl_82->GetOpcode()] = anl_82;
@@ -235,8 +230,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[orl_43->GetOpcode()] = orl_43;
   ORL_42 *orl_42 = new ORL_42(*this);
   instructionSet[orl_42->GetOpcode()] = orl_42;
-  ORL_45 *orl_45 = new ORL_45(*this);
-  instructionSet[orl_45->GetOpcode()] = orl_45;
   ORL_72 *orl_72 = new ORL_72(*this);
   instructionSet[orl_72->GetOpcode()] = orl_72;
   ORL_A0 *orl_a0 = new ORL_A0(*this);
@@ -284,8 +277,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
 
   XRL_62 *xrl_62 = new XRL_62(*this);
   instructionSet[xrl_62->GetOpcode()] = xrl_62;
-  XRL_65 *xrl_65 = new XRL_65(*this);
-  instructionSet[xrl_65->GetOpcode()] = xrl_65;
   XRL_63 *xrl_63 = new XRL_63(*this);
   instructionSet[xrl_63->GetOpcode()] = xrl_63;
 }

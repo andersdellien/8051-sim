@@ -25,17 +25,17 @@
 #include "exceptions.hpp"
 
 
-// Bits one and two indicate operand
-constexpr int BitwiseOperandMask = 0x06;
+// Bits one and two set -> register indirect operand
+constexpr int IndirectOperandMask = 0x06;
 
-// Bits two and one are set if instruction has indirect register operand
-constexpr int IndirectRegisterOperand = 0x06;
-
-// Bit two is set if instruction has immediate operand
-constexpr int ImmediateOperand = 0x04;
-
-// Bit zero of opcode contain indirect register
+// Register indirect operand, register is indicated by bit zero
 constexpr int IndirectRegisterMask = 0x01;
+
+// Lower three bits indicate operand type
+constexpr int BitwiseOperandMask = 0x07;
+
+constexpr int ImmediateOperand = 0x04;
+constexpr int AddressOperand = 0x05;
 
 // High bits of opcode contain operation
 constexpr int BitwiseOpMask = 0xf0;
@@ -335,29 +335,6 @@ void ANL_53::Execute() const
   std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.Write(addr, alu.Read(addr) & operand);
-  IncPC();
-}
-
-ANL_55::ANL_55(Alu &a) : Instruction(a)
-{
-  opcode = 0x55;
-  operands = 1;
-  cycles = 1;
-}
-
-std::string ANL_55::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::hex;
-  ss << "ANL A,";
-  ss << std::setw(2) << (int) alu.flash.Read(address+1);
-  return ss.str();
-}
-
-void ANL_55::Execute() const
-{
-  std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
-  alu.SetA(alu.iram.Read(address) & alu.GetA());
   IncPC();
 }
 
@@ -869,14 +846,17 @@ void DecIndirectRegister::Execute() const
 
 BitwiseOperation::BitwiseOperation(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  if ((opcode & BitwiseOperandMask) == IndirectRegisterOperand)
+  cycles = 1;
+  if ((opcode & IndirectOperandMask) == IndirectOperandMask)
   {
-    cycles = 1;
     operands = 0;
   }
   else if ((opcode & BitwiseOperandMask) == ImmediateOperand)
   {
-    cycles = 1;
+    operands = 1;
+  }
+  else if ((opcode & BitwiseOperandMask) == AddressOperand)
+  {
     operands = 1;
   }
 }
@@ -896,13 +876,18 @@ std::string BitwiseOperation::Disassemble(std::uint16_t address) const
   {
     ss << "XRL";
   }
-  if ((opcode & BitwiseOperandMask) == IndirectRegisterOperand)
+  if ((opcode & IndirectOperandMask) == IndirectOperandMask)
   {  
     ss << " A, @R" << (int) (opcode & IndirectRegisterMask);
   }
   else if ((opcode & BitwiseOperandMask) == ImmediateOperand)
   {
     ss << " A, #";
+    ss << std::setw(2) << (int) alu.flash.Read(address+1);
+  }
+  else if ((opcode & BitwiseOperandMask) == AddressOperand)
+  {
+    ss << " A, ";
     ss << std::setw(2) << (int) alu.flash.Read(address+1);
   }
   return ss.str();
@@ -912,13 +897,17 @@ void BitwiseOperation::Execute() const
 {
   std::uint8_t operand;
 
-  if ((opcode & BitwiseOperandMask) == IndirectRegisterOperand)
+  if ((opcode & IndirectOperandMask) == IndirectOperandMask)
   {
     operand = alu.Read(opcode & IndirectRegisterMask);
   }
   else if ((opcode & BitwiseOperandMask) == ImmediateOperand)
   {
     operand = alu.flash.Read(alu.GetPC() + 1);
+  }
+  else if ((opcode & BitwiseOperandMask) == AddressOperand)
+  {
+    operand = alu.Read(alu.flash.Read(alu.GetPC() + 1));
   }
   if ((opcode & BitwiseOpMask) == BitwiseAnd)
   {
@@ -2014,30 +2003,6 @@ void ORL_42::Execute() const
   IncPC();
 }
 
-ORL_45::ORL_45(Alu &a) : Instruction(a)
-{
-  opcode = 0x45;
-  operands = 1;
-  cycles = 1;
-}
-
-std::string ORL_45::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ORL A, ";
-  ss << (int) alu.flash.Read(address+1);
-  return ss.str();
-}
-
-void ORL_45::Execute() const
-{
-  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
-
-  alu.SetA(alu.GetA() | alu.Read(addr));
-  IncPC();
-}
-
 ORL_72::ORL_72(Alu &a) : Instruction(a)
 {
   opcode = 0x72;
@@ -2644,22 +2609,6 @@ std::string XRL_62::Disassemble(std::uint16_t address) const
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "XRL ";
   ss << (int) alu.flash.Read(address+1) << ", A";
-  return ss.str();
-}
-
-XRL_65::XRL_65(Alu &a) : Instruction(a)
-{
-  opcode = 0x65;
-  operands = 1;
-  cycles = 1;
-}
-
-std::string XRL_65::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "XRL A, ";
-  ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 

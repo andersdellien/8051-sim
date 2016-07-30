@@ -71,18 +71,44 @@ class INC_5: public Instruction
     void Execute() const;
 };
 
-class INC_6: public Instruction
+class IncIndirectRegister: public Instruction
 {
   public:
-    INC_6(Alu&);
+    IncIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
-class INC_7: public Instruction
+class DecIndirectRegister: public Instruction
 {
   public:
-    INC_7(Alu&);
+    DecIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
+};
+
+class OrlIndirectRegister: public Instruction
+{
+  public:
+    OrlIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
+};
+
+class AnlIndirectRegister: public Instruction
+{
+  public:
+    AnlIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
+};
+
+class XrlIndirectRegister: public Instruction
+{
+  public:
+    XrlIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class IncRegister: public Instruction
@@ -156,20 +182,6 @@ class DEC_15: public Instruction
     DEC_15(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-};
-
-class DEC_16: public Instruction
-{
-  public:
-    DEC_16(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class DEC_17: public Instruction
-{
-  public:
-    DEC_17(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
 };
 
 class DEC_18: public Instruction
@@ -382,20 +394,6 @@ class ORL_45: public Instruction
     void Execute() const;
 };
 
-class ORL_46: public Instruction
-{
-  public:
-    ORL_46(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class ORL_47: public Instruction
-{
-  public:
-    ORL_47(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class OrARegister: public Instruction
 {
   public:
@@ -458,20 +456,6 @@ class ANL_55: public Instruction
     ANL_55(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-};
-
-class ANL_56: public Instruction
-{
-  public:
-    ANL_56(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class ANL_57: public Instruction
-{
-  public:
-    ANL_57(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
 };
 
 class ANL_58: public Instruction

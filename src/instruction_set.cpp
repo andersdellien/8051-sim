@@ -56,18 +56,6 @@ static void PrintAddress(std::stringstream &ss, std::uint16_t address)
   }
 }
 
-INC_7::INC_7(Alu &a) : Instruction(a)
-{
-  opcode = 7;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string INC_7::Disassemble(std::uint16_t address) const
-{
-  return "INC @R0";
-}
-
 ACALL::ACALL(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 1;
@@ -375,30 +363,6 @@ void ANL_55::Execute() const
   std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
   alu.SetA(alu.iram.Read(address) & alu.GetA());
   IncPC();
-}
-
-ANL_56::ANL_56(Alu &a) : Instruction(a)
-{
-  opcode = 0x56;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string ANL_56::Disassemble(std::uint16_t address) const
-{
-  return "ANL A, @R0";
-}
-
-ANL_57::ANL_57(Alu &a) : Instruction(a)
-{
-  opcode = 0x57;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string ANL_57::Disassemble(std::uint16_t address) const
-{
-  return "ANL A, @R1";
 }
 
 ANL_82::ANL_82(Alu &a) : Instruction(a)
@@ -754,30 +718,6 @@ void DEC_14::Execute() const
   IncPC();
 }
 
-DEC_16::DEC_16(Alu &a) : Instruction(a)
-{
-  opcode = 0x16;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string DEC_16::Disassemble(std::uint16_t address) const
-{
-  return "DEC @R0";
-}
-
-DEC_17::DEC_17(Alu &a) : Instruction(a)
-{
-  opcode = 0x17;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string DEC_17::Disassemble(std::uint16_t address) const
-{
-  return "DEC @R1";
-}
-
 DIV_84::DIV_84(Alu &a) : Instruction(a)
 {
   opcode = 0x84;
@@ -891,16 +831,98 @@ void INC_4::Execute() const
   IncPC();
 }
 
-INC_6::INC_6(Alu &a) : Instruction(a)
+IncIndirectRegister::IncIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
 {
-  opcode = 6;
-  operands = 0;
   cycles = 1;
 }
 
-std::string INC_6::Disassemble(std::uint16_t address) const
+std::string IncIndirectRegister::Disassemble(std::uint16_t address) const
 {
-  return "INC @R0";
+  std::stringstream ss;
+  ss << "INC @R" << (int) reg;
+  return ss.str();
+}
+
+void IncIndirectRegister::Execute() const
+{
+  std::uint8_t addr = alu.GetReg(reg);
+
+  alu.Write(addr, alu.Read(addr) + 1);
+  IncPC();
+}
+
+DecIndirectRegister::DecIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+{
+  cycles = 1;
+}
+
+std::string DecIndirectRegister::Disassemble(std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "DEC @R" << (int) reg;
+  return ss.str();
+}
+
+void DecIndirectRegister::Execute() const
+{
+  std::uint8_t addr = alu.GetReg(reg);
+
+  alu.Write(addr, alu.Read(addr) - 1);
+  IncPC();
+}
+
+OrlIndirectRegister::OrlIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+{
+  cycles = 1;
+}
+
+std::string OrlIndirectRegister::Disassemble(std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "ORL A, @R" << (int) reg;
+  return ss.str();
+}
+
+void OrlIndirectRegister::Execute() const
+{
+  alu.SetA(alu.GetA() | alu.Read(alu.GetReg(reg)));
+  IncPC();
+}
+
+AnlIndirectRegister::AnlIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+{
+  cycles = 1;
+}
+
+std::string AnlIndirectRegister::Disassemble(std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "ANL A, @R" << (int) reg;
+  return ss.str();
+}
+
+void AnlIndirectRegister::Execute() const
+{
+  alu.SetA(alu.GetA() & alu.Read(alu.GetReg(reg)));
+  IncPC();
+}
+
+XrlIndirectRegister::XrlIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+{
+  cycles = 1;
+}
+
+std::string XrlIndirectRegister::Disassemble(std::uint16_t address) const
+{
+  std::stringstream ss;
+  ss << "XRL A, @R" << (int) reg;
+  return ss.str();
+}
+
+void XrlIndirectRegister::Execute() const
+{
+  alu.SetA(alu.GetA() ^ alu.Read(alu.GetReg(reg)));
+  IncPC();
 }
 
 IncRegister::IncRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
@@ -909,6 +931,7 @@ IncRegister::IncRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instructi
 }
 
 std::string IncRegister::Disassemble(std::uint16_t address) const
+
 {
   std::stringstream ss;
   ss << "INC R" << (int) reg;
@@ -2058,29 +2081,6 @@ std::string ORL_A0::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-ORL_46::ORL_46(Alu &a) : Instruction(a)
-{
-  opcode = 0x46;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string ORL_46::Disassemble(std::uint16_t address) const
-{
-  return "ORL A, @R0";
-}
-
-ORL_47::ORL_47(Alu &a) : Instruction(a)
-{
-  opcode = 0x47;
-  operands = 0;
-}
-
-std::string ORL_47::Disassemble(std::uint16_t address) const
-{
-  return "ORL A, @R1";
-}
-
 OrARegister::OrARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
 {
   cycles = 1;
@@ -2641,29 +2641,6 @@ XCHD_D7::XCHD_D7(Alu &a) : Instruction(a)
 std::string XCHD_D7::Disassemble(std::uint16_t address) const
 {
   return "XCHD A, @R1";
-}
-
-XRL_66::XRL_66(Alu &a) : Instruction(a)
-{
-  opcode = 0x66;
-  operands = 0;
-  cycles = 1;
-}
-
-std::string XRL_66::Disassemble(std::uint16_t address) const
-{
-  return "XRL A, @R0";
-}
-
-XRL_67::XRL_67(Alu &a) : Instruction(a)
-{
-  opcode = 0x67;
-  operands = 0;
-}
-
-std::string XRL_67::Disassemble(std::uint16_t address) const
-{
-  return "XRL A, @R1";
 }
 
 XRL_62::XRL_62(Alu &a) : Instruction(a)

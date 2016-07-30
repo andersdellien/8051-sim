@@ -87,8 +87,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
     instructionSet[0xf8 + i] = new MovRegisterA(*this, 0xf8 + i, i);
   }
 
-  INC_7 *inc_7 = new INC_7(*this);
-  instructionSet[inc_7->GetOpcode()] = inc_7;
   instructionSet[0x24] = new AddImmediate(*this, 0x24, false);
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);
   instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, 0, false);
@@ -107,10 +105,9 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[anl_54->GetOpcode()] = anl_54;
   ANL_55 *anl_55 = new ANL_55(*this);
   instructionSet[anl_55->GetOpcode()] = anl_55;
-  ANL_56 *anl_56 = new ANL_56(*this);
-  instructionSet[anl_56->GetOpcode()] = anl_56;
-  ANL_57 *anl_57 = new ANL_57(*this);
-  instructionSet[anl_57->GetOpcode()] = anl_57;
+
+  instructionSet[0x56] = new AnlIndirectRegister(*this, 0x56, 0);
+  instructionSet[0x57] = new AnlIndirectRegister(*this, 0x57, 1);
 
   ANL_82 *anl_82 = new ANL_82(*this);
   instructionSet[anl_82->GetOpcode()] = anl_82;
@@ -143,10 +140,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[dec_15->GetOpcode()] = dec_15;
   DEC_14 *dec_14 = new DEC_14(*this);
   instructionSet[dec_14->GetOpcode()] = dec_14;
-  DEC_16 *dec_16 = new DEC_16(*this);
-  instructionSet[dec_16->GetOpcode()] = dec_16;
-  DEC_17 *dec_17 = new DEC_17(*this);
-  instructionSet[dec_17->GetOpcode()] = dec_17;
 
   DIV_84 *div_84 = new DIV_84(*this);
   instructionSet[div_84->GetOpcode()] = div_84;
@@ -157,8 +150,11 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[inc_5->GetOpcode()] = inc_5;
   INC_4 *inc_4 = new INC_4(*this);
   instructionSet[inc_4->GetOpcode()] = inc_4;
-  INC_6 *inc_6 = new INC_6(*this);
-  instructionSet[inc_6->GetOpcode()] = inc_6;
+
+  instructionSet[0x06] = new IncIndirectRegister(*this, 0x06, 0);
+  instructionSet[0x07] = new IncIndirectRegister(*this, 0x07, 1);
+  instructionSet[0x16] = new DecIndirectRegister(*this, 0x16, 0);
+  instructionSet[0x17] = new DecIndirectRegister(*this, 0x17, 1);
 
   INC_A3 *inc_a3 = new INC_A3(*this);
   instructionSet[inc_a3->GetOpcode()] = inc_a3;
@@ -242,10 +238,9 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[orl_72->GetOpcode()] = orl_72;
   ORL_A0 *orl_a0 = new ORL_A0(*this);
   instructionSet[orl_a0->GetOpcode()] = orl_a0;
-  ORL_46 *orl_46 = new ORL_46(*this);
-  instructionSet[orl_46->GetOpcode()] = orl_46;
-  ORL_47 *orl_47 = new ORL_47(*this);
-  instructionSet[orl_47->GetOpcode()] = orl_47;
+
+  instructionSet[0x46] = new OrlIndirectRegister(*this, 0x46, 0);
+  instructionSet[0x47] = new OrlIndirectRegister(*this, 0x47, 1);
 
   POP_D0 *pop_d0 = new POP_D0(*this);
   instructionSet[pop_d0->GetOpcode()] = pop_d0;
@@ -286,10 +281,10 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[xchd_d6->GetOpcode()] = xchd_d6;
   XCHD_D7 *xchd_d7 = new XCHD_D7(*this);
   instructionSet[xchd_d7->GetOpcode()] = xchd_d7;
-  XRL_66 *xrl_66 = new XRL_66(*this);
-  instructionSet[xrl_66->GetOpcode()] = xrl_66;
-  XRL_67 *xrl_67 = new XRL_67(*this);
-  instructionSet[xrl_67->GetOpcode()] = xrl_67;
+
+  instructionSet[0x66] = new XrlIndirectRegister(*this, 0x66, 0);
+  instructionSet[0x67] = new XrlIndirectRegister(*this, 0x67, 1);
+
   XRL_62 *xrl_62 = new XRL_62(*this);
   instructionSet[xrl_62->GetOpcode()] = xrl_62;
   XRL_64 *xrl_64 = new XRL_64(*this);

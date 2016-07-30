@@ -101,17 +101,18 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[anl_52->GetOpcode()] = anl_52;
   ANL_53 *anl_53 = new ANL_53(*this);
   instructionSet[anl_53->GetOpcode()] = anl_53;
-  ANL_54 *anl_54 = new ANL_54(*this);
-  instructionSet[anl_54->GetOpcode()] = anl_54;
   ANL_55 *anl_55 = new ANL_55(*this);
   instructionSet[anl_55->GetOpcode()] = anl_55;
 
-  instructionSet[0x46] = new BitwiseIndirectRegister(*this, 0x46);
-  instructionSet[0x47] = new BitwiseIndirectRegister(*this, 0x47);
-  instructionSet[0x56] = new BitwiseIndirectRegister(*this, 0x56);
-  instructionSet[0x57] = new BitwiseIndirectRegister(*this, 0x57);
-  instructionSet[0x66] = new BitwiseIndirectRegister(*this, 0x66);
-  instructionSet[0x67] = new BitwiseIndirectRegister(*this, 0x67);
+  instructionSet[0x44] = new BitwiseOperation(*this, 0x44);
+  instructionSet[0x46] = new BitwiseOperation(*this, 0x46);
+  instructionSet[0x47] = new BitwiseOperation(*this, 0x47);
+  instructionSet[0x54] = new BitwiseOperation(*this, 0x54);
+  instructionSet[0x56] = new BitwiseOperation(*this, 0x56);
+  instructionSet[0x57] = new BitwiseOperation(*this, 0x57);
+  instructionSet[0x64] = new BitwiseOperation(*this, 0x64);
+  instructionSet[0x66] = new BitwiseOperation(*this, 0x66);
+  instructionSet[0x67] = new BitwiseOperation(*this, 0x67);
 
   ANL_82 *anl_82 = new ANL_82(*this);
   instructionSet[anl_82->GetOpcode()] = anl_82;
@@ -234,8 +235,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[orl_43->GetOpcode()] = orl_43;
   ORL_42 *orl_42 = new ORL_42(*this);
   instructionSet[orl_42->GetOpcode()] = orl_42;
-  ORL_44 *orl_44 = new ORL_44(*this);
-  instructionSet[orl_44->GetOpcode()] = orl_44;
   ORL_45 *orl_45 = new ORL_45(*this);
   instructionSet[orl_45->GetOpcode()] = orl_45;
   ORL_72 *orl_72 = new ORL_72(*this);
@@ -285,8 +284,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
 
   XRL_62 *xrl_62 = new XRL_62(*this);
   instructionSet[xrl_62->GetOpcode()] = xrl_62;
-  XRL_64 *xrl_64 = new XRL_64(*this);
-  instructionSet[xrl_64->GetOpcode()] = xrl_64;
   XRL_65 *xrl_65 = new XRL_65(*this);
   instructionSet[xrl_65->GetOpcode()] = xrl_65;
   XRL_63 *xrl_63 = new XRL_63(*this);

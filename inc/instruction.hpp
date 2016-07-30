@@ -48,9 +48,7 @@ class Instruction
     std::uint8_t operands;
     std::uint8_t opcode;
     Alu &alu;
-    std::uint8_t reg;
   public:
-    Instruction(Alu&, std::uint8_t opcode, std::uint8_t reg);
     Instruction(Alu&, std::uint8_t opcode);
     Instruction(Alu&);
     virtual bool IsJump() const;

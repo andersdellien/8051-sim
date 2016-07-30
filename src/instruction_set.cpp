@@ -31,6 +31,9 @@ constexpr int IndirectOperandMask = 0x06;
 // Register indirect operand, register is indicated by bit zero
 constexpr int IndirectRegisterMask = 0x01;
 
+// Register operand, register is lower three bits
+constexpr int RegisterMask = 0x07;
+
 // Lower three bits indicate operand type
 constexpr int BitwiseOperandMask = 0x07;
 
@@ -104,7 +107,7 @@ void ACALL::Execute() const
 }
 
 /* 0x24 and 0x34 */
-AddImmediate::AddImmediate(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, 0, c)
+AddImmediate::AddImmediate(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, c)
 {
   operands = 1;
 }
@@ -156,7 +159,7 @@ void AddImmediate::Execute() const
   Helper(alu.flash.Read(alu.GetPC() + 1));
 }
 
-AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, std::uint8_t reg, bool c): Instruction(alu, opcode, reg), carry(c)
+AdditionHelper::AdditionHelper(Alu &alu, std::uint8_t opcode, bool c): Instruction(alu, opcode), carry(c)
 {
   cycles = 1;
 }
@@ -204,7 +207,7 @@ void AdditionHelper::Helper(std::uint16_t data) const
 }
 
 /* 0x25 and 0x35 */
-AddMemory::AddMemory(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, 0, c)
+AddMemory::AddMemory(Alu &a, std::uint8_t opcode, bool c) : AdditionHelper(a, opcode, c)
 {
   operands = 1;
 }
@@ -228,7 +231,7 @@ void AddMemory::Execute() const
   Helper(alu.Read(alu.flash.Read(alu.GetPC() + 1)));
 }
 
-AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r, bool carry) : AdditionHelper(a, o, r, carry)
+AddIndirectRegister::AddIndirectRegister(Alu &a, std::uint8_t o, bool carry) : AdditionHelper(a, o, carry)
 {
   operands = 0;
 }
@@ -241,18 +244,18 @@ std::string AddIndirectRegister::Disassemble(std::uint16_t address) const
   {
     ss << "C";
   }
-  ss << ", @R" << (int) reg;
+  ss << ", @R" << (int) (opcode & IndirectRegisterMask);
   return ss.str();
 }
 
 void AddIndirectRegister::Execute() const
 {
-  std::uint16_t data = alu.Read(alu.GetReg(reg));
+  std::uint16_t data = alu.Read(alu.GetReg(opcode & RegisterMask));
 
   Helper(data);
 }
 
-AddRegister::AddRegister(Alu &a, std::uint8_t o, std::uint8_t r, bool c) : AdditionHelper(a, o, r, c)
+AddRegister::AddRegister(Alu &a, std::uint8_t o, bool c) : AdditionHelper(a, o, c)
 {
   operands = 0;
 }
@@ -265,13 +268,13 @@ std::string AddRegister::Disassemble(std::uint16_t address) const
   {
     ss << "C ";
   }
-  ss << "A, R" << (int) reg;
+  ss << "A, R" << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void AddRegister::Execute() const
 {
-  std::uint16_t data = alu.GetReg(reg);
+  std::uint16_t data = alu.GetReg(opcode & RegisterMask);
 
   Helper(data);
 }
@@ -429,7 +432,7 @@ std::string CJNE_B7::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 2;
   cycles = 2;
@@ -439,7 +442,7 @@ std::string CJNERegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::hex;
-  ss << "CJNE R" << (int) reg << ", #";
+  ss << "CJNE R" << (int) (opcode & RegisterMask) << ", #";
   ss << std::setw(2) << (int) alu.flash.Read(address+1) << ", " << std::setw(2) << (int) alu.flash.Read(address+2);
   return ss.str();
 }
@@ -449,7 +452,7 @@ void CJNERegister::Execute() const
   std::uint8_t operand = alu.flash.Read(alu.GetPC() + 1);
   std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 2);
 
-  if (alu.GetReg(reg) != operand)
+  if (alu.GetReg(opcode & RegisterMask) != operand)
   {
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
   }
@@ -458,7 +461,7 @@ void CJNERegister::Execute() const
     IncPC();
   }
 
-  if (alu.GetReg(reg) < operand)
+  if (alu.GetReg(opcode & RegisterMask) < operand)
   {
     alu.SetC();
   }
@@ -679,7 +682,7 @@ std::string DJNZ_D5::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-DJNZRegister::DJNZRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+DJNZRegister::DJNZRegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 1;
   cycles = 2;
@@ -689,7 +692,7 @@ std::string DJNZRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "DJNZ R" << (int) reg << ", ";
+  ss << "DJNZ R" << (int) (opcode & RegisterMask) << ", ";
   ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
@@ -698,9 +701,9 @@ void DJNZRegister::Execute() const
 {
   std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
 
-  alu.SetReg(reg, alu.GetReg(reg) - 1);
+  alu.SetReg(opcode & RegisterMask, alu.GetReg(opcode & RegisterMask) - 1);
 
-  if (alu.GetReg(reg))
+  if (alu.GetReg(opcode & RegisterMask))
   {
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
   }
@@ -764,7 +767,7 @@ void INC_4::Execute() const
   IncPC();
 }
 
-IncIndirectRegister::IncIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+IncIndirectRegister::IncIndirectRegister(Alu &a, std::uint8_t opcode): Instruction(a, opcode)
 {
   cycles = 1;
 }
@@ -772,19 +775,19 @@ IncIndirectRegister::IncIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8
 std::string IncIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "INC @R" << (int) reg;
+  ss << "INC @R" << (int) (opcode & IndirectRegisterMask);
   return ss.str();
 }
 
 void IncIndirectRegister::Execute() const
 {
-  std::uint8_t addr = alu.GetReg(reg);
+  std::uint8_t addr = alu.GetReg(opcode & IndirectRegisterMask);
 
   alu.Write(addr, alu.Read(addr) + 1);
   IncPC();
 }
 
-DecIndirectRegister::DecIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+DecIndirectRegister::DecIndirectRegister(Alu &a, std::uint8_t opcode): Instruction(a, opcode)
 {
   cycles = 1;
 }
@@ -792,13 +795,13 @@ DecIndirectRegister::DecIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8
 std::string DecIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "DEC @R" << (int) reg;
+  ss << "DEC @R" << (int) (opcode & IndirectRegisterMask);
   return ss.str();
 }
 
 void DecIndirectRegister::Execute() const
 {
-  std::uint8_t addr = alu.GetReg(reg);
+  std::uint8_t addr = alu.GetReg(opcode & IndirectRegisterMask);
 
   alu.Write(addr, alu.Read(addr) - 1);
   IncPC();
@@ -884,7 +887,7 @@ void BitwiseOperation::Execute() const
   IncPC();
 }
 
-IncRegister::IncRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+IncRegister::IncRegister(Alu &a, std::uint8_t opcode): Instruction(a, opcode)
 {
   cycles = 1;
 }
@@ -893,17 +896,17 @@ std::string IncRegister::Disassemble(std::uint16_t address) const
 
 {
   std::stringstream ss;
-  ss << "INC R" << (int) reg;
+  ss << "INC R" << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void IncRegister::Execute() const
 {
-  alu.SetReg(reg, alu.GetReg(reg) + 1);
+  alu.SetReg(opcode & RegisterMask, alu.GetReg(opcode & RegisterMask) + 1);
   IncPC();
 }
 
-DecRegister::DecRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+DecRegister::DecRegister(Alu &a, std::uint8_t opcode): Instruction(a, opcode)
 {
   cycles = 1;
 }
@@ -911,13 +914,13 @@ DecRegister::DecRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instructi
 std::string DecRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "DEC R" << (int) reg;
+  ss << "DEC R" << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void DecRegister::Execute() const
 {
-  alu.SetReg(reg, alu.GetReg(reg) - 1);
+  alu.SetReg(opcode & RegisterMask, alu.GetReg(opcode & RegisterMask) - 1);
   IncPC();
 }
 
@@ -1365,7 +1368,7 @@ void MOV_85::Execute() const
   IncPC();
 }
 
-MovRegisterIndirectImmediate::MovRegisterIndirectImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+MovRegisterIndirectImmediate::MovRegisterIndirectImmediate(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 1;
   cycles = 2;
@@ -1374,14 +1377,14 @@ MovRegisterIndirectImmediate::MovRegisterIndirectImmediate(Alu &a, std::uint8_t 
 std::string MovRegisterIndirectImmediate::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "MOV @R" << (int) reg << ", #";
+  ss << "MOV @R" << (int) (opcode & IndirectRegisterMask) << ", #";
   PrintAddress(ss, alu.flash.Read(address+1));
   return ss.str();
 }
 
 void MovRegisterIndirectImmediate::Execute() const
 {
-  alu.Write(alu.GetReg(reg), alu.flash.Read(alu.GetPC() + 1));
+  alu.Write(alu.GetReg(opcode & IndirectRegisterMask), alu.flash.Read(alu.GetPC() + 1));
   IncPC();
 }
 
@@ -1462,7 +1465,7 @@ void MOV_A2::Execute(void) const
   IncPC();
 }
 
-MovRegisterImmediate::MovRegisterImmediate(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+MovRegisterImmediate::MovRegisterImmediate(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 1;
   cycles = 1;
@@ -1471,18 +1474,18 @@ MovRegisterImmediate::MovRegisterImmediate(Alu &a, std::uint8_t opcode, std::uin
 std::string MovRegisterImmediate::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "MOV R" << (int) reg << ", #";
+  ss << "MOV R" << (int) (opcode & RegisterMask) << ", #";
   ss << std::setw(2) << std::hex << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
 void MovRegisterImmediate::Execute() const
 {
-  alu.SetReg(reg, alu.flash.Read(alu.GetPC() + 1));
+  alu.SetReg(opcode & RegisterMask, alu.flash.Read(alu.GetPC() + 1));
   IncPC();
 }
 
-MovRegisterA::MovRegisterA(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+MovRegisterA::MovRegisterA(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 0;
   cycles = 1;
@@ -1491,13 +1494,13 @@ MovRegisterA::MovRegisterA(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instru
 std::string MovRegisterA::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "MOV R" << (int) reg << ", A";
+  ss << "MOV R" << (int) (opcode & RegisterMask) << ", A";
   return ss.str();
 }
 
 void MovRegisterA::Execute() const
 {
-  alu.SetReg(reg, alu.GetA());
+  alu.SetReg(opcode & RegisterMask, alu.GetA());
   IncPC();
 }
 
@@ -1506,11 +1509,11 @@ void MovRegisterA::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
   if (c.r[8].type == ConstraintType::None)
   {
     c.r[8].type = ConstraintType::Alias;
-    c.r[8].reg = reg;
+    c.r[8].reg = opcode & RegisterMask;
   }
 }
 
-MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
+MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 1;
   cycles = 2;
@@ -1519,7 +1522,7 @@ MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode, std::uint8_t
 std::string MovRegisterAddress::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "MOV R" << (int) reg << ", ";
+  ss << "MOV R" << (int) (opcode & RegisterMask) << ", ";
   PrintAddress(ss, alu.flash.Read(address+1));
   return ss.str();
 }
@@ -1528,7 +1531,7 @@ void MovRegisterAddress::Execute() const
 {
   std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
 
-  alu.SetReg(reg, alu.Read(address));
+  alu.SetReg(opcode & RegisterMask, alu.Read(address));
   IncPC();
 }
 
@@ -1556,7 +1559,7 @@ void MOV_92::Execute(void) const
   IncPC();
 }
 
-MovMemoryIndirectRegister::MovMemoryIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+MovMemoryIndirectRegister::MovMemoryIndirectRegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 1;
   cycles = 2;
@@ -1567,17 +1570,17 @@ std::string MovMemoryIndirectRegister::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << "MOV ";
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << (int) alu.flash.Read(address+1) << ", @R" << (int) reg;
+  ss << (int) alu.flash.Read(address+1) << ", @R" << (int) (opcode & IndirectRegisterMask);
   return ss.str();
 }
 
 void MovMemoryIndirectRegister::Execute() const
 {
-  alu.Write(alu.flash.Read(alu.GetPC() + 1), alu.Read(alu.GetReg(reg)));
+  alu.Write(alu.flash.Read(alu.GetPC() + 1), alu.Read(alu.GetReg(opcode & IndirectRegisterMask)));
   IncPC();
 }
 
-MovAddressRegister::MovAddressRegister(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
+MovAddressRegister::MovAddressRegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 1;
   cycles = 2;
@@ -1586,17 +1589,17 @@ MovAddressRegister::MovAddressRegister(Alu &a, std::uint8_t opcode, std::uint8_t
 std::string MovAddressRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "MOV " << (int) alu.flash.Read(address+1) << ", R" << (int) reg;
+  ss << "MOV " << (int) alu.flash.Read(address+1) << ", R" << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void MovAddressRegister::Execute() const
 {
-  alu.Write(alu.flash.Read(alu.GetPC()+ 1), alu.GetReg(reg));
+  alu.Write(alu.flash.Read(alu.GetPC()+ 1), alu.GetReg(opcode & RegisterMask));
   IncPC();
 }
 
-MovARegister::MovARegister(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Instruction(a, opcode, reg)
+MovARegister::MovARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 0;
   cycles = 1;
@@ -1605,12 +1608,13 @@ MovARegister::MovARegister(Alu &a, std::uint8_t opcode, std::uint8_t reg) : Inst
 std::string MovARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "MOV A, R" << (int) reg;
+  ss << "MOV A, R" << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void MovARegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
+  std::uint8_t reg = opcode & RegisterMask;
   if (c.r[reg].type == ConstraintType::Interval)
   {
     c.r[8].type = ConstraintType::Interval;
@@ -1620,13 +1624,13 @@ void MovARegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
   else
   {
     c.r[8].type = ConstraintType::Alias;
-    c.r[8].reg = reg;
+    c.r[8].reg = opcode & RegisterMask;
   }
 }
 
 void MovARegister::Execute() const
 {
-  alu.SetA(alu.GetReg(reg));
+  alu.SetA(alu.GetReg(opcode & RegisterMask));
   IncPC();
 }
 
@@ -1669,7 +1673,7 @@ void MOV_F5::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, st
   }
 }
 
-MovIndirect::MovIndirect(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+MovIndirect::MovIndirect(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 0;
   cycles = 1;
@@ -1679,18 +1683,18 @@ std::string MovIndirect::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV @R";
-  ss << (int) reg;
+  ss << (int) (opcode & IndirectRegisterMask);
   ss << ", A";
   return ss.str();
 }
 
 void MovIndirect::Execute() const
 {
-  alu.iram.Write(alu.GetReg(reg), alu.GetA());
+  alu.iram.Write(alu.GetReg(opcode & IndirectRegisterMask), alu.GetA());
   IncPC();
 }
 
-MovIndirectFromMem::MovIndirectFromMem(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+MovIndirectFromMem::MovIndirectFromMem(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 1;
   cycles = 2;
@@ -1700,7 +1704,7 @@ std::string MovIndirectFromMem::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "MOV @R";
-  ss << (int) reg;
+  ss << (int) (opcode & IndirectRegisterMask);
   ss << ", ";
   ss << std::hex << std::setw(2) << (int) alu.flash.Read(alu.GetPC() + 1);
   return ss.str();
@@ -1708,11 +1712,11 @@ std::string MovIndirectFromMem::Disassemble(std::uint16_t address) const
 
 void MovIndirectFromMem::Execute() const
 {
-  alu.iram.Write(alu.GetReg(reg), alu.iram.Read(alu.flash.Read(alu.GetPC() + 1)));
+  alu.iram.Write(alu.GetReg(opcode & IndirectRegisterMask), alu.iram.Read(alu.flash.Read(alu.GetPC() + 1)));
   IncPC();
 }
 
-MovIndirectRegister::MovIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r) : Instruction(a, o, r)
+MovIndirectRegister::MovIndirectRegister(Alu &a, std::uint8_t o) : Instruction(a, o)
 {
   operands = 0;
   cycles = 1;
@@ -1721,13 +1725,13 @@ MovIndirectRegister::MovIndirectRegister(Alu &a, std::uint8_t o, std::uint8_t r)
 std::string MovIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "MOV A, @R" << (int) reg;
+  ss << "MOV A, @R" << (int) (opcode & IndirectRegisterMask);
   return ss.str();
 }
 
 void MovIndirectRegister::Execute() const
 {
-  alu.SetA(alu.Read(alu.GetReg(reg)));
+  alu.SetA(alu.Read(alu.GetReg(opcode & IndirectRegisterMask)));
   IncPC();
 }
 
@@ -1995,7 +1999,7 @@ std::string ORL_A0::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-OrARegister::OrARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+OrARegister::OrARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   cycles = 1;
 }
@@ -2004,17 +2008,17 @@ std::string OrARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "ORL A, R";
-  ss << (int) reg;
+  ss << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void OrARegister::Execute() const
 {
-  alu.SetA(alu.GetA() | alu.GetReg(reg));
+  alu.SetA(alu.GetA() | alu.GetReg(opcode & RegisterMask));
   IncPC();
 }
 
-AndARegister::AndARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+AndARegister::AndARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   cycles = 1;
 }
@@ -2023,17 +2027,17 @@ std::string AndARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "ANL A, R";
-  ss << (int) reg;
+  ss << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void AndARegister::Execute() const
 {
-  alu.SetA(alu.GetA() & alu.GetReg(reg));
+  alu.SetA(alu.GetA() & alu.GetReg(opcode & RegisterMask));
   IncPC();
 }
 
-XorARegister::XorARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+XorARegister::XorARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   cycles = 1;
 }
@@ -2042,13 +2046,13 @@ std::string XorARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "XRL A, R";
-  ss << (int) reg;
+  ss << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void XorARegister::Execute() const
 {
-  alu.SetA(alu.GetA() ^ alu.GetReg(reg));
+  alu.SetA(alu.GetA() ^ alu.GetReg(opcode & RegisterMask));
   IncPC();
 }
 
@@ -2316,7 +2320,7 @@ std::set<std::uint16_t> SJMP_80::GetNextAddresses(std::uint16_t address) const
   return {(std::uint16_t) (address + 1 + operands + reladdr)};
 }
 
-SubtractionHelper::SubtractionHelper(Alu &alu, std::uint8_t opcode, std::uint8_t reg): Instruction(alu, opcode, reg)
+SubtractionHelper::SubtractionHelper(Alu &alu, std::uint8_t opcode): Instruction(alu, opcode)
 {
   cycles = 1;
 }
@@ -2360,7 +2364,7 @@ void SubtractionHelper::Helper(std::uint16_t operand) const
   IncPC();
 }
 
-SUBB_94::SUBB_94(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode, 0)
+SUBB_94::SUBB_94(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode)
 {
   operands = 1;
 }
@@ -2381,7 +2385,7 @@ void SUBB_94::Execute() const
   Helper(operand);
 }
 
-SUBB_95::SUBB_95(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode, 0)
+SUBB_95::SUBB_95(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode)
 {
   operands = 1;
 }
@@ -2424,7 +2428,7 @@ std::string SUBB_97::Disassemble(std::uint16_t address) const
   return "SUBB A, @R0";
 }
 
-SubARegister::SubARegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : SubtractionHelper(a, opcode, r)
+SubARegister::SubARegister(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode)
 {
   operands = 0;
 }
@@ -2433,16 +2437,16 @@ std::string SubARegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
   ss << "SUBB A, R";
-  ss << (int) reg;
+  ss << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void SubARegister::Execute() const
 {
-  Helper(alu.GetReg(reg));
+  Helper(alu.GetReg(opcode & RegisterMask));
 }
 
-SWAP_C4::SWAP_C4(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+SWAP_C4::SWAP_C4(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 0;
   cycles = 1;
@@ -2511,7 +2515,7 @@ std::string XCH_C7::Disassemble(std::uint16_t address) const
   return "XCH A, @R1";
 }
 
-XCHRegister::XCHRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruction(a, opcode, r)
+XCHRegister::XCHRegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   operands = 0;
   cycles = 1;
@@ -2520,15 +2524,15 @@ XCHRegister::XCHRegister(Alu &a, std::uint8_t opcode, std::uint8_t r) : Instruct
 std::string XCHRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "XCH A, R" << (int) reg;
+  ss << "XCH A, R" << (int) (opcode & RegisterMask);
   return ss.str();
 }
 
 void XCHRegister::Execute() const
 {
-  std::uint8_t temp = alu.GetReg(reg);
+  std::uint8_t temp = alu.GetReg(opcode & RegisterMask);
 
-  alu.SetReg(reg, alu.GetA());
+  alu.SetReg(opcode & RegisterMask, alu.GetA());
   alu.SetA(temp);
   IncPC();
 }

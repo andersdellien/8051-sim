@@ -74,7 +74,7 @@ class INC_5: public Instruction
 class IncIndirectRegister: public Instruction
 {
   public:
-    IncIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    IncIndirectRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -82,7 +82,7 @@ class IncIndirectRegister: public Instruction
 class DecIndirectRegister: public Instruction
 {
   public:
-    DecIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    DecIndirectRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -98,7 +98,7 @@ class BitwiseOperation: public Instruction
 class IncRegister: public Instruction
 {
   public:
-    IncRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    IncRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -106,7 +106,7 @@ class IncRegister: public Instruction
 class DecRegister: public Instruction
 {
   public:
-    DecRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    DecRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -261,7 +261,7 @@ class RL_23: public Instruction
 class AdditionHelper: public Instruction
 {
   public:
-    AdditionHelper(Alu& alu, std::uint8_t opcode, std::uint8_t reg, bool carry);
+    AdditionHelper(Alu& alu, std::uint8_t opcode, bool carry);
   protected:
     void Helper(std::uint16_t operand) const;
     bool carry;
@@ -290,7 +290,7 @@ class AddMemory: public AdditionHelper
 class AddIndirectRegister: public AdditionHelper
 {
   public:
-    AddIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg, bool carry);
+    AddIndirectRegister(Alu&, std::uint8_t opcode, bool carry);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -300,7 +300,7 @@ class AddIndirectRegister: public AdditionHelper
 class AddRegister: public AdditionHelper
 {
   public:
-    AddRegister(Alu&, std::uint8_t opcode, std::uint8_t reg, bool carry);
+    AddRegister(Alu&, std::uint8_t opcode, bool carry);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -357,7 +357,7 @@ class BitwiseOperationMemory: public Instruction
 class OrARegister: public Instruction
 {
   public:
-    OrARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    OrARegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -365,7 +365,7 @@ class OrARegister: public Instruction
 class AndARegister: public Instruction
 {
   public:
-    AndARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    AndARegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -373,7 +373,7 @@ class AndARegister: public Instruction
 class XorARegister: public Instruction
 {
   public:
-    XorARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    XorARegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -504,7 +504,7 @@ class MOV_75: public Instruction
 class MovRegisterIndirectImmediate: public Instruction
 {
   public:
-    MovRegisterIndirectImmediate(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovRegisterIndirectImmediate(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -512,7 +512,7 @@ class MovRegisterIndirectImmediate: public Instruction
 class MovRegisterImmediate: public Instruction
 {
   public:
-    MovRegisterImmediate(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovRegisterImmediate(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -520,7 +520,7 @@ class MovRegisterImmediate: public Instruction
 class MovRegisterA: public Instruction
 {
   public:
-    MovRegisterA(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovRegisterA(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
     void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
@@ -570,7 +570,7 @@ class MOV_85: public Instruction
 class MovMemoryIndirectRegister: public Instruction
 {
   public:
-    MovMemoryIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovMemoryIndirectRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -578,7 +578,7 @@ class MovMemoryIndirectRegister: public Instruction
 class MovARegister: public Instruction
 {
   public:
-    MovARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovARegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
     void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
@@ -587,7 +587,7 @@ class MovARegister: public Instruction
 class MovAddressRegister: public Instruction
 {
   public:
-    MovAddressRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovAddressRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -620,7 +620,7 @@ class MOVC_93: public Instruction
 class SubtractionHelper: public Instruction
 {
   public:
-    SubtractionHelper(Alu& alu, std::uint8_t opcode, std::uint8_t reg);
+    SubtractionHelper(Alu& alu, std::uint8_t opcode);
   protected:
     void Helper(std::uint16_t operand) const;
 };
@@ -659,7 +659,7 @@ class SUBB_97: public Instruction
 class SubARegister: public SubtractionHelper
 {
   public:
-    SubARegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    SubARegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -712,7 +712,7 @@ class MOV_A7: public Instruction
 class MovRegisterAddress: public Instruction
 {
   public:
-    MovRegisterAddress(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovRegisterAddress(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -773,7 +773,7 @@ class CJNE_B7: public Instruction
 class CJNERegister: public Instruction
 {
   public:
-    CJNERegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    CJNERegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     bool IsJump() const;
     void Execute() const;
@@ -807,7 +807,7 @@ class CLR_C3: public Instruction
 class SWAP_C4: public Instruction
 {
   public:
-    SWAP_C4(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    SWAP_C4(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -837,7 +837,7 @@ class XCH_C7: public Instruction
 class XCHRegister: public Instruction
 {
   public:
-    XCHRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    XCHRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -896,7 +896,7 @@ class XCHD_D7: public Instruction
 class DJNZRegister: public Instruction
 {
   public:
-    DJNZRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    DJNZRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     bool IsJump() const;
     void Execute() const;
@@ -931,7 +931,7 @@ class MOV_E5: public Instruction
 class MovIndirectRegister: public Instruction
 {
   public:
-    MovIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovIndirectRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -980,7 +980,7 @@ class MOV_F5: public Instruction
 class MovIndirect: public Instruction
 {
   public:
-    MovIndirect(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovIndirect(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -989,7 +989,7 @@ class MovIndirect: public Instruction
 class MovIndirectFromMem: public Instruction
 {
   public:
-    MovIndirectFromMem(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    MovIndirectFromMem(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

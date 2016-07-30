@@ -57,10 +57,6 @@ void RegisterConstraints::Print()
   }
 }
 
-Instruction::Instruction(Alu& a, std::uint8_t o, std::uint8_t r) : alu(a), opcode(o), reg(r)
-{
-}
-
 Instruction::Instruction(Alu& a, std::uint8_t o) : alu(a), opcode(o)
 {
 }

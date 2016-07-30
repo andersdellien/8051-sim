@@ -69,32 +69,32 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
 
   for (auto i = 0; i < 8; i++)
   {
-    instructionSet[0x08 + i] = new IncRegister(*this, 0x08 + i, i);
-    instructionSet[0x18 + i] = new DecRegister(*this, 0x18 + i, i);
-    instructionSet[0x28 + i] = new AddRegister(*this, 0x28 + i, i, false);
-    instructionSet[0x38 + i] = new AddRegister(*this, 0x38 + i, i, true);
-    instructionSet[0x48 + i] = new OrARegister(*this, 0x48 + i, i);
-    instructionSet[0x58 + i] = new AndARegister(*this, 0x58 + i, i);
-    instructionSet[0x68 + i] = new XorARegister(*this, 0x68 + i, i);
-    instructionSet[0x78 + i] = new MovRegisterImmediate(*this, 0x78 + i, i);
-    instructionSet[0x88 + i] = new MovAddressRegister(*this, 0x88 + i, i);
-    instructionSet[0x98 + i] = new SubARegister(*this, 0x98 + i, i);
-    instructionSet[0xa8 + i] = new MovRegisterAddress(*this, 0xa8 + i, i);
-    instructionSet[0xb8 + i] = new CJNERegister(*this, 0xb8 + i, i);
-    instructionSet[0xc8 + i] = new XCHRegister(*this, 0xc8 + i, i);
-    instructionSet[0xd8 + i] = new DJNZRegister(*this, 0xd8 + i, i);
-    instructionSet[0xe8 + i] = new MovARegister(*this, 0xe8 + i, i);
-    instructionSet[0xf8 + i] = new MovRegisterA(*this, 0xf8 + i, i);
+    instructionSet[0x08 + i] = new IncRegister(*this, 0x08 + i);
+    instructionSet[0x18 + i] = new DecRegister(*this, 0x18 + i);
+    instructionSet[0x28 + i] = new AddRegister(*this, 0x28 + i, false);
+    instructionSet[0x38 + i] = new AddRegister(*this, 0x38 + i, true);
+    instructionSet[0x48 + i] = new OrARegister(*this, 0x48 + i);
+    instructionSet[0x58 + i] = new AndARegister(*this, 0x58 + i);
+    instructionSet[0x68 + i] = new XorARegister(*this, 0x68 + i);
+    instructionSet[0x78 + i] = new MovRegisterImmediate(*this, 0x78 + i);
+    instructionSet[0x88 + i] = new MovAddressRegister(*this, 0x88 + i);
+    instructionSet[0x98 + i] = new SubARegister(*this, 0x98 + i);
+    instructionSet[0xa8 + i] = new MovRegisterAddress(*this, 0xa8 + i);
+    instructionSet[0xb8 + i] = new CJNERegister(*this, 0xb8 + i);
+    instructionSet[0xc8 + i] = new XCHRegister(*this, 0xc8 + i);
+    instructionSet[0xd8 + i] = new DJNZRegister(*this, 0xd8 + i);
+    instructionSet[0xe8 + i] = new MovARegister(*this, 0xe8 + i);
+    instructionSet[0xf8 + i] = new MovRegisterA(*this, 0xf8 + i);
   }
 
   instructionSet[0x24] = new AddImmediate(*this, 0x24, false);
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);
-  instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, 0, false);
-  instructionSet[0x27] = new AddIndirectRegister(*this, 0x27, 1, false);
+  instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, false);
+  instructionSet[0x27] = new AddIndirectRegister(*this, 0x27, false);
   instructionSet[0x34] = new AddImmediate(*this, 0x34, true);
   instructionSet[0x35] = new AddMemory(*this, 0x35, true);
-  instructionSet[0x36] = new AddIndirectRegister(*this, 0x36, 0, true);
-  instructionSet[0x37] = new AddIndirectRegister(*this, 0x37, 1, true);
+  instructionSet[0x36] = new AddIndirectRegister(*this, 0x36, true);
+  instructionSet[0x37] = new AddIndirectRegister(*this, 0x37, true);
 
   for (auto i = 4; i <= 7; i++)
   {
@@ -122,10 +122,10 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0xd5] = new DJNZ_D5(*this);
   instructionSet[0x05] = new INC_5(*this);
   instructionSet[0x04] = new INC_4(*this);
-  instructionSet[0x06] = new IncIndirectRegister(*this, 0x06, 0);
-  instructionSet[0x07] = new IncIndirectRegister(*this, 0x07, 1);
-  instructionSet[0x16] = new DecIndirectRegister(*this, 0x16, 0);
-  instructionSet[0x17] = new DecIndirectRegister(*this, 0x17, 1);
+  instructionSet[0x06] = new IncIndirectRegister(*this, 0x06);
+  instructionSet[0x07] = new IncIndirectRegister(*this, 0x07);
+  instructionSet[0x16] = new DecIndirectRegister(*this, 0x16);
+  instructionSet[0x17] = new DecIndirectRegister(*this, 0x17);
   instructionSet[0xa3] = new INC_A3(*this);
   instructionSet[0x10] = new JBC_10(*this, 0x10);
   instructionSet[0x20] = new JB_20(*this, 0x20);
@@ -140,21 +140,21 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0x90] = new MOV_90(*this);
   instructionSet[0x75] = new MOV_75(*this);
   instructionSet[0x85] = new MOV_85(*this);
-  instructionSet[0x76] = new MovRegisterIndirectImmediate(*this, 0x76, 0);
-  instructionSet[0x77] = new MovRegisterIndirectImmediate(*this, 0x77, 1);
-  instructionSet[0xa6] = new MovIndirectFromMem(*this, 0xa6, 0);
-  instructionSet[0xa7] = new MovIndirectFromMem(*this, 0xa7, 1);
+  instructionSet[0x76] = new MovRegisterIndirectImmediate(*this, 0x76);
+  instructionSet[0x77] = new MovRegisterIndirectImmediate(*this, 0x77);
+  instructionSet[0xa6] = new MovIndirectFromMem(*this, 0xa6);
+  instructionSet[0xa7] = new MovIndirectFromMem(*this, 0xa7);
   instructionSet[0x74] = new MOV_74(*this);
   instructionSet[0xe5] = new MOV_E5(*this);
   instructionSet[0xa2] = new MOV_A2(*this);
   instructionSet[0x92] = new MOV_92(*this);
-  instructionSet[0x86] = new MovMemoryIndirectRegister(*this, 0x86, 0);
-  instructionSet[0x87] = new MovMemoryIndirectRegister(*this, 0x87, 1);
+  instructionSet[0x86] = new MovMemoryIndirectRegister(*this, 0x86);
+  instructionSet[0x87] = new MovMemoryIndirectRegister(*this, 0x87);
   instructionSet[0xf5] = new MOV_F5(*this);
-  instructionSet[0xf6] = new MovIndirect(*this, 0xf6, 0);
-  instructionSet[0xf7] = new MovIndirect(*this, 0xf7, 1);
-  instructionSet[0xe6] = new MovIndirectRegister(*this, 0xe6, 0);
-  instructionSet[0xe7] = new MovIndirectRegister(*this, 0xe7, 1);
+  instructionSet[0xf6] = new MovIndirect(*this, 0xf6);
+  instructionSet[0xf7] = new MovIndirect(*this, 0xf7);
+  instructionSet[0xe6] = new MovIndirectRegister(*this, 0xe6);
+  instructionSet[0xe7] = new MovIndirectRegister(*this, 0xe7);
   instructionSet[0x93] = new MOVC_93(*this);
   instructionSet[0x83] = new MOVC_83(*this);
   instructionSet[0xf0] = new MOVX_F0(*this);
@@ -188,7 +188,7 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0x95] = new SUBB_95(*this, 0x95);
   instructionSet[0x96] = new SUBB_96(*this);
   instructionSet[0x97] = new SUBB_97(*this);
-  instructionSet[0xc4] = new SWAP_C4(*this, 0xc4, 0);
+  instructionSet[0xc4] = new SWAP_C4(*this, 0xc4);
   instructionSet[0xc5] = new XCH_C5(*this);
   instructionSet[0xc6] = new XCH_C6(*this);
   instructionSet[0xc7] = new XCH_C7(*this);

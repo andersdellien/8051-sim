@@ -87,26 +87,10 @@ class DecIndirectRegister: public Instruction
     void Execute() const;
 };
 
-class OrlIndirectRegister: public Instruction
+class BitwiseIndirectRegister: public Instruction
 {
   public:
-    OrlIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class AnlIndirectRegister: public Instruction
-{
-  public:
-    AnlIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XrlIndirectRegister: public Instruction
-{
-  public:
-    XrlIndirectRegister(Alu&, std::uint8_t opcode, std::uint8_t reg);
+    BitwiseIndirectRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

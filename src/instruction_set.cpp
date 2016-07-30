@@ -24,6 +24,15 @@
 #include "symbol_table.hpp"
 #include "exceptions.hpp"
 
+// Lower bits of opcode contain register
+constexpr int RegisterMask = 0x0f;
+
+// High bits of opcode contain operation
+constexpr int BitwiseOpMask = 0xf0;
+constexpr int BitwiseOr = 0x40;
+constexpr int BitwiseAnd = 0x50;
+constexpr int BitwiseXor = 0x60;
+
 static void PrintAddress(std::stringstream &ss, std::uint8_t address)
 {
   bool found;
@@ -871,57 +880,45 @@ void DecIndirectRegister::Execute() const
   IncPC();
 }
 
-OrlIndirectRegister::OrlIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
+BitwiseIndirectRegister::BitwiseIndirectRegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
   cycles = 1;
 }
 
-std::string OrlIndirectRegister::Disassemble(std::uint16_t address) const
+std::string BitwiseIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "ORL A, @R" << (int) reg;
+  if ((opcode & BitwiseOpMask) == BitwiseAnd)
+  {
+    ss << "ANL";
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseOr)
+  {
+    ss << "ORL";
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseXor)
+  {
+    ss << "XRL";
+  }
+  ss << " A, @R" << (int) reg;
   return ss.str();
 }
 
-void OrlIndirectRegister::Execute() const
+void BitwiseIndirectRegister::Execute() const
 {
-  alu.SetA(alu.GetA() | alu.Read(alu.GetReg(reg)));
-  IncPC();
-}
-
-AnlIndirectRegister::AnlIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
-{
-  cycles = 1;
-}
-
-std::string AnlIndirectRegister::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << "ANL A, @R" << (int) reg;
-  return ss.str();
-}
-
-void AnlIndirectRegister::Execute() const
-{
-  alu.SetA(alu.GetA() & alu.Read(alu.GetReg(reg)));
-  IncPC();
-}
-
-XrlIndirectRegister::XrlIndirectRegister(Alu &a, std::uint8_t opcode, std::uint8_t r): Instruction(a, opcode, r)
-{
-  cycles = 1;
-}
-
-std::string XrlIndirectRegister::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << "XRL A, @R" << (int) reg;
-  return ss.str();
-}
-
-void XrlIndirectRegister::Execute() const
-{
-  alu.SetA(alu.GetA() ^ alu.Read(alu.GetReg(reg)));
+  std::uint8_t reg = opcode & RegisterMask;
+  if ((opcode & BitwiseOpMask) == BitwiseAnd)
+  {
+    alu.SetA(alu.GetA() & alu.Read(alu.GetReg(reg)));
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseOr)
+  {
+    alu.SetA(alu.GetA() | alu.Read(alu.GetReg(reg)));
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseXor)
+  {
+    alu.SetA(alu.GetA() ^ alu.Read(alu.GetReg(reg)));
+  }
   IncPC();
 }
 

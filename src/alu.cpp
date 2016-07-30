@@ -106,8 +106,12 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   ANL_55 *anl_55 = new ANL_55(*this);
   instructionSet[anl_55->GetOpcode()] = anl_55;
 
-  instructionSet[0x56] = new AnlIndirectRegister(*this, 0x56, 0);
-  instructionSet[0x57] = new AnlIndirectRegister(*this, 0x57, 1);
+  instructionSet[0x46] = new BitwiseIndirectRegister(*this, 0x46);
+  instructionSet[0x47] = new BitwiseIndirectRegister(*this, 0x47);
+  instructionSet[0x56] = new BitwiseIndirectRegister(*this, 0x56);
+  instructionSet[0x57] = new BitwiseIndirectRegister(*this, 0x57);
+  instructionSet[0x66] = new BitwiseIndirectRegister(*this, 0x66);
+  instructionSet[0x67] = new BitwiseIndirectRegister(*this, 0x67);
 
   ANL_82 *anl_82 = new ANL_82(*this);
   instructionSet[anl_82->GetOpcode()] = anl_82;
@@ -239,9 +243,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   ORL_A0 *orl_a0 = new ORL_A0(*this);
   instructionSet[orl_a0->GetOpcode()] = orl_a0;
 
-  instructionSet[0x46] = new OrlIndirectRegister(*this, 0x46, 0);
-  instructionSet[0x47] = new OrlIndirectRegister(*this, 0x47, 1);
-
   POP_D0 *pop_d0 = new POP_D0(*this);
   instructionSet[pop_d0->GetOpcode()] = pop_d0;
   PUSH_C0 *push_c0 = new PUSH_C0(*this);
@@ -281,9 +282,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[xchd_d6->GetOpcode()] = xchd_d6;
   XCHD_D7 *xchd_d7 = new XCHD_D7(*this);
   instructionSet[xchd_d7->GetOpcode()] = xchd_d7;
-
-  instructionSet[0x66] = new XrlIndirectRegister(*this, 0x66, 0);
-  instructionSet[0x67] = new XrlIndirectRegister(*this, 0x67, 1);
 
   XRL_62 *xrl_62 = new XRL_62(*this);
   instructionSet[xrl_62->GetOpcode()] = xrl_62;

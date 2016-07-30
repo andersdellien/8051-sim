@@ -91,7 +91,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);
   instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, 0, false);
   instructionSet[0x27] = new AddIndirectRegister(*this, 0x27, 1, false);
-
   instructionSet[0x34] = new AddImmediate(*this, 0x34, true);
   instructionSet[0x35] = new AddMemory(*this, 0x35, true);
   instructionSet[0x36] = new AddIndirectRegister(*this, 0x36, 0, true);
@@ -104,56 +103,30 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
     instructionSet[0x60 + i] = new BitwiseOperation(*this, 0x60 + i);
   }
 
-  ANL_82 *anl_82 = new ANL_82(*this);
-  instructionSet[anl_82->GetOpcode()] = anl_82;
-  ANL_B0 *anl_b0 = new ANL_B0(*this);
-  instructionSet[anl_b0->GetOpcode()] = anl_b0;
-  CJNE_B4 *cjne_b4 = new CJNE_B4(*this);
-  instructionSet[cjne_b4->GetOpcode()] = cjne_b4;
-  CJNE_B5 *cjne_b5 = new CJNE_B5(*this);
-  instructionSet[cjne_b5->GetOpcode()] = cjne_b5;
-  CJNE_B6 *cjne_b6 = new CJNE_B6(*this);
-  instructionSet[cjne_b6->GetOpcode()] = cjne_b6;
-  CJNE_B7 *cjne_b7 = new CJNE_B7(*this);
-  instructionSet[cjne_b7->GetOpcode()] = cjne_b7;
-
-  CLR_C2 *clr_c2 = new CLR_C2(*this);
-  instructionSet[clr_c2->GetOpcode()] = clr_c2;
-  CLR_C3 *clr_c3 = new CLR_C3(*this);
-  instructionSet[clr_c3->GetOpcode()] = clr_c3;
-  CLR_E4 *clr_e4 = new CLR_E4(*this);
-  instructionSet[clr_e4->GetOpcode()] = clr_e4;
-  CPL_F4 *cpl_f4 = new CPL_F4(*this);
-  instructionSet[cpl_f4->GetOpcode()] = cpl_f4;
-  CPL_B3 *cpl_b3 = new CPL_B3(*this);
-  instructionSet[cpl_b3->GetOpcode()] = cpl_b3;
-  CPL_B2 *cpl_b2 = new CPL_B2(*this);
-  instructionSet[cpl_b2->GetOpcode()] = cpl_b2;
-  DA_D4 *da_d4 = new DA_D4(*this);
-  instructionSet[da_d4->GetOpcode()] = da_d4;
-  DEC_15 *dec_15 = new DEC_15(*this);
-  instructionSet[dec_15->GetOpcode()] = dec_15;
-  DEC_14 *dec_14 = new DEC_14(*this);
-  instructionSet[dec_14->GetOpcode()] = dec_14;
-
-  DIV_84 *div_84 = new DIV_84(*this);
-  instructionSet[div_84->GetOpcode()] = div_84;
-  DJNZ_D5 *djnz_d5 = new DJNZ_D5(*this);
-  instructionSet[djnz_d5->GetOpcode()] = djnz_d5;
-
-  INC_5 *inc_5 = new INC_5(*this);
-  instructionSet[inc_5->GetOpcode()] = inc_5;
-  INC_4 *inc_4 = new INC_4(*this);
-  instructionSet[inc_4->GetOpcode()] = inc_4;
-
+  instructionSet[0x82] = new ANL_82(*this);
+  instructionSet[0xb0] = new ANL_B0(*this);
+  instructionSet[0xb4] = new CJNE_B4(*this);
+  instructionSet[0xb5] = new CJNE_B5(*this);
+  instructionSet[0xb6] = new CJNE_B6(*this);
+  instructionSet[0xb7] = new CJNE_B7(*this);
+  instructionSet[0xc2] = new CLR_C2(*this);
+  instructionSet[0xc3] = new CLR_C3(*this);
+  instructionSet[0xe4] = new CLR_E4(*this);
+  instructionSet[0xf4] = new CPL_F4(*this);
+  instructionSet[0xb3] = new CPL_B3(*this);
+  instructionSet[0xb2] = new CPL_B2(*this);
+  instructionSet[0xd4] = new DA_D4(*this);
+  instructionSet[0x15] = new DEC_15(*this);
+  instructionSet[0x14] = new DEC_14(*this);
+  instructionSet[0x84] = new DIV_84(*this);
+  instructionSet[0xd5] = new DJNZ_D5(*this);
+  instructionSet[0x05] = new INC_5(*this);
+  instructionSet[0x04] = new INC_4(*this);
   instructionSet[0x06] = new IncIndirectRegister(*this, 0x06, 0);
   instructionSet[0x07] = new IncIndirectRegister(*this, 0x07, 1);
   instructionSet[0x16] = new DecIndirectRegister(*this, 0x16, 0);
   instructionSet[0x17] = new DecIndirectRegister(*this, 0x17, 1);
-
-  INC_A3 *inc_a3 = new INC_A3(*this);
-  instructionSet[inc_a3->GetOpcode()] = inc_a3;
-
+  instructionSet[0xa3] = new INC_A3(*this);
   instructionSet[0x10] = new JBC_10(*this, 0x10);
   instructionSet[0x20] = new JB_20(*this, 0x20);
   instructionSet[0x30] = new JNB_30(*this, 0x30);
@@ -161,114 +134,66 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0x50] = new JNC_50(*this, 0x50);
   instructionSet[0x60] = new JZ_60(*this, 0x60);
   instructionSet[0x70] = new JNZ_70(*this, 0x70);
-
-  JMP_73 *jmp_73 = new JMP_73(*this);
-  instructionSet[jmp_73->GetOpcode()] = jmp_73;
-  LCALL_12 *lcall_12 = new LCALL_12(*this);
-  instructionSet[lcall_12->GetOpcode()] = lcall_12;
-  LJMP_2 *ljmp_2 = new LJMP_2(*this);
-  instructionSet[ljmp_2->GetOpcode()] = ljmp_2;
-  MOV_90 *mov_90 = new MOV_90(*this);
-  instructionSet[mov_90->GetOpcode()] = mov_90;
-  MOV_75 *mov_75 = new MOV_75(*this);
-  instructionSet[mov_75->GetOpcode()] = mov_75;
-  MOV_85 *mov_85 = new MOV_85(*this);
-  instructionSet[mov_85->GetOpcode()] = mov_85;
-
+  instructionSet[0x73] = new JMP_73(*this);
+  instructionSet[0x12] = new LCALL_12(*this);
+  instructionSet[0x02] = new LJMP_2(*this);
+  instructionSet[0x90] = new MOV_90(*this);
+  instructionSet[0x75] = new MOV_75(*this);
+  instructionSet[0x85] = new MOV_85(*this);
   instructionSet[0x76] = new MovRegisterIndirectImmediate(*this, 0x76, 0);
   instructionSet[0x77] = new MovRegisterIndirectImmediate(*this, 0x77, 1);
   instructionSet[0xa6] = new MovIndirectFromMem(*this, 0xa6, 0);
   instructionSet[0xa7] = new MovIndirectFromMem(*this, 0xa7, 1);
-
-  MOV_74 *mov_74 = new MOV_74(*this);
-  instructionSet[mov_74->GetOpcode()] = mov_74;
-  MOV_E5 *mov_e5 = new MOV_E5(*this);
-  instructionSet[mov_e5->GetOpcode()] = mov_e5;
-  MOV_A2 *mov_a2 = new MOV_A2(*this);
-  instructionSet[mov_a2->GetOpcode()] = mov_a2;
-
-  MOV_92 *mov_92 = new MOV_92(*this);
-  instructionSet[mov_92->GetOpcode()] = mov_92;
-
+  instructionSet[0x74] = new MOV_74(*this);
+  instructionSet[0xe5] = new MOV_E5(*this);
+  instructionSet[0xa2] = new MOV_A2(*this);
+  instructionSet[0x92] = new MOV_92(*this);
   instructionSet[0x86] = new MovMemoryIndirectRegister(*this, 0x86, 0);
   instructionSet[0x87] = new MovMemoryIndirectRegister(*this, 0x87, 1);
-
-  MOV_F5 *mov_f5 = new MOV_F5(*this);
-  instructionSet[mov_f5->GetOpcode()] = mov_f5;
-
+  instructionSet[0xf5] = new MOV_F5(*this);
   instructionSet[0xf6] = new MovIndirect(*this, 0xf6, 0);
   instructionSet[0xf7] = new MovIndirect(*this, 0xf7, 1);
   instructionSet[0xe6] = new MovIndirectRegister(*this, 0xe6, 0);
   instructionSet[0xe7] = new MovIndirectRegister(*this, 0xe7, 1);
-
-  MOVC_93 *movc_93 = new MOVC_93(*this);
-  instructionSet[movc_93->GetOpcode()] = movc_93;
-  MOVC_83 *movc_83 = new MOVC_83(*this);
-  instructionSet[movc_83->GetOpcode()] = movc_83;
-  MOVX_F0 *movx_f0 = new MOVX_F0(*this);
-  instructionSet[movx_f0->GetOpcode()] = movx_f0;
+  instructionSet[0x93] = new MOVC_93(*this);
+  instructionSet[0x83] = new MOVC_83(*this);
+  instructionSet[0xf0] = new MOVX_F0(*this);
   instructionSet[0xf2] = new MOVXRegisterA(*this, 0xf2);
   instructionSet[0xf3] = new MOVXRegisterA(*this, 0xf3);
-  MOVX_E0 *movx_e0 = new MOVX_E0(*this);
-  instructionSet[movx_e0->GetOpcode()] = movx_e0;
+  instructionSet[0xe0] = new MOVX_E0(*this);
   instructionSet[0xe2] = new MOVXARegister(*this, 0xe2);
   instructionSet[0xe3] = new MOVXARegister(*this, 0xe3);
-  MUL_A4 *mul_a4 = new MUL_A4(*this);
-  instructionSet[mul_a4->GetOpcode()] = mul_a4;
-  NOP *nop = new NOP(*this);
-  instructionSet[nop->GetOpcode()] = nop;
-
+  instructionSet[0xa4] = new MUL_A4(*this);
+  instructionSet[0x00] = new NOP(*this);
   instructionSet[0x42] = new BitwiseOperationMemory(*this, 0x42);
   instructionSet[0x43] = new BitwiseOperationMemory(*this, 0x43);
   instructionSet[0x52] = new BitwiseOperationMemory(*this, 0x52);
   instructionSet[0x53] = new BitwiseOperationMemory(*this, 0x53);
   instructionSet[0x62] = new BitwiseOperationMemory(*this, 0x62);
   instructionSet[0x63] = new BitwiseOperationMemory(*this, 0x63);
-
-  ORL_72 *orl_72 = new ORL_72(*this);
-  instructionSet[orl_72->GetOpcode()] = orl_72;
-  ORL_A0 *orl_a0 = new ORL_A0(*this);
-  instructionSet[orl_a0->GetOpcode()] = orl_a0;
-
-  POP_D0 *pop_d0 = new POP_D0(*this);
-  instructionSet[pop_d0->GetOpcode()] = pop_d0;
-  PUSH_C0 *push_c0 = new PUSH_C0(*this);
-  instructionSet[push_c0->GetOpcode()] = push_c0;
-  RET_22 *ret_22 = new RET_22(*this);
-  instructionSet[ret_22->GetOpcode()] = ret_22;
-  RETI_32 *reti_32 = new RETI_32(*this);
-  instructionSet[reti_32->GetOpcode()] = reti_32;
-  RL_23 *rl_23 = new RL_23(*this);
-  instructionSet[rl_23->GetOpcode()] = rl_23;
-  RLC_33 *rlc_33 = new RLC_33(*this);
-  instructionSet[rlc_33->GetOpcode()] = rlc_33;
-  RR_3 *rr_3 = new RR_3(*this);
-  instructionSet[rr_3->GetOpcode()] = rr_3;
-  RRC_13 *rrc_13 = new RRC_13(*this);
-  instructionSet[rrc_13->GetOpcode()] = rrc_13;
-  SETB_D3 *setb_d3 = new SETB_D3(*this);
-  instructionSet[setb_d3->GetOpcode()] = setb_d3;
-  SETB_D2 *setb_d2 = new SETB_D2(*this);
-  instructionSet[setb_d2->GetOpcode()] = setb_d2;
-  SJMP_80 *sjmp_80 = new SJMP_80(*this);
-  instructionSet[sjmp_80->GetOpcode()] = sjmp_80;
+  instructionSet[0x72] = new ORL_72(*this);
+  instructionSet[0xa0] = new ORL_A0(*this);
+  instructionSet[0xd0] = new POP_D0(*this);
+  instructionSet[0xc0] = new PUSH_C0(*this);
+  instructionSet[0x22] = new RET_22(*this);
+  instructionSet[0x32] = new RETI_32(*this);
+  instructionSet[0x23] = new RL_23(*this);
+  instructionSet[0x33] = new RLC_33(*this);
+  instructionSet[0x03] = new RR_3(*this);
+  instructionSet[0x13] = new RRC_13(*this);
+  instructionSet[0xd3] = new SETB_D3(*this);
+  instructionSet[0xd2] = new SETB_D2(*this);
+  instructionSet[0x80] = new SJMP_80(*this);
   instructionSet[0x94] = new SUBB_94(*this, 0x94);
   instructionSet[0x95] = new SUBB_95(*this, 0x95);
-  SUBB_96 *subb_96 = new SUBB_96(*this);
-  instructionSet[subb_96->GetOpcode()] = subb_96;
-  SUBB_97 *subb_97 = new SUBB_97(*this);
-  instructionSet[subb_97->GetOpcode()] = subb_97;
+  instructionSet[0x96] = new SUBB_96(*this);
+  instructionSet[0x97] = new SUBB_97(*this);
   instructionSet[0xc4] = new SWAP_C4(*this, 0xc4, 0);
-  XCH_C5 *xch_c5 = new XCH_C5(*this);
-  instructionSet[xch_c5->GetOpcode()] = xch_c5;
-  XCH_C6 *xch_c6 = new XCH_C6(*this);
-  instructionSet[xch_c6->GetOpcode()] = xch_c6;
-  XCH_C7 *xch_c7 = new XCH_C7(*this);
-  instructionSet[xch_c7->GetOpcode()] = xch_c7;
-  XCHD_D6 *xchd_d6 = new XCHD_D6(*this);
-  instructionSet[xchd_d6->GetOpcode()] = xchd_d6;
-  XCHD_D7 *xchd_d7 = new XCHD_D7(*this);
-  instructionSet[xchd_d7->GetOpcode()] = xchd_d7;
+  instructionSet[0xc5] = new XCH_C5(*this);
+  instructionSet[0xc6] = new XCH_C6(*this);
+  instructionSet[0xc7] = new XCH_C7(*this);
+  instructionSet[0xd6] = new XCHD_D6(*this);
+  instructionSet[0xd7] = new XCHD_D7(*this);
 }
 
 std::string Alu::Disassemble(std::uint16_t address)

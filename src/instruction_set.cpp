@@ -1797,34 +1797,44 @@ void MOVX_F0::Execute() const
   IncPC();
 }
 
-MOVX_F2::MOVX_F2(Alu &a) : Instruction(a)
+MOVXRegisterA::MOVXRegisterA(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  opcode = 0xF2;
   operands = 0;
   cycles = 2;
 }
 
-std::string MOVX_F2::Disassemble(std::uint16_t address) const
+std::string MOVXRegisterA::Disassemble(std::uint16_t address) const
 {
-  return "MOVX @R0, A";
+  std::stringstream ss;
+
+  ss << "MOVX @R" << (int) (opcode & IndirectRegisterMask) << ", A";
+  return ss.str();
 }
 
-void MOVX_F2::Execute() const
+void MOVXRegisterA::Execute() const
 {
-  alu.WriteX(alu.GetReg(0), alu.GetA());
+  alu.WriteX(alu.GetReg(opcode & IndirectRegisterMask), alu.GetA());
   IncPC();
 }
 
-MOVX_F3::MOVX_F3(Alu &a) : Instruction(a)
+MOVXARegister::MOVXARegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  opcode = 0xF3;
   operands = 0;
   cycles = 2;
 }
 
-std::string MOVX_F3::Disassemble(std::uint16_t address) const
+std::string MOVXARegister::Disassemble(std::uint16_t address) const
 {
-  return "MOVX @R1, A";
+  std::stringstream ss;
+
+  ss << "MOVX A, @R" << (int) (opcode & IndirectRegisterMask);
+  return ss.str();
+}
+
+void MOVXARegister::Execute() const
+{
+  alu.SetA(alu.ReadX(alu.GetReg(opcode & IndirectRegisterMask)));
+  IncPC();
 }
 
 MOVX_E0::MOVX_E0(Alu &a) : Instruction(a)
@@ -1843,29 +1853,6 @@ void MOVX_E0::Execute() const
 {
   alu.SetA(alu.ReadX(alu.GetDPTR()));
   IncPC();
-}
-
-MOVX_E2::MOVX_E2(Alu &a) : Instruction(a)
-{
-  opcode = 0xE2;
-  operands = 0;
-  cycles = 2;
-}
-
-std::string MOVX_E2::Disassemble(std::uint16_t address) const
-{
-  return "MOVX A, @R0";
-}
-
-MOVX_E3::MOVX_E3(Alu &a) : Instruction(a)
-{
-  opcode = 0xE3;
-  operands = 0;
-}
-
-std::string MOVX_E3::Disassemble(std::uint16_t address) const
-{
-  return "MOVX A, @R1";
 }
 
 MUL_A4::MUL_A4(Alu &a) : Instruction(a)

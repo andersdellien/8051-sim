@@ -911,20 +911,6 @@ class MOVX_E0: public Instruction
     void Execute() const;
 };
 
-class MOVX_E2: public Instruction
-{
-  public:
-    MOVX_E2(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class MOVX_E3: public Instruction
-{
-  public:
-    MOVX_E3(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
 class CLR_E4: public Instruction
 {
   public:
@@ -958,19 +944,20 @@ class MOVX_F0: public Instruction
     void Execute() const;
 };
 
-class MOVX_F2: public Instruction
+class MOVXRegisterA: public Instruction
 {
   public:
-    MOVX_F2(Alu&);
+    MOVXRegisterA(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
 
-class MOVX_F3: public Instruction
+class MOVXARegister: public Instruction
 {
   public:
-    MOVX_F3(Alu&);
+    MOVXARegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CPL_F4: public Instruction

@@ -625,18 +625,12 @@ class SUBB_95: public SubtractionHelper
     void Execute() const;
 };
 
-class SUBB_96: public Instruction
+class SUBBIndirectRegister: public SubtractionHelper
 {
   public:
-    SUBB_96(Alu&);
+    SUBBIndirectRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
-};
-
-class SUBB_97: public Instruction
-{
-  public:
-    SUBB_97(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 // 0x98 - 0x9f

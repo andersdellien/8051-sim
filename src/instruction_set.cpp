@@ -2391,26 +2391,25 @@ void SUBB_95::Execute() const
   Helper(operand);
 }
 
-SUBB_96::SUBB_96(Alu &a) : Instruction(a)
+SUBBIndirectRegister::SUBBIndirectRegister(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode)
 {
-  opcode = 0x96;
   operands = 0;
+  cycles = 1;
 }
 
-std::string SUBB_96::Disassemble(std::uint16_t address) const
+std::string SUBBIndirectRegister::Disassemble(std::uint16_t address) const
 {
-  return "SUBB A, @R0";
+  std::stringstream ss;
+
+  ss << "SUBB A, @R" << (int) (opcode & IndirectRegisterMask);
+  return ss.str();
 }
 
-SUBB_97::SUBB_97(Alu &a) : Instruction(a)
+void SUBBIndirectRegister::Execute() const
 {
-  opcode = 0x97;
-  operands = 0;
-}
+  std::uint8_t operand = alu.Read(alu.GetReg(opcode & IndirectRegisterMask));
 
-std::string SUBB_97::Disassemble(std::uint16_t address) const
-{
-  return "SUBB A, @R0";
+  Helper(operand);
 }
 
 SubARegister::SubARegister(Alu &a, std::uint8_t opcode) : SubtractionHelper(a, opcode)

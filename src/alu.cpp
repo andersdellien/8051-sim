@@ -186,8 +186,8 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0x80] = new SJMP_80(*this);
   instructionSet[0x94] = new SUBB_94(*this, 0x94);
   instructionSet[0x95] = new SUBB_95(*this, 0x95);
-  instructionSet[0x96] = new SUBB_96(*this);
-  instructionSet[0x97] = new SUBB_97(*this);
+  instructionSet[0x96] = new SUBBIndirectRegister(*this, 0x96);
+  instructionSet[0x97] = new SUBBIndirectRegister(*this, 0x97);
   instructionSet[0xc4] = new SWAP_C4(*this, 0xc4);
   instructionSet[0xc5] = new XCH_C5(*this);
   instructionSet[0xc6] = new XCHIndirectRegister(*this, 0xc6);

@@ -97,11 +97,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0x36] = new AddIndirectRegister(*this, 0x36, 0, true);
   instructionSet[0x37] = new AddIndirectRegister(*this, 0x37, 1, true);
 
-  ANL_52 *anl_52 = new ANL_52(*this);
-  instructionSet[anl_52->GetOpcode()] = anl_52;
-  ANL_53 *anl_53 = new ANL_53(*this);
-  instructionSet[anl_53->GetOpcode()] = anl_53;
-
   for (auto i = 4; i <= 7; i++)
   {
     instructionSet[0x40 + i] = new BitwiseOperation(*this, 0x40 + i);
@@ -226,10 +221,14 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[mul_a4->GetOpcode()] = mul_a4;
   NOP *nop = new NOP(*this);
   instructionSet[nop->GetOpcode()] = nop;
-  ORL_43 *orl_43 = new ORL_43(*this);
-  instructionSet[orl_43->GetOpcode()] = orl_43;
-  ORL_42 *orl_42 = new ORL_42(*this);
-  instructionSet[orl_42->GetOpcode()] = orl_42;
+
+  instructionSet[0x42] = new BitwiseOperationMemory(*this, 0x42);
+  instructionSet[0x43] = new BitwiseOperationMemory(*this, 0x43);
+  instructionSet[0x52] = new BitwiseOperationMemory(*this, 0x52);
+  instructionSet[0x53] = new BitwiseOperationMemory(*this, 0x53);
+  instructionSet[0x62] = new BitwiseOperationMemory(*this, 0x62);
+  instructionSet[0x63] = new BitwiseOperationMemory(*this, 0x63);
+
   ORL_72 *orl_72 = new ORL_72(*this);
   instructionSet[orl_72->GetOpcode()] = orl_72;
   ORL_A0 *orl_a0 = new ORL_A0(*this);
@@ -274,11 +273,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[xchd_d6->GetOpcode()] = xchd_d6;
   XCHD_D7 *xchd_d7 = new XCHD_D7(*this);
   instructionSet[xchd_d7->GetOpcode()] = xchd_d7;
-
-  XRL_62 *xrl_62 = new XRL_62(*this);
-  instructionSet[xrl_62->GetOpcode()] = xrl_62;
-  XRL_63 *xrl_63 = new XRL_63(*this);
-  instructionSet[xrl_63->GetOpcode()] = xrl_63;
 }
 
 std::string Alu::Disassemble(std::uint16_t address)

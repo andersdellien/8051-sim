@@ -346,18 +346,10 @@ class JC_40: public CondJump
     void Execute() const;
 };
 
-class ORL_42: public Instruction
+class BitwiseOperationMemory: public Instruction
 {
   public:
-    ORL_42(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class ORL_43: public Instruction
-{
-  public:
-    ORL_43(Alu&);
+    BitwiseOperationMemory(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -393,21 +385,6 @@ class JNC_50: public CondJump
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
     void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
-};
-
-class ANL_52: public Instruction
-{
-  public:
-    ANL_52(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class ANL_53: public Instruction
-{
-  public:
-    ANL_53(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
 };
 
 class ANL_58: public Instruction
@@ -478,21 +455,6 @@ class JZ_60: public CondJump
 {
   public:
     JZ_60(Alu&, std::uint8_t opcode);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class XRL_62: public Instruction
-{
-  public:
-    XRL_62(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class XRL_63: public Instruction
-{
-  public:
-    XRL_63(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

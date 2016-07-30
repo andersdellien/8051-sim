@@ -34,6 +34,7 @@ constexpr int IndirectRegisterMask = 0x01;
 // Lower three bits indicate operand type
 constexpr int BitwiseOperandMask = 0x07;
 
+constexpr int ImmediateOperandMemory = 0x03;
 constexpr int ImmediateOperand = 0x04;
 constexpr int AddressOperand = 0x05;
 
@@ -295,47 +296,6 @@ void AJMP::Execute() const
   std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
 
   alu.SetPC(alu.flash.Read((alu.GetPC()) & 0x3) * 256 + addr);
-}
-
-ANL_52::ANL_52(Alu &a) : Instruction(a)
-{
-  opcode = 0x52;
-  operands = 1;
-  cycles = 1;
-}
-
-std::string ANL_52::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ANL ";
-  ss << (int) alu.flash.Read(address+1) << ", A";
-  return ss.str();
-}
-
-ANL_53::ANL_53(Alu &a) : Instruction(a)
-{
-  opcode = 0x53;
-  operands = 2;
-  cycles = 2;
-}
-
-std::string ANL_53::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ANL ";
-  ss << (int) alu.flash.Read(address+1) << " ,#" << (int) alu.flash.Read(address+2);
-  return ss.str();
-}
-
-void ANL_53::Execute() const
-{
-  std::uint8_t operand = alu.flash.Read(alu.GetPC() + 2);
-  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
-
-  alu.Write(addr, alu.Read(addr) & operand);
-  IncPC();
 }
 
 ANL_82::ANL_82(Alu &a) : Instruction(a)
@@ -1954,52 +1914,66 @@ void NOP::Execute() const
   IncPC();
 }
 
-ORL_43::ORL_43(Alu &a) : Instruction(a)
+BitwiseOperationMemory::BitwiseOperationMemory(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  opcode = 0x43;
-  operands = 2;
+  if ((opcode & BitwiseOperandMask) == ImmediateOperandMemory)
+  {
+    operands = 2;
+  }
+  else
+  {
+    operands = 1;
+  }
   cycles = 2;
 }
 
-std::string ORL_43::Disassemble(std::uint16_t address) const
+std::string BitwiseOperationMemory::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
+  if ((opcode & BitwiseOpMask) == BitwiseAnd)
+  {
+    ss << "ANL ";
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseOr)
+  {
+    ss << "ORL ";
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseXor)
+  {
+    ss << "XRL ";
+  }
   ss << std::setfill('0') << std::hex;
-  ss << "ORL ";
   PrintAddress(ss, alu.flash.Read(address + 1));
   ss << ", #" << std::setw(2) << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
-void ORL_43::Execute() const
+void BitwiseOperationMemory::Execute() const
 {
+  std::uint8_t operand;
   std::uint8_t address = alu.flash.Read(alu.GetPC() + 1);
-  std::uint8_t data = alu.Read(address);
 
-  alu.Write(address, data | alu.flash.Read(alu.GetPC() + 2));
-  IncPC();
-}
+  if ((opcode & BitwiseOperandMask) == ImmediateOperandMemory)
+  {
+    operand = alu.flash.Read(alu.GetPC() + 2);
+  }
+  else
+  {  
+    operand = alu.GetA();
+  }
 
-ORL_42::ORL_42(Alu &a) : Instruction(a)
-{
-  opcode = 0x42;
-  operands = 1;
-  cycles = 1;
-}
-
-std::string ORL_42::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "ORL ";
-  ss << (int) alu.flash.Read(address+1) << ", A";
-  return ss.str();
-}
-
-void ORL_42::Execute() const
-{
-  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
-  alu.Write(addr, alu.GetA() | alu.Read(addr));
+  if ((opcode & BitwiseOpMask) == BitwiseAnd)
+  {
+    alu.Write(address, operand & alu.Read(address));
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseOr)
+  {
+    alu.Write(address, operand | alu.Read(address));
+  }
+  else if ((opcode & BitwiseOpMask) == BitwiseXor)
+  {
+    alu.Write(address, operand ^ alu.Read(address));
+  }
   IncPC();
 }
 
@@ -2594,45 +2568,4 @@ XCHD_D7::XCHD_D7(Alu &a) : Instruction(a)
 std::string XCHD_D7::Disassemble(std::uint16_t address) const
 {
   return "XCHD A, @R1";
-}
-
-XRL_62::XRL_62(Alu &a) : Instruction(a)
-{
-  opcode = 0x62;
-  operands = 1;
-  cycles = 1;
-}
-
-std::string XRL_62::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "XRL ";
-  ss << (int) alu.flash.Read(address+1) << ", A";
-  return ss.str();
-}
-
-XRL_63::XRL_63(Alu &a) : Instruction(a)
-{
-  opcode = 0x63;
-  operands = 2;
-  cycles = 2;
-}
-
-std::string XRL_63::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "XRL ";
-  ss << (int) alu.flash.Read(address+1) << ", #" << (int) alu.flash.Read(address+2);
-  return ss.str();
-}
-
-void XRL_63::Execute() const
-{
-  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
-  std::uint8_t data = alu.flash.Read(alu.GetPC() + 2);
-
-  alu.Write(addr, data | alu.Read(addr));
-  IncPC();
 }

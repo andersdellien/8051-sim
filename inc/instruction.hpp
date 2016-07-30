@@ -57,7 +57,6 @@ class Instruction
     virtual void Execute() const;
     virtual void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
     std::uint8_t GetOperands() const;
-    std::uint8_t GetOpcode() const;
     void IncPC() const;
     std::uint8_t cycles;
 };

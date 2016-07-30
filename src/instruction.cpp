@@ -65,11 +65,6 @@ Instruction::Instruction(Alu& a) : alu(a), opcode(0)
 {
 }
 
-std::uint8_t Instruction::GetOpcode() const
-{
-  return opcode;
-}
-
 std::uint8_t Instruction::GetOperands() const
 {
   return operands;

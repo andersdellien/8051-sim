@@ -105,10 +105,10 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
 
   instructionSet[0x82] = new ANL_82(*this);
   instructionSet[0xb0] = new ANL_B0(*this);
-  instructionSet[0xb4] = new CJNE_B4(*this);
-  instructionSet[0xb5] = new CJNE_B5(*this);
-  instructionSet[0xb6] = new CJNE_B6(*this);
-  instructionSet[0xb7] = new CJNE_B7(*this);
+  instructionSet[0xb4] = new CJNE_B4(*this, 0xb4);
+  instructionSet[0xb5] = new CJNE_B5(*this, 0xb5);
+  instructionSet[0xb6] = new CJNE_B6(*this, 0xb6);
+  instructionSet[0xb7] = new CJNE_B7(*this, 0xb7);
   instructionSet[0xc2] = new CLR_C2(*this);
   instructionSet[0xc3] = new CLR_C3(*this);
   instructionSet[0xe4] = new CLR_E4(*this);

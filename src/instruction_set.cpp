@@ -333,11 +333,48 @@ std::string ANL_B0::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-CJNE_B4::CJNE_B4(Alu &a) : Instruction(a)
+CJNEHelper::CJNEHelper(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  opcode = 0xB4;
   operands = 2;
   cycles = 2;
+}
+
+void CJNEHelper::Helper(std::uint8_t operand1, std::uint8_t operand2) const
+{
+  std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 2);
+
+  if (operand1 != operand2)
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+  }
+  else
+  {
+    IncPC();
+  }
+
+  if (operand1 < operand2)
+  {
+    alu.SetC();
+  }
+  else
+  {
+    alu.ClrC();
+  }
+}
+
+bool CJNEHelper::IsJump() const
+{
+  return true;
+}
+
+std::set<std::uint16_t> CJNEHelper::GetNextAddresses(std::uint16_t address) const
+{
+  std::int8_t reladdr = alu.flash.Read(address + 2);
+  return {(std::uint16_t) (address + 1 + operands + reladdr), (std::uint16_t) (address + 1 + operands)};
+}
+
+CJNE_B4::CJNE_B4(Alu &a, std::uint8_t opcode) : CJNEHelper(a, opcode)
+{
 }
 
 std::string CJNE_B4::Disassemble(std::uint16_t address) const
@@ -349,11 +386,13 @@ std::string CJNE_B4::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-CJNE_B5::CJNE_B5(Alu &a) : Instruction(a)
+void CJNE_B4::Execute() const
 {
-  opcode = 0xB5;
-  operands = 2;
-  cycles = 2;
+  Helper(alu.GetA(), alu.flash.Read(alu.GetPC() + 1));
+}
+
+CJNE_B5::CJNE_B5(Alu &a, std::uint8_t opcode) : CJNEHelper(a, opcode)
+{
 }
 
 std::string CJNE_B5::Disassemble(std::uint16_t address) const
@@ -368,43 +407,12 @@ std::string CJNE_B5::Disassemble(std::uint16_t address) const
 void CJNE_B5::Execute() const
 {
   std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 2);
 
-  if (alu.GetA() != alu.Read(addr))
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    IncPC();
-  }
-
-  if (alu.GetA() < alu.Read(addr))
-  {
-    alu.SetC();
-  }
-  else
-  {
-    alu.ClrC();
-  }
+  Helper(alu.GetA(), alu.Read(addr));
 }
 
-bool CJNE_B5::IsJump() const
+CJNE_B6::CJNE_B6(Alu &a, std::uint8_t opcode) : CJNEHelper(a, opcode)
 {
-  return true;
-}
-
-std::set<std::uint16_t> CJNE_B5::GetNextAddresses(std::uint16_t address) const
-{
-  std::int8_t reladdr = alu.flash.Read(address + 2);
-  return {(std::uint16_t) (address + 1 + operands + reladdr), (std::uint16_t) (address + 1 + operands)};
-}
-
-CJNE_B6::CJNE_B6(Alu &a) : Instruction(a)
-{
-  opcode = 0xB6;
-  operands = 2;
-  cycles = 2;
 }
 
 std::string CJNE_B6::Disassemble(std::uint16_t address) const
@@ -416,11 +424,13 @@ std::string CJNE_B6::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-CJNE_B7::CJNE_B7(Alu &a) : Instruction(a)
+void CJNE_B6::Execute() const
 {
-  opcode = 0xB7;
-  operands = 2;
-  cycles = 2;
+  Helper(alu.Read(alu.GetReg(opcode & IndirectRegisterMask)), alu.flash.Read(alu.GetPC() + 1));
+}
+
+CJNE_B7::CJNE_B7(Alu &a, std::uint8_t opcode) : CJNEHelper(a, opcode)
+{
 }
 
 std::string CJNE_B7::Disassemble(std::uint16_t address) const
@@ -432,10 +442,13 @@ std::string CJNE_B7::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
-CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
+void CJNE_B7::Execute() const
 {
-  operands = 2;
-  cycles = 2;
+  Helper(alu.Read(alu.GetReg(opcode & IndirectRegisterMask)), alu.flash.Read(alu.GetPC() + 1));
+}
+
+CJNERegister::CJNERegister(Alu &a, std::uint8_t opcode) : CJNEHelper(a, opcode)
+{
 }
 
 std::string CJNERegister::Disassemble(std::uint16_t address) const
@@ -449,37 +462,7 @@ std::string CJNERegister::Disassemble(std::uint16_t address) const
 
 void CJNERegister::Execute() const
 {
-  std::uint8_t operand = alu.flash.Read(alu.GetPC() + 1);
-  std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 2);
-
-  if (alu.GetReg(opcode & RegisterMask) != operand)
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    IncPC();
-  }
-
-  if (alu.GetReg(opcode & RegisterMask) < operand)
-  {
-    alu.SetC();
-  }
-  else
-  {
-    alu.ClrC();
-  }
-}
-
-bool CJNERegister::IsJump() const
-{
-  return true;
-}
-
-std::set<std::uint16_t> CJNERegister::GetNextAddresses(std::uint16_t address) const
-{
-  std::int8_t reladdr = alu.flash.Read(address + 2);
-  return {(std::uint16_t) (address + 1 + operands + reladdr), (std::uint16_t) (address + 1 + operands)};
+  Helper(alu.GetReg(opcode & RegisterMask), alu.flash.Read(alu.GetPC() + 1));
 }
 
 CLR_C2::CLR_C2(Alu &a) : Instruction(a)

@@ -717,45 +717,53 @@ class CPL_B3: public Instruction
     void Execute() const;
 };
 
-class CJNE_B4: public Instruction
+class CJNEHelper: public Instruction
 {
   public:
-    CJNE_B4(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
-};
-
-class CJNE_B5: public Instruction
-{
-  public:
-    CJNE_B5(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
+    CJNEHelper(Alu&, std::uint8_t opcode);
+    void Helper(std::uint8_t operand1, std::uint8_t operand2) const;
     bool IsJump() const;
-    void Execute() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
-class CJNE_B6: public Instruction
+class CJNE_B4: public CJNEHelper
 {
   public:
-    CJNE_B6(Alu&);
+    CJNE_B4(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
-class CJNE_B7: public Instruction
+class CJNE_B5: public CJNEHelper
 {
   public:
-    CJNE_B7(Alu&);
+    CJNE_B5(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
-class CJNERegister: public Instruction
+class CJNE_B6: public CJNEHelper
+{
+  public:
+    CJNE_B6(Alu&, std::uint8_t opcode);
+    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
+};
+
+class CJNE_B7: public CJNEHelper
+{
+  public:
+    CJNE_B7(Alu&, std::uint8_t opcode);
+    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
+};
+
+class CJNERegister: public CJNEHelper
 {
   public:
     CJNERegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
-    bool IsJump() const;
     void Execute() const;
-    std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
 class PUSH_C0: public Instruction

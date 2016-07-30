@@ -57,51 +57,47 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
     traceSfr(false),
     instructionSet(256)
 {
+  for (auto i = 0x11; i <= 0xf1; i += 0x20)
+  {
+    instructionSet[i] = new ACALL(*this, i);
+  }
+
+  for (auto i = 0x01; i <= 0xe1; i += 0x20)
+  {
+    instructionSet[i] = new AJMP(*this, i);
+  }
+
+  for (auto i = 0; i < 8; i++)
+  {
+    instructionSet[0x08 + i] = new IncRegister(*this, 0x08 + i, i);
+    instructionSet[0x18 + i] = new DecRegister(*this, 0x18 + i, i);
+    instructionSet[0x28 + i] = new AddRegister(*this, 0x28 + i, i, false);
+    instructionSet[0x38 + i] = new AddRegister(*this, 0x38 + i, i, true);
+    instructionSet[0x48 + i] = new OrARegister(*this, 0x48 + i, i);
+    instructionSet[0x58 + i] = new AndARegister(*this, 0x58 + i, i);
+    instructionSet[0x68 + i] = new XorARegister(*this, 0x68 + i, i);
+    instructionSet[0x78 + i] = new MovRegisterImmediate(*this, 0x78 + i, i);
+    instructionSet[0x88 + i] = new MovAddressRegister(*this, 0x88 + i, i);
+    instructionSet[0x98 + i] = new SubARegister(*this, 0x98 + i, i);
+    instructionSet[0xa8 + i] = new MovRegisterAddress(*this, 0xa8 + i, i);
+    instructionSet[0xb8 + i] = new CJNERegister(*this, 0xb8 + i, i);
+    instructionSet[0xc8 + i] = new XCHRegister(*this, 0xc8 + i, i);
+    instructionSet[0xd8 + i] = new DJNZRegister(*this, 0xd8 + i, i);
+    instructionSet[0xe8 + i] = new MovARegister(*this, 0xe8 + i, i);
+    instructionSet[0xf8 + i] = new MovRegisterA(*this, 0xf8 + i, i);
+  }
+
   INC_7 *inc_7 = new INC_7(*this);
   instructionSet[inc_7->GetOpcode()] = inc_7;
-
-  instructionSet[0x11] = new ACALL(*this, 0x11);
-  instructionSet[0x31] = new ACALL(*this, 0x31);
-  instructionSet[0x51] = new ACALL(*this, 0x51);
-  instructionSet[0x71] = new ACALL(*this, 0x71);
-  instructionSet[0x91] = new ACALL(*this, 0x91);
-  instructionSet[0xb1] = new ACALL(*this, 0xb1);
-  instructionSet[0xd1] = new ACALL(*this, 0xd1);
-  instructionSet[0xf1] = new ACALL(*this, 0xf1);
-
   instructionSet[0x24] = new AddImmediate(*this, 0x24, false);
   instructionSet[0x25] = new AddMemory(*this, 0x25, false);
   instructionSet[0x26] = new AddIndirectRegister(*this, 0x26, 0, false);
   instructionSet[0x27] = new AddIndirectRegister(*this, 0x27, 1, false);
-  instructionSet[0x28] = new AddRegister(*this, 0x28, 0, false);
-  instructionSet[0x29] = new AddRegister(*this, 0x29, 1, false);
-  instructionSet[0x2a] = new AddRegister(*this, 0x2a, 2, false);
-  instructionSet[0x2b] = new AddRegister(*this, 0x2b, 3, false);
-  instructionSet[0x2c] = new AddRegister(*this, 0x2c, 4, false);
-  instructionSet[0x2d] = new AddRegister(*this, 0x2d, 5, false);
-  instructionSet[0x2e] = new AddRegister(*this, 0x2e, 6, false);
-  instructionSet[0x2f] = new AddRegister(*this, 0x2f, 7, false);
+
   instructionSet[0x34] = new AddImmediate(*this, 0x34, true);
   instructionSet[0x35] = new AddMemory(*this, 0x35, true);
   instructionSet[0x36] = new AddIndirectRegister(*this, 0x36, 0, true);
   instructionSet[0x37] = new AddIndirectRegister(*this, 0x37, 1, true);
-  instructionSet[0x38] = new AddRegister(*this, 0x38, 0, true);
-  instructionSet[0x39] = new AddRegister(*this, 0x39, 1, true);
-  instructionSet[0x3a] = new AddRegister(*this, 0x3a, 2, true);
-  instructionSet[0x3b] = new AddRegister(*this, 0x3b, 3, true);
-  instructionSet[0x3c] = new AddRegister(*this, 0x3c, 4, true);
-  instructionSet[0x3d] = new AddRegister(*this, 0x3d, 5, true);
-  instructionSet[0x3e] = new AddRegister(*this, 0x3e, 6, true);
-  instructionSet[0x3f] = new AddRegister(*this, 0x3f, 7, true);
-
-  instructionSet[0x01] = new AJMP(*this, 0x01);
-  instructionSet[0x21] = new AJMP(*this, 0x21);
-  instructionSet[0x41] = new AJMP(*this, 0x41);
-  instructionSet[0x61] = new AJMP(*this, 0x61);
-  instructionSet[0x81] = new AJMP(*this, 0x81);
-  instructionSet[0xa1] = new AJMP(*this, 0xa1);
-  instructionSet[0xc1] = new AJMP(*this, 0xc1);
-  instructionSet[0xe1] = new AJMP(*this, 0xe1);
 
   ANL_52 *anl_52 = new ANL_52(*this);
   instructionSet[anl_52->GetOpcode()] = anl_52;
@@ -116,15 +112,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   ANL_57 *anl_57 = new ANL_57(*this);
   instructionSet[anl_57->GetOpcode()] = anl_57;
 
-  instructionSet[0x58] = new AndARegister(*this, 0x58, 0);
-  instructionSet[0x59] = new AndARegister(*this, 0x59, 1);
-  instructionSet[0x5a] = new AndARegister(*this, 0x5a, 2);
-  instructionSet[0x5b] = new AndARegister(*this, 0x5b, 3);
-  instructionSet[0x5c] = new AndARegister(*this, 0x5c, 4);
-  instructionSet[0x5d] = new AndARegister(*this, 0x5d, 5);
-  instructionSet[0x5e] = new AndARegister(*this, 0x5e, 6);
-  instructionSet[0x5f] = new AndARegister(*this, 0x5f, 7);
-
   ANL_82 *anl_82 = new ANL_82(*this);
   instructionSet[anl_82->GetOpcode()] = anl_82;
   ANL_B0 *anl_b0 = new ANL_B0(*this);
@@ -137,15 +124,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[cjne_b6->GetOpcode()] = cjne_b6;
   CJNE_B7 *cjne_b7 = new CJNE_B7(*this);
   instructionSet[cjne_b7->GetOpcode()] = cjne_b7;
-
-  instructionSet[0xb8] = new CJNERegister(*this, 0xb8, 0);
-  instructionSet[0xb9] = new CJNERegister(*this, 0xb9, 1);
-  instructionSet[0xba] = new CJNERegister(*this, 0xba, 2);
-  instructionSet[0xbb] = new CJNERegister(*this, 0xbb, 3);
-  instructionSet[0xbc] = new CJNERegister(*this, 0xbc, 4);
-  instructionSet[0xbd] = new CJNERegister(*this, 0xbd, 5);
-  instructionSet[0xbe] = new CJNERegister(*this, 0xbe, 6);
-  instructionSet[0xbf] = new CJNERegister(*this, 0xbf, 7);
 
   CLR_C2 *clr_c2 = new CLR_C2(*this);
   instructionSet[clr_c2->GetOpcode()] = clr_c2;
@@ -170,28 +148,10 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   DEC_17 *dec_17 = new DEC_17(*this);
   instructionSet[dec_17->GetOpcode()] = dec_17;
 
-  instructionSet[0x18] = new DecRegister(*this, 0x18, 0);
-  instructionSet[0x19] = new DecRegister(*this, 0x19, 1);
-  instructionSet[0x1a] = new DecRegister(*this, 0x1a, 2);
-  instructionSet[0x1b] = new DecRegister(*this, 0x1b, 3);
-  instructionSet[0x1c] = new DecRegister(*this, 0x1c, 4);
-  instructionSet[0x1d] = new DecRegister(*this, 0x1d, 5);
-  instructionSet[0x1e] = new DecRegister(*this, 0x1e, 6);
-  instructionSet[0x1f] = new DecRegister(*this, 0x1f, 7);
-
   DIV_84 *div_84 = new DIV_84(*this);
   instructionSet[div_84->GetOpcode()] = div_84;
   DJNZ_D5 *djnz_d5 = new DJNZ_D5(*this);
   instructionSet[djnz_d5->GetOpcode()] = djnz_d5;
-
-  instructionSet[0xd8] = new DJNZRegister(*this, 0xd8, 0);
-  instructionSet[0xd9] = new DJNZRegister(*this, 0xd9, 1);
-  instructionSet[0xda] = new DJNZRegister(*this, 0xda, 2);
-  instructionSet[0xdb] = new DJNZRegister(*this, 0xdb, 3);
-  instructionSet[0xdc] = new DJNZRegister(*this, 0xdc, 4);
-  instructionSet[0xdd] = new DJNZRegister(*this, 0xdd, 5);
-  instructionSet[0xde] = new DJNZRegister(*this, 0xde, 6);
-  instructionSet[0xdf] = new DJNZRegister(*this, 0xdf, 7);
 
   INC_5 *inc_5 = new INC_5(*this);
   instructionSet[inc_5->GetOpcode()] = inc_5;
@@ -199,15 +159,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[inc_4->GetOpcode()] = inc_4;
   INC_6 *inc_6 = new INC_6(*this);
   instructionSet[inc_6->GetOpcode()] = inc_6;
-
-  instructionSet[0x08] = new IncRegister(*this, 0x08, 0);
-  instructionSet[0x09] = new IncRegister(*this, 0x09, 1);
-  instructionSet[0x0a] = new IncRegister(*this, 0x0a, 2);
-  instructionSet[0x0b] = new IncRegister(*this, 0x0b, 3);
-  instructionSet[0x0c] = new IncRegister(*this, 0x0c, 4);
-  instructionSet[0x0d] = new IncRegister(*this, 0x0d, 5);
-  instructionSet[0x0e] = new IncRegister(*this, 0x0e, 6);
-  instructionSet[0x0f] = new IncRegister(*this, 0x0f, 7);
 
   INC_A3 *inc_a3 = new INC_A3(*this);
   instructionSet[inc_a3->GetOpcode()] = inc_a3;
@@ -245,38 +196,11 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   MOV_A2 *mov_a2 = new MOV_A2(*this);
   instructionSet[mov_a2->GetOpcode()] = mov_a2;
 
-  instructionSet[0x78] = new MovRegisterImmediate(*this, 0x78, 0);
-  instructionSet[0x79] = new MovRegisterImmediate(*this, 0x79, 1);
-  instructionSet[0x7a] = new MovRegisterImmediate(*this, 0x7a, 2);
-  instructionSet[0x7b] = new MovRegisterImmediate(*this, 0x7b, 3);
-  instructionSet[0x7c] = new MovRegisterImmediate(*this, 0x7c, 4);
-  instructionSet[0x7d] = new MovRegisterImmediate(*this, 0x7d, 5);
-  instructionSet[0x7e] = new MovRegisterImmediate(*this, 0x7e, 6);
-  instructionSet[0x7f] = new MovRegisterImmediate(*this, 0x7f, 7);
-
-  instructionSet[0xa8] = new MovRegisterAddress(*this, 0xa8, 0);
-  instructionSet[0xa9] = new MovRegisterAddress(*this, 0xa9, 1);
-  instructionSet[0xaa] = new MovRegisterAddress(*this, 0xaa, 2);
-  instructionSet[0xab] = new MovRegisterAddress(*this, 0xab, 3);
-  instructionSet[0xac] = new MovRegisterAddress(*this, 0xac, 4);
-  instructionSet[0xad] = new MovRegisterAddress(*this, 0xad, 5);
-  instructionSet[0xae] = new MovRegisterAddress(*this, 0xae, 6);
-  instructionSet[0xaf] = new MovRegisterAddress(*this, 0xaf, 7);
-
   MOV_92 *mov_92 = new MOV_92(*this);
   instructionSet[mov_92->GetOpcode()] = mov_92;
 
   instructionSet[0x86] = new MovMemoryIndirectRegister(*this, 0x86, 0);
   instructionSet[0x87] = new MovMemoryIndirectRegister(*this, 0x87, 1);
-
-  instructionSet[0x88] = new MovAddressRegister(*this, 0x88, 0);
-  instructionSet[0x89] = new MovAddressRegister(*this, 0x89, 1);
-  instructionSet[0x8a] = new MovAddressRegister(*this, 0x8a, 2);
-  instructionSet[0x8b] = new MovAddressRegister(*this, 0x8b, 3);
-  instructionSet[0x8c] = new MovAddressRegister(*this, 0x8c, 4);
-  instructionSet[0x8d] = new MovAddressRegister(*this, 0x8d, 5);
-  instructionSet[0x8e] = new MovAddressRegister(*this, 0x8e, 6);
-  instructionSet[0x8f] = new MovAddressRegister(*this, 0x8f, 7);
 
   MOV_F5 *mov_f5 = new MOV_F5(*this);
   instructionSet[mov_f5->GetOpcode()] = mov_f5;
@@ -285,24 +209,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0xf7] = new MovIndirect(*this, 0xf7, 1);
   instructionSet[0xe6] = new MovIndirectRegister(*this, 0xe6, 0);
   instructionSet[0xe7] = new MovIndirectRegister(*this, 0xe7, 1);
-
-  instructionSet[0xe8] = new MovARegister(*this, 0xe8, 0);
-  instructionSet[0xe9] = new MovARegister(*this, 0xe9, 1);
-  instructionSet[0xea] = new MovARegister(*this, 0xea, 2);
-  instructionSet[0xeb] = new MovARegister(*this, 0xeb, 3);
-  instructionSet[0xec] = new MovARegister(*this, 0xec, 4);
-  instructionSet[0xed] = new MovARegister(*this, 0xed, 5);
-  instructionSet[0xee] = new MovARegister(*this, 0xee, 6);
-  instructionSet[0xef] = new MovARegister(*this, 0xef, 7);
-
-  instructionSet[0xf8] = new MovRegisterA(*this, 0xf8, 0);
-  instructionSet[0xf9] = new MovRegisterA(*this, 0xf9, 1);
-  instructionSet[0xfa] = new MovRegisterA(*this, 0xfa, 2);
-  instructionSet[0xfb] = new MovRegisterA(*this, 0xfb, 3);
-  instructionSet[0xfc] = new MovRegisterA(*this, 0xfc, 4);
-  instructionSet[0xfd] = new MovRegisterA(*this, 0xfd, 5);
-  instructionSet[0xfe] = new MovRegisterA(*this, 0xfe, 6);
-  instructionSet[0xff] = new MovRegisterA(*this, 0xff, 7);
 
   MOVC_93 *movc_93 = new MOVC_93(*this);
   instructionSet[movc_93->GetOpcode()] = movc_93;
@@ -341,15 +247,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   ORL_47 *orl_47 = new ORL_47(*this);
   instructionSet[orl_47->GetOpcode()] = orl_47;
 
-  instructionSet[0x48] = new OrARegister(*this, 0x48, 0);
-  instructionSet[0x49] = new OrARegister(*this, 0x49, 1);
-  instructionSet[0x4a] = new OrARegister(*this, 0x4a, 2);
-  instructionSet[0x4b] = new OrARegister(*this, 0x4b, 3);
-  instructionSet[0x4c] = new OrARegister(*this, 0x4c, 4);
-  instructionSet[0x4d] = new OrARegister(*this, 0x4d, 5);
-  instructionSet[0x4e] = new OrARegister(*this, 0x4e, 6);
-  instructionSet[0x4f] = new OrARegister(*this, 0x4f, 7);
-
   POP_D0 *pop_d0 = new POP_D0(*this);
   instructionSet[pop_d0->GetOpcode()] = pop_d0;
   PUSH_C0 *push_c0 = new PUSH_C0(*this);
@@ -372,42 +269,19 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[setb_d2->GetOpcode()] = setb_d2;
   SJMP_80 *sjmp_80 = new SJMP_80(*this);
   instructionSet[sjmp_80->GetOpcode()] = sjmp_80;
-
   instructionSet[0x94] = new SUBB_94(*this, 0x94);
   instructionSet[0x95] = new SUBB_95(*this, 0x95);
-
   SUBB_96 *subb_96 = new SUBB_96(*this);
   instructionSet[subb_96->GetOpcode()] = subb_96;
   SUBB_97 *subb_97 = new SUBB_97(*this);
   instructionSet[subb_97->GetOpcode()] = subb_97;
-
-  instructionSet[0x98] = new SubARegister(*this, 0x98, 0);
-  instructionSet[0x99] = new SubARegister(*this, 0x99, 1);
-  instructionSet[0x9a] = new SubARegister(*this, 0x9a, 2);
-  instructionSet[0x9b] = new SubARegister(*this, 0x9b, 3);
-  instructionSet[0x9c] = new SubARegister(*this, 0x9c, 4);
-  instructionSet[0x9d] = new SubARegister(*this, 0x9d, 5);
-  instructionSet[0x9e] = new SubARegister(*this, 0x9e, 6);
-  instructionSet[0x9f] = new SubARegister(*this, 0x9f, 7);
-
   instructionSet[0xc4] = new SWAP_C4(*this, 0xc4, 0);
-
   XCH_C5 *xch_c5 = new XCH_C5(*this);
   instructionSet[xch_c5->GetOpcode()] = xch_c5;
   XCH_C6 *xch_c6 = new XCH_C6(*this);
   instructionSet[xch_c6->GetOpcode()] = xch_c6;
   XCH_C7 *xch_c7 = new XCH_C7(*this);
   instructionSet[xch_c7->GetOpcode()] = xch_c7;
-
-  instructionSet[0xc8] = new XCHRegister(*this, 0xc8, 0);
-  instructionSet[0xc9] = new XCHRegister(*this, 0xc9, 1);
-  instructionSet[0xca] = new XCHRegister(*this, 0xca, 2);
-  instructionSet[0xcb] = new XCHRegister(*this, 0xcb, 3);
-  instructionSet[0xcc] = new XCHRegister(*this, 0xcc, 4);
-  instructionSet[0xcd] = new XCHRegister(*this, 0xcd, 5);
-  instructionSet[0xce] = new XCHRegister(*this, 0xce, 6);
-  instructionSet[0xcf] = new XCHRegister(*this, 0xcf, 7);
-
   XCHD_D6 *xchd_d6 = new XCHD_D6(*this);
   instructionSet[xchd_d6->GetOpcode()] = xchd_d6;
   XCHD_D7 *xchd_d7 = new XCHD_D7(*this);
@@ -416,16 +290,6 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[xrl_66->GetOpcode()] = xrl_66;
   XRL_67 *xrl_67 = new XRL_67(*this);
   instructionSet[xrl_67->GetOpcode()] = xrl_67;
-
-  instructionSet[0x68] = new XorARegister(*this, 0x68, 0);
-  instructionSet[0x69] = new XorARegister(*this, 0x69, 1);
-  instructionSet[0x6a] = new XorARegister(*this, 0x6a, 2);
-  instructionSet[0x6b] = new XorARegister(*this, 0x6b, 3);
-  instructionSet[0x6c] = new XorARegister(*this, 0x6c, 4);
-  instructionSet[0x6d] = new XorARegister(*this, 0x6d, 5);
-  instructionSet[0x6e] = new XorARegister(*this, 0x6e, 6);
-  instructionSet[0x6f] = new XorARegister(*this, 0x6f, 7);
-
   XRL_62 *xrl_62 = new XRL_62(*this);
   instructionSet[xrl_62->GetOpcode()] = xrl_62;
   XRL_64 *xrl_64 = new XRL_64(*this);

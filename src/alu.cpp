@@ -192,8 +192,8 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0xc5] = new XCH_C5(*this);
   instructionSet[0xc6] = new XCH_C6(*this);
   instructionSet[0xc7] = new XCH_C7(*this);
-  instructionSet[0xd6] = new XCHD_D6(*this);
-  instructionSet[0xd7] = new XCHD_D7(*this);
+  instructionSet[0xd6] = new XCHD(*this, 0xd6);
+  instructionSet[0xd7] = new XCHD(*this, 0xd7);
 }
 
 std::string Alu::Disassemble(std::uint16_t address)

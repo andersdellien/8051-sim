@@ -863,18 +863,12 @@ class DJNZ_D5: public Instruction
     std::string Disassemble(std::uint16_t address) const;
 };
 
-class XCHD_D6: public Instruction
+class XCHD: public Instruction
 {
   public:
-    XCHD_D6(Alu&);
+    XCHD(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
-};
-
-class XCHD_D7: public Instruction
-{
-  public:
-    XCHD_D7(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class DJNZRegister: public Instruction

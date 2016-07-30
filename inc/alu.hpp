@@ -34,8 +34,6 @@ class RegisterConstraints;
 
 class Alu : public Block
 {
-  friend class SfrSp;
-  friend class SfrDpl;
   public:
     Flash flash;
     Memory xram;

@@ -750,43 +750,41 @@ void INC_4::Execute() const
   IncPC();
 }
 
-IncIndirectRegister::IncIndirectRegister(Alu &a, std::uint8_t opcode): Instruction(a, opcode)
+constexpr int IncDecMask = 0x10;
+constexpr int Dec = 0x10;
+
+IncDecIndirectRegister::IncDecIndirectRegister(Alu &a, std::uint8_t opcode): Instruction(a, opcode)
 {
   cycles = 1;
 }
 
-std::string IncIndirectRegister::Disassemble(std::uint16_t address) const
+std::string IncDecIndirectRegister::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
-  ss << "INC @R" << (int) (opcode & IndirectRegisterMask);
+  if ((opcode & IncDecMask) == Dec)
+  {
+    ss << "DEC";
+  }
+  else
+  {
+    ss << "INC";
+  }
+  ss << " @R" << (int) (opcode & IndirectRegisterMask);
   return ss.str();
 }
 
-void IncIndirectRegister::Execute() const
+void IncDecIndirectRegister::Execute() const
 {
   std::uint8_t addr = alu.GetReg(opcode & IndirectRegisterMask);
 
-  alu.Write(addr, alu.Read(addr) + 1);
-  IncPC();
-}
-
-DecIndirectRegister::DecIndirectRegister(Alu &a, std::uint8_t opcode): Instruction(a, opcode)
-{
-  cycles = 1;
-}
-
-std::string DecIndirectRegister::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << "DEC @R" << (int) (opcode & IndirectRegisterMask);
-  return ss.str();
-}
-
-void DecIndirectRegister::Execute() const
-{
-  std::uint8_t addr = alu.GetReg(opcode & IndirectRegisterMask);
-
-  alu.Write(addr, alu.Read(addr) - 1);
+  if ((opcode & IncDecMask) == Dec)
+  {
+    alu.Write(addr, alu.Read(addr) - 1);
+  }
+  else
+  {
+    alu.Write(addr, alu.Read(addr) + 1);
+  }
   IncPC();
 }
 

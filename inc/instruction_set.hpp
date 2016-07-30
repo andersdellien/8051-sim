@@ -71,18 +71,10 @@ class INC_5: public Instruction
     void Execute() const;
 };
 
-class IncIndirectRegister: public Instruction
+class IncDecIndirectRegister: public Instruction
 {
   public:
-    IncIndirectRegister(Alu&, std::uint8_t opcode);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class DecIndirectRegister: public Instruction
-{
-  public:
-    DecIndirectRegister(Alu&, std::uint8_t opcode);
+    IncDecIndirectRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

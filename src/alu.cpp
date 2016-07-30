@@ -122,10 +122,10 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0xd5] = new DJNZ_D5(*this);
   instructionSet[0x05] = new INC_5(*this);
   instructionSet[0x04] = new INC_4(*this);
-  instructionSet[0x06] = new IncIndirectRegister(*this, 0x06);
-  instructionSet[0x07] = new IncIndirectRegister(*this, 0x07);
-  instructionSet[0x16] = new DecIndirectRegister(*this, 0x16);
-  instructionSet[0x17] = new DecIndirectRegister(*this, 0x17);
+  instructionSet[0x06] = new IncDecIndirectRegister(*this, 0x06);
+  instructionSet[0x07] = new IncDecIndirectRegister(*this, 0x07);
+  instructionSet[0x16] = new IncDecIndirectRegister(*this, 0x16);
+  instructionSet[0x17] = new IncDecIndirectRegister(*this, 0x17);
   instructionSet[0xa3] = new INC_A3(*this);
   instructionSet[0x10] = new JBC_10(*this, 0x10);
   instructionSet[0x20] = new JB_20(*this, 0x20);

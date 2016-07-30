@@ -2477,27 +2477,28 @@ void XCH_C5::Execute() const
   IncPC();
 }
 
-XCH_C6::XCH_C6(Alu &a) : Instruction(a)
+XCHIndirectRegister::XCHIndirectRegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
-  opcode = 0xC6;
   operands = 0;
   cycles = 1;
 }
 
-std::string XCH_C6::Disassemble(std::uint16_t address) const
+std::string XCHIndirectRegister::Disassemble(std::uint16_t address) const
 {
-  return "XCH A, @R0";
+  std::stringstream ss;
+
+  ss <<  "XCH A, @R" << (int) (opcode & IndirectRegisterMask);
+  return ss.str();
 }
 
-XCH_C7::XCH_C7(Alu &a) : Instruction(a)
+void XCHIndirectRegister::Execute() const
 {
-  opcode = 0xC7;
-  operands = 0;
-}
+  std::uint8_t addr = alu.GetReg(opcode & IndirectRegisterMask);
+  std::uint8_t temp = alu.GetA();
 
-std::string XCH_C7::Disassemble(std::uint16_t address) const
-{
-  return "XCH A, @R1";
+  alu.SetA(alu.Read(addr));
+  alu.Write(addr, temp);
+  IncPC();
 }
 
 XCHRegister::XCHRegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)

@@ -190,8 +190,8 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
   instructionSet[0x97] = new SUBB_97(*this);
   instructionSet[0xc4] = new SWAP_C4(*this, 0xc4);
   instructionSet[0xc5] = new XCH_C5(*this);
-  instructionSet[0xc6] = new XCH_C6(*this);
-  instructionSet[0xc7] = new XCH_C7(*this);
+  instructionSet[0xc6] = new XCHIndirectRegister(*this, 0xc6);
+  instructionSet[0xc7] = new XCHIndirectRegister(*this, 0xc7);
   instructionSet[0xd6] = new XCHD(*this, 0xd6);
   instructionSet[0xd7] = new XCHD(*this, 0xd7);
 }

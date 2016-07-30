@@ -804,18 +804,12 @@ class XCH_C5: public Instruction
     void Execute() const;
 };
 
-class XCH_C6: public Instruction
+class XCHIndirectRegister: public Instruction
 {
   public:
-    XCH_C6(Alu&);
+    XCHIndirectRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
-};
-
-class XCH_C7: public Instruction
-{
-  public:
-    XCH_C7(Alu&);
-    std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCHRegister: public Instruction

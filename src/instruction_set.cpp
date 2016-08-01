@@ -923,36 +923,6 @@ void INC_A3::Execute() const
   IncPC();
 }
 
-JB_20::JB_20(Alu &a, std::uint8_t opcde) : CondJump(a, opcode)
-{
-  operands = 2;
-  cycles = 2;
-}
-
-std::string JB_20::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "JB ";
-  ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
-  return ss.str();
-}
-
-void JB_20::Execute() const
-{
-  std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
-  std::int8_t relAddr = alu.flash.Read(alu.GetPC() + 2);
-
-  if (alu.ReadBit(bitAddr))
-  {
-    alu.SetPC(alu.GetPC() + 1 + operands + relAddr);
-  }
-  else
-  {
-    IncPC();
-  }
-}
-
 CondJump::CondJump(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
 {
 }
@@ -1000,24 +970,37 @@ void JBC_10::Execute() const
   }
 }
 
-JC_40::JC_40(Alu &a, std::uint8_t opcde) : CondJump(a, opcode)
+constexpr int InvertFlag = 0x10;
+
+JC::JC(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
 {
   operands = 1;
   cycles = 2;
 }
 
-std::string JC_40::Disassemble(std::uint16_t address) const
+std::string JC::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
+  ss << "J";
+  if (opcode & InvertFlag)
+  {
+    ss << "N";
+  }
+  ss << "C ";
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "JC ";
   ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
-void JC_40::Execute() const
+void JC::Execute() const
 {
-  if (alu.GetC())
+  bool condition = alu.GetC();
+
+  if (opcode & InvertFlag)
+  {
+    condition = !condition;
+  }
+  if (condition)
   {
     std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
@@ -1056,27 +1039,37 @@ std::set<std::uint16_t> JMP_73::GetNextAddresses(std::uint16_t address) const
   return {};
 }
 
-JNB_30::JNB_30(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
+JB::JB(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
 {
   operands = 2;
   cycles = 2;
 }
 
-std::string JNB_30::Disassemble(std::uint16_t address) const
+std::string JB::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
+  ss << "J";
+  if (opcode & InvertFlag)
+  {
+    ss << "N";
+  }
+  ss << "B";
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "JNB ";
   ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
 }
 
-void JNB_30::Execute() const
+void JB::Execute() const
 {
   std::uint8_t bitAddr = alu.flash.Read(alu.GetPC() + 1);
   std::int8_t relAddr = alu.flash.Read(alu.GetPC() + 2);
+  bool condition = alu.ReadBit(bitAddr);
 
-  if (!(alu.ReadBit(bitAddr)))
+  if (opcode & InvertFlag)
+  {
+    condition = !condition;
+  }
+  if (condition)
   {
     alu.SetPC(alu.GetPC() + 1 + operands + relAddr);
   }
@@ -1086,105 +1079,66 @@ void JNB_30::Execute() const
   }
 }
 
-JNC_50::JNC_50(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
-{
-  operands = 1;
-  cycles = 2;
-}
+constexpr int JNCOpcode = 0x50;
 
-std::string JNC_50::Disassemble(std::uint16_t address) const
+void JC::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "JNC ";
-  ss << (int) alu.flash.Read(address+1);
-  return ss.str();
-}
-
-void JNC_50::Execute() const
-{
-  if (!alu.GetC())
+  if (opcode == JNCOpcode)
   {
-    std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
-  }
-  else
-  {
-    IncPC();
-  }
-}
-
-void JNC_50::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
-{
-  if (c.c.type == ConstraintType::RegisterInterval)
-  {
-    std::int8_t reladdr = alu.flash.Read(address + 1);
-
-    c.c.type = ConstraintType::None;
-    if (address + 1 + operands + reladdr == destination)
+    if (c.c.type == ConstraintType::RegisterInterval)
     {
-      if (c.c.high == 0xff)
+      std::int8_t reladdr = alu.flash.Read(address + 1);
+
+      c.c.type = ConstraintType::None;
+      if (address + 1 + operands + reladdr == destination)
+      {
+        if (c.c.high == 0xff)
+        {
+          c.r[c.c.reg].type = ConstraintType::Interval;
+          c.r[c.c.reg].low = 0;
+          c.r[c.c.reg].high = c.c.low - 1;
+        }
+      }
+      else if (address + 1 + operands == destination)
       {
         c.r[c.c.reg].type = ConstraintType::Interval;
-        c.r[c.c.reg].low = 0;
-        c.r[c.c.reg].high = c.c.low - 1;
+        c.r[c.c.reg].low = c.c.low;
+        c.r[c.c.reg].high = c.c.high;
       }
-    }
-    else if (address + 1 + operands == destination)
-    {
-      c.r[c.c.reg].type = ConstraintType::Interval;
-      c.r[c.c.reg].low = c.c.low;
-      c.r[c.c.reg].high = c.c.high;
     }  
   }
 }
 
-JNZ_70::JNZ_70(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
+JZ::JZ(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
 {
   operands = 1;
   cycles = 2;
 }
 
-std::string JNZ_70::Disassemble(std::uint16_t address) const
+std::string JZ::Disassemble(std::uint16_t address) const
 {
   std::stringstream ss;
+  ss << "J";
+  if (opcode & InvertFlag)
+  {
+    ss << "N";
+  } 
+  ss << "Z ";
   ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "JNZ ";
   ss << (int) alu.flash.Read(address+1);
   return ss.str();
 }
 
-void JNZ_70::Execute() const
+void JZ::Execute() const
 {
-  if (alu.GetA() != 0)
+  bool condition = alu.GetA() == 0;
+
+  if (opcode & InvertFlag)
   {
-    std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
-    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+    condition = !condition;
   }
-  else
-  {
-    IncPC();
-  }
-}
-
-JZ_60::JZ_60(Alu &a, std::uint8_t opcode) : CondJump(a, opcode)
-{
-  operands = 1;
-  cycles = 2;
-}
-
-std::string JZ_60::Disassemble(std::uint16_t address) const
-{
-  std::stringstream ss;
-  ss << std::setfill('0') << std::setw(2) << std::hex;
-  ss << "JZ ";
-  ss << (int) alu.flash.Read(address+1);
-  return ss.str();
-}
-
-void JZ_60::Execute() const
-{
-  if (alu.GetA() == 0)
+ 
+  if (condition)
   {
     std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 1);
     alu.SetPC(alu.GetPC() + 1 + operands + reladdr);

@@ -224,10 +224,10 @@ class DEC_1F: public Instruction
     void Execute() const;
 };
 
-class JB_20: public CondJump
+class JB: public CondJump
 {
   public:
-    JB_20(Alu&, std::uint8_t opcode);
+    JB(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };
@@ -297,14 +297,6 @@ class AddRegister: public AdditionHelper
     void Execute() const;
 };
 
-class JNB_30: public CondJump
-{
-  public:
-    JNB_30(Alu&, std::uint8_t opcode);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
 class RETI_32: public Instruction
 {
   public:
@@ -330,14 +322,6 @@ class ADDC_34: public Instruction
     std::string Disassemble(std::uint16_t address) const;
 };
 
-class JC_40: public CondJump
-{
-  public:
-    JC_40(Alu&, std::uint8_t opcode);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
 class BitwiseOperationMemory: public Instruction
 {
   public:
@@ -354,10 +338,10 @@ class BitwiseOperationARegister: public Instruction
     void Execute() const;
 };
 
-class JNC_50: public CondJump
+class JC: public CondJump
 {
   public:
-    JNC_50(Alu&, std::uint8_t opcode);
+    JC(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
     void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
@@ -427,18 +411,10 @@ class ANL_5F: public Instruction
     void Execute() const;
 };
 
-class JZ_60: public CondJump
+class JZ: public CondJump
 {
   public:
-    JZ_60(Alu&, std::uint8_t opcode);
-    std::string Disassemble(std::uint16_t address) const;
-    void Execute() const;
-};
-
-class JNZ_70: public CondJump
-{
-  public:
-    JNZ_70(Alu&, std::uint8_t opcode);
+    JZ(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
 };

@@ -172,7 +172,7 @@ bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tok
 
       InstructionCoverage::GetInstance().Initialize(handler.alu);
       InstructionCoverage::GetInstance().GetCoverage(total, executed);
-      std::cout << "Found " << total << " instructions" << std::endl;
+      std::cout << "Found " << std::dec << total << " instructions" << std::endl;
     }
     else if (tokens[1] == "list")
     {

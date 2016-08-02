@@ -32,6 +32,7 @@ BasicBlock::BasicBlock(int n, std::uint16_t address) : number(n), firstAddress(a
 void InstructionCoverage::Initialize(Alu &alu)
 {
   std::set<std::pair<BasicBlock*, std::uint16_t>> waiting;
+  constexpr const int IndirectJumpOpcode = 0x73; // JMP @DPTR
 
   basicBlockCount = 0;
   basicBlocks.erase(basicBlocks.begin(), basicBlocks.end());
@@ -155,10 +156,11 @@ void InstructionCoverage::Initialize(Alu &alu)
     {
       BasicBlock *block = it->second;
       std::uint16_t addr = block->firstAddress;
+
       bool foundIndirectJump = false;
       while (addr <= block->lastAddress)
       {
-        if (alu.flash.Read(addr) == 0x73)
+        if (alu.flash.Read(addr) == IndirectJumpOpcode)
         {
           foundIndirectJump = true;
         }      
@@ -169,18 +171,28 @@ void InstructionCoverage::Initialize(Alu &alu)
       }
       if (foundIndirectJump)
       {
-        BasicBlock *refBlock;
+        BasicBlock *refBlock = block;
+        std::vector<BasicBlock*> blocks;
 
-        refBlock = basicBlocks[refBlock->inEdges[0]];
-
-        // Calculate exit constraints of referencing block
-        std::uint16_t addr = refBlock->firstAddress;
-        RegisterConstraints c;
-        while (addr <= refBlock->lastAddress)
+        while (refBlock->inEdges.size() == 1)
         {
-          alu.UpdateConstraints(c, addr, block->firstAddress);
-          std::set<std::uint16_t> next = alu.GetNextAddresses(addr);
-          addr = *(next.begin());
+          blocks.push_back(basicBlocks[refBlock->inEdges[0]]);
+          refBlock = basicBlocks[refBlock->inEdges[0]];
+        }
+
+        RegisterConstraints c;
+
+        // Calculate exit constraints of referencing chain of blocks
+        for (int i = blocks.size() - 1; i >= 0; i--)
+        {
+          std::uint16_t addr = blocks[i]->firstAddress;
+
+          while (addr <= blocks[i]->lastAddress && alu.flash.Read(addr) != IndirectJumpOpcode)
+          {
+            alu.UpdateConstraints(c, addr, i?blocks[i-1]->firstAddress:block->firstAddress);
+            std::set<std::uint16_t> next = alu.GetNextAddresses(addr);
+            addr = *(next.begin());
+          }
         }
 
         // Using entry constraints to block using indirect jump, calculate constraints at call site

@@ -101,8 +101,13 @@ void InstructionCoverage::Initialize(Alu &alu)
           if (reachable[*i])
           {
             BasicBlock *referencedBlock = basicBlocks[reachable[*i]];
+
+            // If the jump destination is the first address of a block,
+            // we just need to add the edges.
             if (*i == referencedBlock->firstAddress)
             {
+              currentBlock->outEdges.insert(referencedBlock->number);
+              referencedBlock->inEdges.insert(currentBlock->number);
               continue;
             }
 

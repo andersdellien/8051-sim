@@ -362,9 +362,22 @@ void CJNEHelper::Helper(std::uint8_t operand1, std::uint8_t operand2) const
   }
 }
 
-bool CJNEHelper::IsJump() const
+bool CJNEHelper::IsJump(std::uint16_t address) const
 {
-  return true;
+  std::int8_t reladdr = alu.flash.Read(address + 2);
+
+  // If the relative address is zero, we 'jump' to the following instruction.
+  // This is not a jump from a control flow point of view, so we need
+  // to check the relative address to determine whether to return true or false.
+
+  if (reladdr)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 std::set<std::uint16_t> CJNEHelper::GetNextAddresses(std::uint16_t address) const
@@ -696,7 +709,7 @@ void DJNZRegister::Execute() const
   }
 }
 
-bool DJNZRegister::IsJump() const
+bool DJNZRegister::IsJump(std::uint16_t address) const
 {
   return true;
 }
@@ -934,7 +947,7 @@ std::set<std::uint16_t> CondJump::GetNextAddresses(std::uint16_t address) const
   return {(std::uint16_t) (address + 1 + operands + relAddr), (std::uint16_t) (address + 1 + operands)};
 }
 
-bool CondJump::IsJump() const
+bool CondJump::IsJump(std::uint16_t address) const
 {
   return true;
 }
@@ -1023,7 +1036,7 @@ std::string JMP_73::Disassemble(std::uint16_t address) const
   return "JMP @A+DPTR";
 }
 
-bool JMP_73::IsJump() const
+bool JMP_73::IsJump(std::uint16_t address) const
 {
   return true;
 }
@@ -1178,7 +1191,7 @@ void LCALL_12::Execute() const
   alu.SetPC(low + 256 * high);
 }
 
-bool LCALL_12::IsJump() const
+bool LCALL_12::IsJump(std::uint16_t address) const
 {
   return true;
 }
@@ -1209,7 +1222,7 @@ void LJMP_2::Execute() const
   alu.SetPC(256 * alu.flash.Read(alu.GetPC() + 1) + alu.flash.Read(alu.GetPC() + 2));
 }
 
-bool LJMP_2::IsJump() const
+bool LJMP_2::IsJump(std::uint16_t address) const
 {
   return true;
 }
@@ -2044,7 +2057,7 @@ void RET_22::Execute() const
   alu.SetSP(sp - 2);
 }
 
-bool RET_22::IsJump() const
+bool RET_22::IsJump(std::uint16_t address) const
 {
   return true;
 }
@@ -2071,7 +2084,7 @@ void RETI_32::Execute() const
   alu.SetSP(sp - 2);
 }
 
-bool RETI_32::IsJump() const
+bool RETI_32::IsJump(std::uint16_t address) const
 {
   return true;
 }
@@ -2228,7 +2241,7 @@ void SJMP_80::Execute() const
   alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
 }
 
-bool SJMP_80::IsJump() const
+bool SJMP_80::IsJump(std::uint16_t address) const
 {
   return true;
 }

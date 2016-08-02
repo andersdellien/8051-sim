@@ -248,7 +248,7 @@ bool Alu::IsJump(std::uint16_t address)
   }
   else
   {
-    return instructionSet[opcode]->IsJump();
+    return instructionSet[opcode]->IsJump(address);
   }
 }
 

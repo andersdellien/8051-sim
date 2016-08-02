@@ -43,7 +43,7 @@ class LJMP_2: public Instruction
   public:
     LJMP_2(Alu&);
     std::string Disassemble(std::uint16_t address) const;
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     void Execute() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
@@ -107,7 +107,7 @@ class CondJump: public Instruction
 {
   public:
     CondJump(Alu&, std::uint8_t opcode);
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
@@ -132,7 +132,7 @@ class LCALL_12: public Instruction
   public:
     LCALL_12(Alu&);
     std::string Disassemble(std::uint16_t address) const;
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     void Execute() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
@@ -238,7 +238,7 @@ class RET_22: public Instruction
     RET_22(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
@@ -303,7 +303,7 @@ class RETI_32: public Instruction
     RETI_32(Alu&);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
@@ -431,7 +431,7 @@ class JMP_73: public Instruction
   public:
     JMP_73(Alu&);
     std::string Disassemble(std::uint16_t address) const;
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     void Execute() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
@@ -483,7 +483,7 @@ class SJMP_80: public Instruction
   public:
     SJMP_80(Alu&);
     std::string Disassemble(std::uint16_t address) const;
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     void Execute() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
@@ -690,7 +690,7 @@ class CJNEHelper: public Instruction
   public:
     CJNEHelper(Alu&, std::uint8_t opcode);
     void Helper(std::uint8_t operand1, std::uint8_t operand2) const;
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };
 
@@ -840,7 +840,7 @@ class DJNZRegister: public Instruction
   public:
     DJNZRegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
-    bool IsJump() const;
+    bool IsJump(std::uint16_t address) const;
     void Execute() const;
     std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
 };

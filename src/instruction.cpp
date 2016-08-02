@@ -81,7 +81,7 @@ void Instruction::IncPC() const
   alu.SetPC(alu.GetPC() + 1 + operands);
 }
 
-bool Instruction::IsJump() const
+bool Instruction::IsJump(std::uint16_t address) const
 {
   return false;
 }

@@ -20,7 +20,6 @@
 #define _INSTRUCTION_COVERAGE_HPP
 
 #include <map>
-#include <set>
 #include <vector>
 
 #include "alu.hpp"
@@ -32,7 +31,7 @@ class BasicBlock
     BasicBlock(int num, std::uint16_t address);
     int number;
     std::uint16_t firstAddress, lastAddress;
-    std::set<int> outEdges, inEdges;
+    std::vector<int> outEdges, inEdges;
     RegisterConstraints c;
 };
 

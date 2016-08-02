@@ -106,8 +106,8 @@ void InstructionCoverage::Initialize(Alu &alu)
             // we just need to add the edges.
             if (*i == referencedBlock->firstAddress)
             {
-              currentBlock->outEdges.insert(referencedBlock->number);
-              referencedBlock->inEdges.insert(currentBlock->number);
+              currentBlock->outEdges.push_back(referencedBlock->number);
+              referencedBlock->inEdges.push_back(currentBlock->number);
               continue;
             }
 
@@ -128,8 +128,8 @@ void InstructionCoverage::Initialize(Alu &alu)
             referencedBlock->lastAddress = *i - 1;
             newBlock->outEdges = referencedBlock->outEdges;
             referencedBlock->outEdges.erase(referencedBlock->outEdges.begin(), referencedBlock->outEdges.end());
-            newBlock->inEdges.insert(referencedBlock->number);
-            referencedBlock->outEdges.insert(newBlock->number);
+            newBlock->inEdges.push_back(referencedBlock->number);
+            referencedBlock->outEdges.push_back(newBlock->number);
           }
           else
           {
@@ -137,8 +137,8 @@ void InstructionCoverage::Initialize(Alu &alu)
             reachable[*i] = newBlock->number;
 
             basicBlocks[newBlock->number] = newBlock;
-            currentBlock->outEdges.insert(newBlock->number);
-            newBlock->inEdges.insert(currentBlock->number);
+            currentBlock->outEdges.push_back(newBlock->number);
+            newBlock->inEdges.push_back(currentBlock->number);
             waiting.insert(std::make_pair(newBlock, *i));
           }
         }
@@ -146,8 +146,8 @@ void InstructionCoverage::Initialize(Alu &alu)
       else if (isVisited)
       {
         BasicBlock *referencedBlock = basicBlocks[reachable[address]];
-        currentBlock->outEdges.insert(referencedBlock->number);
-        referencedBlock->inEdges.insert(currentBlock->number);
+        currentBlock->outEdges.push_back(referencedBlock->number);
+        referencedBlock->inEdges.push_back(currentBlock->number);
       }
     }
 
@@ -170,10 +170,9 @@ void InstructionCoverage::Initialize(Alu &alu)
       if (foundIndirectJump)
       {
         BasicBlock *refBlock;
-        for (std::set<int>::iterator i = block->inEdges.begin(); i != block->inEdges.end(); i++)
-        {
-          refBlock = basicBlocks[*i];
-        }
+
+        refBlock = basicBlocks[refBlock->inEdges[0]];
+
         // Calculate exit constraints of referencing block
         std::uint16_t addr = refBlock->firstAddress;
         RegisterConstraints c;
@@ -212,8 +211,8 @@ void InstructionCoverage::Initialize(Alu &alu)
             BasicBlock *newBlock = new BasicBlock(++basicBlockCount, addr);
             reachable[addr] = newBlock->number;
             basicBlocks[newBlock->number] = newBlock;
-            block->outEdges.insert(newBlock->number);
-            newBlock->inEdges.insert(block->number);
+            block->outEdges.push_back(newBlock->number);
+            newBlock->inEdges.push_back(block->number);
             waiting.insert(std::make_pair(newBlock, addr));
           }
         }

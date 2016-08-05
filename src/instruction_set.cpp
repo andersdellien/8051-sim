@@ -19,6 +19,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 #include "instruction.hpp"
 #include "instruction_set.hpp"
 #include "symbol_table.hpp"
@@ -476,6 +477,22 @@ std::string CJNERegister::Disassemble(std::uint16_t address) const
 void CJNERegister::Execute() const
 {
   Helper(alu.GetReg(opcode & RegisterMask), alu.flash.Read(alu.GetPC() + 1));
+}
+
+void CJNERegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
+{
+  std::uint8_t reg = opcode & RegisterMask;
+  std::int8_t reladdr = alu.flash.Read(address + 2);
+  std::int8_t operand = alu.flash.Read(address + 1);
+
+  // If relative address is zero, the only effect of the instruction is setting the C flag
+  if (reladdr == 0 && c.r[reg].type == ConstraintType::None)
+  {
+    c.c.type = ConstraintType::RegisterInterval;
+    c.c.reg = reg;
+    c.c.low = 0;
+    c.c.high = operand - 1;
+  }
 }
 
 CLR_C2::CLR_C2(Alu &a) : Instruction(a)
@@ -1092,32 +1109,48 @@ void JB::Execute() const
   }
 }
 
-constexpr int JNCOpcode = 0x50;
-
 void JC::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  if (opcode == JNCOpcode)
-  {
-    if (c.c.type == ConstraintType::RegisterInterval)
-    {
-      std::int8_t reladdr = alu.flash.Read(address + 1);
+  std::uint16_t carrySetDestination;
+  std::uint16_t carryClearDestination;
+  std::int8_t reladdr = alu.flash.Read(address + 1);
 
-      c.c.type = ConstraintType::None;
-      if (address + 1 + operands + reladdr == destination)
-      {
-        if (c.c.high == 0xff)
-        {
-          c.r[c.c.reg].type = ConstraintType::Interval;
-          c.r[c.c.reg].low = 0;
-          c.r[c.c.reg].high = c.c.low - 1;
-        }
-      }
-      else if (address + 1 + operands == destination)
+  if (opcode & InvertFlag)
+  {
+    carryClearDestination = address + 1 + operands + reladdr;
+    carrySetDestination = address + 1 + operands;
+  }
+  else
+  {
+    carrySetDestination = address + 1 + operands + reladdr;
+    carryClearDestination = address + 1 + operands;
+  }
+
+  if (c.c.type == ConstraintType::RegisterInterval)
+  {
+    c.c.type = ConstraintType::None;
+    if (destination == carryClearDestination)
+    {
+      // As we jump on C not set, we need to invert the constraint
+      // So 0 -> x becomes x+1 -> ff, and x -> ff becomes 0 -> x-1
+      if (c.c.high == 0xff)
       {
         c.r[c.c.reg].type = ConstraintType::Interval;
-        c.r[c.c.reg].low = c.c.low;
-        c.r[c.c.reg].high = c.c.high;
+        c.r[c.c.reg].low = 0;
+        c.r[c.c.reg].high = c.c.low - 1;
       }
+      else if (c.c.low == 0x00)
+      {
+        c.r[c.c.reg].type = ConstraintType::Interval;
+        c.r[c.c.reg].low = c.c.high + 1;
+        c.r[c.c.reg].high = 0xff;
+      }
+    }
+    else if (destination == carrySetDestination)
+    {
+      c.r[c.c.reg].type = ConstraintType::Interval;
+      c.r[c.c.reg].low = c.c.low;
+      c.r[c.c.reg].high = c.c.high;
     }  
   }
 }

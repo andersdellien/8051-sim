@@ -732,6 +732,7 @@ class CJNERegister: public CJNEHelper
     CJNERegister(Alu&, std::uint8_t opcode);
     std::string Disassemble(std::uint16_t address) const;
     void Execute() const;
+    void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
 };
 
 class PUSH_C0: public Instruction

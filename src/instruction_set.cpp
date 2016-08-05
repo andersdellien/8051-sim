@@ -132,25 +132,25 @@ void AddImmediate::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
   {
     c.c.type = ConstraintType::None;
   }
-  else if (c.r[8].type == ConstraintType::Alias)
+  else if (c.r[RegisterA].type == ConstraintType::Alias)
   {
     c.c.type = ConstraintType::RegisterInterval;
-    c.c.reg = c.r[8].reg;
+    c.c.reg = c.r[RegisterA].reg;
     c.c.low = 0xff - alu.flash.Read(address+1) + 1;    
     c.c.high = 0xff;
   }
-  if (c.r[8].type == ConstraintType::Interval)
+  if (c.r[RegisterA].type == ConstraintType::Interval)
   {
-    c.r[8].low += alu.flash.Read(address + 1);
-    c.r[8].high += alu.flash.Read(address + 1);
-    if (c.r[8].low > 255 || c.r[8].high > 255)
+    c.r[RegisterA].low += alu.flash.Read(address + 1);
+    c.r[RegisterA].high += alu.flash.Read(address + 1);
+    if (c.r[RegisterA].low > 255 || c.r[RegisterA].high > 255)
     {
-      c.r[8].type = ConstraintType::None;
+      c.r[RegisterA].type = ConstraintType::None;
     }
   }
   else
   {
-    c.r[8].type = ConstraintType::None;
+    c.r[RegisterA].type = ConstraintType::None;
   }
 }
 
@@ -540,9 +540,9 @@ void CLR_E4::Execute(void) const
 
 void CLR_E4::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  c.r[8].type = ConstraintType::Interval;
-  c.r[8].low = 0;
-  c.r[8].high = 0;
+  c.r[RegisterA].type = ConstraintType::Interval;
+  c.r[RegisterA].low = 0;
+  c.r[RegisterA].high = 0;
 }
 
 CPL_F4::CPL_F4(Alu &a) : Instruction(a)
@@ -1454,10 +1454,10 @@ void MovRegisterA::Execute() const
 
 void MovRegisterA::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  if (c.r[8].type == ConstraintType::None)
+  if (c.r[RegisterA].type == ConstraintType::None)
   {
-    c.r[8].type = ConstraintType::Alias;
-    c.r[8].reg = opcode & RegisterMask;
+    c.r[RegisterA].type = ConstraintType::Alias;
+    c.r[RegisterA].reg = opcode & RegisterMask;
   }
 }
 
@@ -1565,14 +1565,14 @@ void MovARegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
   std::uint8_t reg = opcode & RegisterMask;
   if (c.r[reg].type == ConstraintType::Interval)
   {
-    c.r[8].type = ConstraintType::Interval;
-    c.r[8].low = c.r[reg].low;
-    c.r[8].high = c.r[reg].high;
+    c.r[RegisterA].type = ConstraintType::Interval;
+    c.r[RegisterA].low = c.r[reg].low;
+    c.r[RegisterA].high = c.r[reg].high;
   }
   else
   {
-    c.r[8].type = ConstraintType::Alias;
-    c.r[8].reg = opcode & RegisterMask;
+    c.r[RegisterA].type = ConstraintType::Alias;
+    c.r[RegisterA].reg = opcode & RegisterMask;
   }
 }
 
@@ -1613,11 +1613,11 @@ void MOV_F5::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, st
 
   if (addr == alu.sfrDPL.address)
   {
-    c.dpl = c.r[8];
+    c.dpl = c.r[RegisterA];
   }
   else if (addr == alu.sfrDPH.address)
   {
-    c.dph = c.r[8];
+    c.dph = c.r[RegisterA];
   }
 }
 
@@ -1723,11 +1723,11 @@ void MOVC_83::Execute() const
 
 void MOVC_83::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  if (c.r[8].type == ConstraintType::Interval)
+  if (c.r[RegisterA].type == ConstraintType::Interval)
   {
-    c.r[8].type = ConstraintType::Memory;
-    c.r[8].low += address + 1;
-    c.r[8].high += address + 1;
+    c.r[RegisterA].type = ConstraintType::Memory;
+    c.r[RegisterA].low += address + 1;
+    c.r[RegisterA].high += address + 1;
   }
 }
 

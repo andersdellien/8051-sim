@@ -45,7 +45,7 @@ void Constraint::Print(std::string name)
 
 void RegisterConstraints::Print()
 {
-  r[8].Print("A");
+  r[RegisterA].Print("A");
   dpl.Print("DPL");
   dph.Print("DPH");
   c.Print("C");
@@ -93,7 +93,7 @@ std::set<std::uint16_t> Instruction::GetNextAddresses(std::uint16_t address) con
 
 void Instruction::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  c.r[8].type = ConstraintType::None;
+  c.r[RegisterA].type = ConstraintType::None;
   c.c.type = ConstraintType::None;
   c.dpl.type = ConstraintType::None;
   c.dph.type = ConstraintType::None;

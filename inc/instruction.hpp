@@ -27,6 +27,8 @@
 
 enum class ConstraintType {None, Alias, Interval, RegisterInterval, Memory};
 
+constexpr int RegisterA = 8;
+
 class Constraint
 {
   public:

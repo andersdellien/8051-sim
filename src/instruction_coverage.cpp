@@ -189,12 +189,6 @@ void InstructionCoverage::Initialize(Alu &alu)
 
           while (addr <= blocks[i]->lastAddress && alu.flash.Read(addr) != IndirectJumpOpcode)
           {
-
-if (addr >= 0x10df && addr <= 0x1106)
-{
-std::cout  << std::hex << (int) addr << std::endl;
-c.Print();
-}
             alu.UpdateConstraints(c, addr, i?blocks[i-1]->firstAddress:block->firstAddress);
             std::set<std::uint16_t> next = alu.GetNextAddresses(addr);
             addr = *(next.begin());
@@ -205,12 +199,6 @@ c.Print();
         addr = block->firstAddress;
         while (addr <= block->lastAddress)
         {
-
-if (addr >= 0x10df && addr <= 0x1106)
-{
-std::cout  << std::hex << (int) addr << std::endl;
-c.Print();
-}
           if (alu.IsJump(addr))
           {
             break;
@@ -219,9 +207,6 @@ c.Print();
           std::set<std::uint16_t> next = alu.GetNextAddresses(addr);
           addr = *(next.begin());
         }
-
-std::cout << "evil block at " << std::hex << (int) block->firstAddress << std::endl;
-c.Print();
 
         if (c.dpl.type == ConstraintType::Memory && c.dph.type == ConstraintType::Memory)
         {

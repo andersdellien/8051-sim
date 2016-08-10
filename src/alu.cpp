@@ -252,7 +252,7 @@ bool Alu::IsJump(std::uint16_t address)
   }
 }
 
-std::set<std::uint16_t> Alu::GetNextAddresses(std::uint16_t address)
+std::vector<std::uint16_t> Alu::GetNextAddresses(std::uint16_t address)
 {
   const std::uint8_t opcode = flash.Read(address);
 

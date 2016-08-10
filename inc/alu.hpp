@@ -42,7 +42,7 @@ class Alu : public Block
     void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);
     std::uint8_t GetOperands(std::uint16_t address);
     bool IsJump(std::uint16_t address);
-    std::set<std::uint16_t> GetNextAddresses(std::uint16_t address);
+    std::vector<std::uint16_t> GetNextAddresses(std::uint16_t address);
     Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t iramSize, std::uint16_t flashSize);
     void Reset();
     std::uint16_t GetPC();

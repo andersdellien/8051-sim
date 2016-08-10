@@ -18,8 +18,8 @@
 
 #include <iostream>
 #include <map>
-#include <set>
 #include <stdexcept>
+#include <vector>
 
 #include "alu.hpp"
 #include "instruction_coverage.hpp"
@@ -76,8 +76,8 @@ void InstructionCoverage::Initialize(Alu &alu)
         }
         else
         {
-          std::set<uint16_t> nextAddresses = alu.GetNextAddresses(address);
-          address = *(nextAddresses.begin());
+          std::vector<uint16_t> nextAddresses = alu.GetNextAddresses(address);
+          address = nextAddresses[0];
 
           if (reachable[address])
           {
@@ -94,18 +94,18 @@ void InstructionCoverage::Initialize(Alu &alu)
 
       if (isJump)
       {
-        std::set<uint16_t> nextAddresses = alu.GetNextAddresses(address);
+        std::vector<uint16_t> nextAddresses = alu.GetNextAddresses(address);
 
-        for (std::set<std::uint16_t>::iterator i = nextAddresses.begin(); i != nextAddresses.end(); i++)
+        for (uint16_t next : nextAddresses)
         {
           // Already visited -> if instruction is not first address in basic block, split it
-          if (reachable[*i])
+          if (reachable[next])
           {
-            BasicBlock *referencedBlock = basicBlocks[reachable[*i]];
+            BasicBlock *referencedBlock = basicBlocks[reachable[next]];
 
             // If the jump destination is the first address of a block,
             // we just need to add the edges.
-            if (*i == referencedBlock->firstAddress)
+            if (next == referencedBlock->firstAddress)
             {
               currentBlock->outEdges.push_back(referencedBlock->number);
               referencedBlock->inEdges.push_back(currentBlock->number);
@@ -114,9 +114,9 @@ void InstructionCoverage::Initialize(Alu &alu)
 
             // New block starts with referenced address
             // Original block is shortened
-            BasicBlock *newBlock = new BasicBlock(++basicBlockCount, *i);
+            BasicBlock *newBlock = new BasicBlock(++basicBlockCount, next);
 
-            for (int addr = *i; addr <= referencedBlock->lastAddress; addr++)
+            for (int addr = next; addr <= referencedBlock->lastAddress; addr++)
             {
               if (reachable[addr] == referencedBlock->number)
               {
@@ -126,7 +126,7 @@ void InstructionCoverage::Initialize(Alu &alu)
             basicBlocks[newBlock->number] = newBlock;
             newBlock->lastAddress = referencedBlock->lastAddress;
 
-            referencedBlock->lastAddress = *i - 1;
+            referencedBlock->lastAddress = next - 1;
             newBlock->outEdges = referencedBlock->outEdges;
             referencedBlock->outEdges.erase(referencedBlock->outEdges.begin(), referencedBlock->outEdges.end());
             newBlock->inEdges.push_back(referencedBlock->number);
@@ -134,13 +134,13 @@ void InstructionCoverage::Initialize(Alu &alu)
           }
           else
           {
-            BasicBlock *newBlock = new BasicBlock(++basicBlockCount, *i);
-            reachable[*i] = newBlock->number;
+            BasicBlock *newBlock = new BasicBlock(++basicBlockCount, next);
+            reachable[next] = newBlock->number;
 
             basicBlocks[newBlock->number] = newBlock;
             currentBlock->outEdges.push_back(newBlock->number);
             newBlock->inEdges.push_back(currentBlock->number);
-            waiting.insert(std::make_pair(newBlock, *i));
+            waiting.insert(std::make_pair(newBlock, next));
           }
         }
       }
@@ -166,8 +166,8 @@ void InstructionCoverage::Initialize(Alu &alu)
         }      
         if (alu.IsJump(addr))
           break;
-        std::set<std::uint16_t> next = alu.GetNextAddresses(addr);
-        addr = *(next.begin());
+        std::vector<std::uint16_t> next = alu.GetNextAddresses(addr);
+        addr = next[0];
       }
       if (foundIndirectJump)
       {
@@ -190,8 +190,8 @@ void InstructionCoverage::Initialize(Alu &alu)
           while (addr <= blocks[i]->lastAddress && alu.flash.Read(addr) != IndirectJumpOpcode)
           {
             alu.UpdateConstraints(c, addr, i?blocks[i-1]->firstAddress:block->firstAddress);
-            std::set<std::uint16_t> next = alu.GetNextAddresses(addr);
-            addr = *(next.begin());
+            std::vector<std::uint16_t> next = alu.GetNextAddresses(addr);
+            addr = next[0];
           }
         }
 
@@ -204,8 +204,8 @@ void InstructionCoverage::Initialize(Alu &alu)
             break;
           }
           alu.UpdateConstraints(c, addr, block->firstAddress);
-          std::set<std::uint16_t> next = alu.GetNextAddresses(addr);
-          addr = *(next.begin());
+          std::vector<std::uint16_t> next = alu.GetNextAddresses(addr);
+          addr = next[0];
         }
 
         if (c.dpl.type == ConstraintType::Memory && c.dph.type == ConstraintType::Memory)

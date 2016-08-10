@@ -18,9 +18,9 @@
 
 #include <cstdint>
 #include <iostream>
-#include <set>
 #include <stdexcept>
 #include <sstream>
+#include <vector>
 #include "instruction.hpp"
 
 void Constraint::Print(std::string name)
@@ -86,9 +86,9 @@ bool Instruction::IsJump(std::uint16_t address) const
   return false;
 }
 
-std::set<std::uint16_t> Instruction::GetNextAddresses(std::uint16_t address) const
+std::vector<std::uint16_t> Instruction::GetNextAddresses(std::uint16_t address) const
 {
-  return {(std::uint16_t) (address + 1 + operands)};
+  return {static_cast<std::uint16_t>(address + 1 + operands)};
 }
 
 void Instruction::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)

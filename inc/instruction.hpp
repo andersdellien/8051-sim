@@ -20,7 +20,7 @@
 #define _INSTRUCTION_HPP
 
 #include <cstdint>
-#include <set>
+#include <vector>
 #include <string>
 #include "memory.hpp"
 #include "alu.hpp"
@@ -54,7 +54,7 @@ class Instruction
     Instruction(Alu&, std::uint8_t opcode);
     Instruction(Alu&);
     virtual bool IsJump(std::uint16_t address) const;
-    virtual std::set<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
+    virtual std::vector<std::uint16_t> GetNextAddresses(std::uint16_t address) const;
     virtual std::string Disassemble(std::uint16_t address) const = 0;
     virtual void Execute() const;
     virtual void UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination);

@@ -130,21 +130,27 @@ std::string AddImmediate::Disassemble(std::uint16_t address) const
 
 void AddImmediate::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
+  std::uint8_t operand = alu.flash.Read(address + 1);
+  std::uint8_t aliasReg = c.r[RegisterA].reg;
+
   if (carry)
   {
     c.c.type = ConstraintType::None;
+    c.nc.type = ConstraintType::None;
   }
   else if (c.r[RegisterA].type == ConstraintType::Alias)
   {
-    c.c.type = ConstraintType::RegisterInterval;
-    c.c.reg = c.r[RegisterA].reg;
-    c.c.low = 0xff - alu.flash.Read(address+1) + 1;    
+    c.c.type = c.nc.type = ConstraintType::RegisterInterval;
+    c.c.reg = c.nc.reg = aliasReg;
+    c.c.low = 0xff - operand + 1;
     c.c.high = 0xff;
+    c.nc.high = 0xff - operand;
+    c.nc.low = 0x00;
   }
-  if (c.r[RegisterA].type == ConstraintType::Interval)
+  else if (c.r[RegisterA].type == ConstraintType::Interval)
   {
-    c.r[RegisterA].low += alu.flash.Read(address + 1);
-    c.r[RegisterA].high += alu.flash.Read(address + 1);
+    c.r[RegisterA].low += operand;
+    c.r[RegisterA].high += operand;
     if (c.r[RegisterA].low > 255 || c.r[RegisterA].high > 255)
     {
       c.r[RegisterA].type = ConstraintType::None;
@@ -488,12 +494,31 @@ void CJNERegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
   std::int8_t operand = alu.flash.Read(address + 1);
 
   // If relative address is zero, the only effect of the instruction is setting the C flag
-  if (reladdr == 0 && c.r[reg].type == ConstraintType::None)
+  if (reladdr == 0)
   {
-    c.c.type = ConstraintType::RegisterInterval;
-    c.c.reg = reg;
-    c.c.low = 0;
-    c.c.high = operand - 1;
+    if (c.r[reg].type == ConstraintType::None)
+    {
+      c.c.type = c.nc.type = ConstraintType::RegisterInterval;
+      c.c.reg = c.nc.reg = reg;
+      c.c.low = 0;
+      c.c.high = operand - 1;
+      c.nc.low = operand;
+      c.nc.high = 0xff;
+    }
+    else if (c.r[reg].type == ConstraintType::Interval &&
+             c.r[reg].low < operand && c.r[reg].high >= operand)
+    {
+      c.c.type = c.nc.type = ConstraintType::RegisterInterval;
+      c.c.reg = c.nc.reg = reg;
+      c.c.low = c.r[reg].low;
+      c.c.high = operand - 1;
+      c.nc.low = operand;
+      c.nc.high = c.r[reg].high;
+    }
+    else
+    {
+      c.c.type = c.nc.type = ConstraintType::None;
+    }
   }
 }
 
@@ -1128,32 +1153,17 @@ void JC::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::u
     carryClearDestination = address + 1 + operands;
   }
 
-  if (c.c.type == ConstraintType::RegisterInterval)
+  if (c.c.type == ConstraintType::RegisterInterval && destination == carrySetDestination)
   {
-    c.c.type = ConstraintType::None;
-    if (destination == carryClearDestination)
-    {
-      // As we jump on C not set, we need to invert the constraint
-      // So 0 -> x becomes x+1 -> ff, and x -> ff becomes 0 -> x-1
-      if (c.c.high == 0xff)
-      {
-        c.r[c.c.reg].type = ConstraintType::Interval;
-        c.r[c.c.reg].low = 0;
-        c.r[c.c.reg].high = c.c.low - 1;
-      }
-      else if (c.c.low == 0x00)
-      {
-        c.r[c.c.reg].type = ConstraintType::Interval;
-        c.r[c.c.reg].low = c.c.high + 1;
-        c.r[c.c.reg].high = 0xff;
-      }
-    }
-    else if (destination == carrySetDestination)
-    {
-      c.r[c.c.reg].type = ConstraintType::Interval;
-      c.r[c.c.reg].low = c.c.low;
-      c.r[c.c.reg].high = c.c.high;
-    }  
+    c.r[c.c.reg].type = ConstraintType::Interval;
+    c.r[c.c.reg].low = c.c.low;
+    c.r[c.c.reg].high = c.c.high;
+  }
+  else if (c.nc.type == ConstraintType::RegisterInterval && destination == carryClearDestination)
+  {
+    c.r[c.nc.reg].type = ConstraintType::Interval;
+    c.r[c.nc.reg].low = c.nc.low;
+    c.r[c.nc.reg].high = c.nc.high;
   }
 }
 

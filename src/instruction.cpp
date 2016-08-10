@@ -43,12 +43,31 @@ void Constraint::Print(std::string name)
   }
 }
 
+void RegisterConstraints::Clear()
+{
+  r[RegisterA].type = ConstraintType::None;
+  c.type = ConstraintType::None;
+  nc.type = ConstraintType::None;
+  dpl.type = ConstraintType::None;
+  dph.type = ConstraintType::None;
+  for (int i = 0; i < 8; i++)
+  {
+    r[i].type = ConstraintType::None;
+  }
+}
+
+RegisterConstraints::RegisterConstraints()
+{
+  Clear();
+}
+
 void RegisterConstraints::Print()
 {
   r[RegisterA].Print("A");
   dpl.Print("DPL");
   dph.Print("DPH");
   c.Print("C");
+  nc.Print("NC");
   for (int i = 0; i < 8; i++)
   {
     std::stringstream ss;
@@ -93,12 +112,5 @@ std::vector<std::uint16_t> Instruction::GetNextAddresses(std::uint16_t address) 
 
 void Instruction::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  c.r[RegisterA].type = ConstraintType::None;
-  c.c.type = ConstraintType::None;
-  c.dpl.type = ConstraintType::None;
-  c.dph.type = ConstraintType::None;
-  for (int i = 0; i < 8; i++)
-  {
-    c.r[i].type = ConstraintType::None;
-  }
+  c.Clear();
 }

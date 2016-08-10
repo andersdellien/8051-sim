@@ -40,8 +40,10 @@ class Constraint
 class RegisterConstraints
 {
   public:
-    Constraint dpl, dph, r[9], c; // 'A' is register number 8
+    Constraint dpl, dph, r[9], c, nc; // 'A' is register number 8
     void Print();
+    void Clear();
+    RegisterConstraints();
 };
 
 class Instruction

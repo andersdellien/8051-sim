@@ -1500,11 +1500,8 @@ void MovRegisterA::Execute() const
 
 void MovRegisterA::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  if (c.r[RegisterA].type == ConstraintType::None)
-  {
-    c.r[RegisterA].type = ConstraintType::Alias;
-    c.r[RegisterA].reg = opcode & RegisterMask;
-  }
+  c.r[RegisterA].type = ConstraintType::Alias;
+  c.r[RegisterA].reg = opcode & RegisterMask;
 }
 
 MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)

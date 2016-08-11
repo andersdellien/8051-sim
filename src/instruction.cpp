@@ -19,40 +19,48 @@
 #include <cstdint>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 #include <sstream>
 #include <vector>
 #include "instruction.hpp"
 
 void Constraint::Print(std::string name)
 {
+  if (type == ConstraintType::None)
+  {
+    return;
+  }
+
+  std::cout << name << " ";
+
   if (type == ConstraintType::Memory)
   {
-    std::cout << name << " Memory: " << low << " " << high << std::endl;
+    std::cout << "Memory: " << low << " " << high << std::endl;
   }
   else if (type == ConstraintType::Interval)
   {
-    std::cout << name << " Interval: " << low << " " << high << std::endl;
+    std::cout << "Interval: " << low << " " << high << std::endl;
   }
   else if (type == ConstraintType::RegisterInterval)
   {
-    std::cout << name << " Register " << reg << " Interval: " << low << " " << high << std::endl;
+    std::cout << "Register " << reg << " Interval: " << low << " " << high << std::endl;
   }
   else if (type == ConstraintType::Alias)
   {
-    std::cout << name << " Alias " << reg << std::endl;
+    std::cout << "Alias " << reg << std::endl;
   }
+}
+
+Constraint::Constraint()
+{
+  type = ConstraintType::None;
 }
 
 void RegisterConstraints::Clear()
 {
-  r[RegisterA].type = ConstraintType::None;
-  c.type = ConstraintType::None;
-  nc.type = ConstraintType::None;
-  dpl.type = ConstraintType::None;
-  dph.type = ConstraintType::None;
-  for (int i = 0; i < 8; i++)
+  for (int i = 0; i < NumConstraints; i++)
   {
-    r[i].type = ConstraintType::None;
+    constraintRef[i] = i;
   }
 }
 
@@ -63,17 +71,15 @@ RegisterConstraints::RegisterConstraints()
 
 void RegisterConstraints::Print()
 {
-  r[RegisterA].Print("A");
-  dpl.Print("DPL");
-  dph.Print("DPH");
-  c.Print("C");
-  nc.Print("NC");
-  for (int i = 0; i < 8; i++)
+  for (int i = 0; i < NumConstraints; i++)
   {
-    std::stringstream ss;
-    ss << "R" << i;
-    r[i].Print(ss.str());
+    constraints[constraintRef[i]].Print(constraintNames[i]);
   }
+}
+
+Constraint& RegisterConstraints::GetConstraint(enum Constraints c)
+{
+  return constraints[constraintRef[c]];
 }
 
 Instruction::Instruction(Alu& a, std::uint8_t o) : alu(a), opcode(o)

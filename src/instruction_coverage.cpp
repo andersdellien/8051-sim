@@ -208,12 +208,12 @@ void InstructionCoverage::Initialize(Alu &alu)
           addr = next[0];
         }
 
-        if (c.dpl.type == ConstraintType::Memory && c.dph.type == ConstraintType::Memory)
+        if (c.GetConstraint(DPL).type == ConstraintType::Memory && c.GetConstraint(DPH).type == ConstraintType::Memory)
         {
           // Add the switch labels as destinations (if not already visited)
-          for (int i = c.dpl.low; i <= c.dpl.high; i++)
+          for (int i = c.GetConstraint(DPL).low; i <= c.GetConstraint(DPL).high; i++)
           {
-            addr = alu.flash.Read(i) + alu.flash.Read(c.dph.low + i - c.dpl.low) * 256;
+            addr = alu.flash.Read(i) + alu.flash.Read(c.GetConstraint(DPH).low + i - c.GetConstraint(DPL).low) * 256;
 
             if (reachable[addr])
             {

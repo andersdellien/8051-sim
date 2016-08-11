@@ -131,48 +131,51 @@ std::string AddImmediate::Disassemble(std::uint16_t address) const
 void AddImmediate::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
   std::uint8_t operand = alu.flash.Read(address + 1);
-  std::uint8_t aliasReg = c.r[RegisterA].reg;
+  Constraint &aConstraint = c.GetConstraint(RegisterA);
+  std::uint8_t aliasReg = aConstraint.reg;
+  Constraint &cConstraint = c.GetConstraint(C);
+  Constraint &ncConstraint = c.GetConstraint(NC);
 
   if (carry)
   {
-    c.c.type = ConstraintType::None;
-    c.nc.type = ConstraintType::None;
+    cConstraint.type = ConstraintType::None;
+    ncConstraint.type = ConstraintType::None;
   }
-  else if (c.r[RegisterA].type == ConstraintType::Alias)
+  else if (aConstraint.type == ConstraintType::Alias)
   {
-    c.c.type = c.nc.type = ConstraintType::RegisterInterval;
-    c.c.reg = c.nc.reg = aliasReg;
-    c.c.low = 0xff - operand + 1;
-    c.c.high = 0xff;
-    c.nc.high = 0xff - operand;
-    c.nc.low = 0x00;
+    cConstraint.type = ncConstraint.type = ConstraintType::RegisterInterval;
+    cConstraint.reg = ncConstraint.reg = aliasReg;
+    cConstraint.low = 0xff - operand + 1;
+    cConstraint.high = 0xff;
+    ncConstraint.high = 0xff - operand;
+    ncConstraint.low = 0x00;
   }
-  else if (c.r[RegisterA].type == ConstraintType::Interval)
+  else if (aConstraint.type == ConstraintType::Interval)
   {
-    if (operand >= c.r[RegisterA].low && operand <= c.r[RegisterA].high)
+    if (operand >= aConstraint.low && operand <= aConstraint.high)
     {
-      c.c.type = c.nc.type = ConstraintType::RegisterInterval;
-      c.c.reg = c.nc.reg = RegisterA;
-      c.c.low = 0xff - operand + 1;
-      c.c.high = c.r[RegisterA].high;
-      c.nc.low = c.r[RegisterA].low;
-      c.nc.high = 0xff - operand;
+      cConstraint.type = ncConstraint.type = ConstraintType::RegisterInterval;
+      cConstraint.reg = ncConstraint.reg = RegisterA;
+      cConstraint.low = 0xff - operand + 1;
+      cConstraint.high = aConstraint.high;
+      ncConstraint.low = aConstraint.low;
+      ncConstraint.high = 0xff - operand;
     }
     else
     {
-      c.c.type = ConstraintType::None;
-      c.nc.type = ConstraintType::None;
+      cConstraint.type = ConstraintType::None;
+      ncConstraint.type = ConstraintType::None;
     }
-    c.r[RegisterA].low += operand;
-    c.r[RegisterA].high += operand;
-    if (c.r[RegisterA].low > 255 || c.r[RegisterA].high > 255)
+    aConstraint.low += operand;
+    aConstraint.high += operand;
+    if (aConstraint.low > 255 || aConstraint.high > 255)
     {
-      c.r[RegisterA].type = ConstraintType::None;
+      aConstraint.type = ConstraintType::None;
     }
   }
   else
   {
-    c.r[RegisterA].type = ConstraintType::None;
+    aConstraint.type = ConstraintType::None;
   }
 }
 
@@ -506,32 +509,40 @@ void CJNERegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
   std::uint8_t reg = opcode & RegisterMask;
   std::int8_t reladdr = alu.flash.Read(address + 2);
   std::int8_t operand = alu.flash.Read(address + 1);
+  Constraint &cConstraint = c.GetConstraint(C);
+  Constraint &ncConstraint = c.GetConstraint(NC);
+  Constraint &registerConstraint = c.GetConstraint(static_cast<enum Constraints>(reg));
 
   // If relative address is zero, the only effect of the instruction is setting the C flag
   if (reladdr == 0)
   {
-    if (c.r[reg].type == ConstraintType::None)
+    if (registerConstraint.type == ConstraintType::None)
     {
-      c.c.type = c.nc.type = ConstraintType::RegisterInterval;
-      c.c.reg = c.nc.reg = reg;
-      c.c.low = 0;
-      c.c.high = operand - 1;
-      c.nc.low = operand;
-      c.nc.high = 0xff;
+      cConstraint.type = ConstraintType::RegisterInterval;
+      ncConstraint.type = ConstraintType::RegisterInterval;
+      cConstraint.reg = reg;
+      ncConstraint.reg = reg;
+      cConstraint.low = 0;
+      cConstraint.high = operand - 1;
+      ncConstraint.low = operand;
+      ncConstraint.high = 0xff;
     }
-    else if (c.r[reg].type == ConstraintType::Interval &&
-             c.r[reg].low < operand && c.r[reg].high >= operand)
+    else if (registerConstraint.type == ConstraintType::Interval &&
+             registerConstraint.low < operand && registerConstraint.high >= operand)
     {
-      c.c.type = c.nc.type = ConstraintType::RegisterInterval;
-      c.c.reg = c.nc.reg = reg;
-      c.c.low = c.r[reg].low;
-      c.c.high = operand - 1;
-      c.nc.low = operand;
-      c.nc.high = c.r[reg].high;
+      cConstraint.type = ConstraintType::RegisterInterval;
+      ncConstraint.type = ConstraintType::RegisterInterval;
+      cConstraint.reg = reg;
+      ncConstraint.reg = reg;
+      cConstraint.low = registerConstraint.low;
+      cConstraint.high = operand - 1;
+      ncConstraint.low = operand;
+      ncConstraint.high = registerConstraint.high;
     }
     else
     {
-      c.c.type = c.nc.type = ConstraintType::None;
+      cConstraint.type = ConstraintType::None;
+      ncConstraint.type = ConstraintType::None;
     }
   }
 }
@@ -598,9 +609,11 @@ void CLR_E4::Execute(void) const
 
 void CLR_E4::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  c.r[RegisterA].type = ConstraintType::Interval;
-  c.r[RegisterA].low = 0;
-  c.r[RegisterA].high = 0;
+  Constraint aConstraint = c.GetConstraint(RegisterA);
+
+  aConstraint.type = ConstraintType::Interval;
+  aConstraint.low = 0;
+  aConstraint.high = 0;
 }
 
 CPL_F4::CPL_F4(Alu &a) : Instruction(a)
@@ -1167,17 +1180,24 @@ void JC::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::u
     carryClearDestination = address + 1 + operands;
   }
 
-  if (c.c.type == ConstraintType::RegisterInterval && destination == carrySetDestination)
+  Constraint &cConstraint = c.GetConstraint(C);
+  Constraint &ncConstraint = c.GetConstraint(NC);
+
+  if (cConstraint.type == ConstraintType::RegisterInterval && destination == carrySetDestination)
   {
-    c.r[c.c.reg].type = ConstraintType::Interval;
-    c.r[c.c.reg].low = c.c.low;
-    c.r[c.c.reg].high = c.c.high;
+    Constraint& regConstraint = c.GetConstraint(static_cast<enum Constraints>(cConstraint.reg));
+
+    regConstraint.type = ConstraintType::Interval;
+    regConstraint.low = cConstraint.low;
+    regConstraint.high = cConstraint.high;
   }
-  else if (c.nc.type == ConstraintType::RegisterInterval && destination == carryClearDestination)
+  else if (ncConstraint.type == ConstraintType::RegisterInterval && destination == carryClearDestination)
   {
-    c.r[c.nc.reg].type = ConstraintType::Interval;
-    c.r[c.nc.reg].low = c.nc.low;
-    c.r[c.nc.reg].high = c.nc.high;
+    Constraint& regConstraint = c.GetConstraint(static_cast<enum Constraints>(ncConstraint.reg));
+
+    regConstraint.type = ConstraintType::Interval;
+    regConstraint.low = ncConstraint.low;
+    regConstraint.high = ncConstraint.high;
   }
 }
 
@@ -1317,12 +1337,15 @@ void MOV_90::Execute() const
 
 void MOV_90::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  c.dpl.type = ConstraintType::Interval;
-  c.dpl.low = alu.flash.Read(address+1);
-  c.dpl.high = c.dpl.low;
-  c.dph.type = ConstraintType::Interval;
-  c.dph.low = alu.flash.Read(address+2);
-  c.dph.high = c.dpl.low;
+  Constraint& dplConstraint = c.GetConstraint(DPL);
+  Constraint& dphConstraint = c.GetConstraint(DPH);
+
+  dplConstraint.type = ConstraintType::Interval;
+  dplConstraint.low = alu.flash.Read(address+1);
+  dplConstraint.high = dplConstraint.low;
+  dphConstraint.type = ConstraintType::Interval;
+  dphConstraint.low = alu.flash.Read(address+2);
+  dphConstraint.high = dphConstraint.low;
 }
 
 MOV_75::MOV_75(Alu &a) : Instruction(a)
@@ -1514,8 +1537,10 @@ void MovRegisterA::Execute() const
 
 void MovRegisterA::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  c.r[RegisterA].type = ConstraintType::Alias;
-  c.r[RegisterA].reg = opcode & RegisterMask;
+  Constraint& aConstraint = c.GetConstraint(RegisterA);
+
+  aConstraint.type = ConstraintType::Alias;
+  aConstraint.reg = opcode & RegisterMask;
 }
 
 MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
@@ -1620,16 +1645,19 @@ std::string MovARegister::Disassemble(std::uint16_t address) const
 void MovARegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
   std::uint8_t reg = opcode & RegisterMask;
-  if (c.r[reg].type == ConstraintType::Interval)
+  Constraint& regConstraint = c.GetConstraint(static_cast<enum Constraints>(reg));
+  Constraint& aConstraint = c.GetConstraint(RegisterA);
+
+  if (regConstraint.type == ConstraintType::Interval)
   {
-    c.r[RegisterA].type = ConstraintType::Interval;
-    c.r[RegisterA].low = c.r[reg].low;
-    c.r[RegisterA].high = c.r[reg].high;
+    aConstraint.type = ConstraintType::Interval;
+    aConstraint.low = regConstraint.low;
+    aConstraint.high = regConstraint.high;
   }
   else
   {
-    c.r[RegisterA].type = ConstraintType::Alias;
-    c.r[RegisterA].reg = opcode & RegisterMask;
+    aConstraint.type = ConstraintType::Alias;
+    aConstraint.reg = opcode & RegisterMask;
   }
 }
 
@@ -1670,11 +1698,11 @@ void MOV_F5::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, st
 
   if (addr == alu.sfrDPL.address)
   {
-    c.dpl = c.r[RegisterA];
+    c.GetConstraint(DPL) = c.GetConstraint(RegisterA);
   }
   else if (addr == alu.sfrDPH.address)
   {
-    c.dph = c.r[RegisterA];
+    c.GetConstraint(DPH) = c.GetConstraint(RegisterA);
   }
 }
 
@@ -1780,11 +1808,13 @@ void MOVC_83::Execute() const
 
 void MOVC_83::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  if (c.r[RegisterA].type == ConstraintType::Interval)
+  Constraint& aConstraint = c.GetConstraint(RegisterA);
+
+  if (aConstraint.type == ConstraintType::Interval)
   {
-    c.r[RegisterA].type = ConstraintType::Memory;
-    c.r[RegisterA].low += address + 1;
-    c.r[RegisterA].high += address + 1;
+    aConstraint.type = ConstraintType::Memory;
+    aConstraint.low += address + 1;
+    aConstraint.high += address + 1;
   }
 }
 

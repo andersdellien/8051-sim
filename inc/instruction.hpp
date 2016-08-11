@@ -25,9 +25,11 @@
 #include "memory.hpp"
 #include "alu.hpp"
 
-enum class ConstraintType {None, Alias, Interval, RegisterInterval, Memory};
+static const std::vector<std::string> constraintNames = {"R0", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "A", "DPL", "DPH", "C", "NC"};
 
-constexpr int RegisterA = 8;
+enum Constraints {R0, R1, R2, R3, R4, R5, R6, R7, RegisterA, DPL, DPH, C, NC, NumConstraints};
+
+enum class ConstraintType {None, Alias, Interval, RegisterInterval, Memory};
 
 class Constraint
 {
@@ -35,15 +37,18 @@ class Constraint
     int low, high, reg;
     ConstraintType type;
     void Print(std::string name);
+    Constraint();
 };
 
 class RegisterConstraints
 {
   public:
-    Constraint dpl, dph, r[9], c, nc; // 'A' is register number 8
+    Constraint constraints[NumConstraints];
+    int constraintRef[NumConstraints];
     void Print();
     void Clear();
     RegisterConstraints();
+    Constraint& GetConstraint(enum Constraints);
 };
 
 class Instruction

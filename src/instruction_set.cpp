@@ -149,6 +149,20 @@ void AddImmediate::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
   }
   else if (c.r[RegisterA].type == ConstraintType::Interval)
   {
+    if (operand >= c.r[RegisterA].low && operand <= c.r[RegisterA].high)
+    {
+      c.c.type = c.nc.type = ConstraintType::RegisterInterval;
+      c.c.reg = c.nc.reg = RegisterA;
+      c.c.low = 0xff - operand + 1;
+      c.c.high = c.r[RegisterA].high;
+      c.nc.low = c.r[RegisterA].low;
+      c.nc.high = 0xff - operand;
+    }
+    else
+    {
+      c.c.type = ConstraintType::None;
+      c.nc.type = ConstraintType::None;
+    }
     c.r[RegisterA].low += operand;
     c.r[RegisterA].high += operand;
     if (c.r[RegisterA].low > 255 || c.r[RegisterA].high > 255)

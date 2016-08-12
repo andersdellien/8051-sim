@@ -51,9 +51,42 @@ void Constraint::Print(std::string name)
   }
 }
 
-Constraint::Constraint()
+void Constraint::SetNone()
 {
   type = ConstraintType::None;
+}
+
+void Constraint::SetInterval(int l, int h)
+{
+  type = ConstraintType::Interval;
+  low = l;
+  high = h;
+}
+
+void Constraint::SetMemory(int l, int h)
+{
+  type = ConstraintType::Memory;
+  low = l;
+  high = h;
+}
+
+void Constraint::SetRegisterInterval(int r, int l, int h)
+{
+  type = ConstraintType::RegisterInterval;
+  reg = r;
+  low = l;
+  high = h;
+}
+
+void Constraint::SetAlias(int r)
+{
+  type = ConstraintType::Alias;
+  reg = r;
+}
+
+Constraint::Constraint()
+{
+  SetNone();
 }
 
 void RegisterConstraints::Clear()

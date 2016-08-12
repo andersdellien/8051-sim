@@ -37,6 +37,11 @@ class Constraint
     int low, high, reg;
     ConstraintType type;
     void Print(std::string name);
+    void SetNone();
+    void SetInterval(int low, int high);
+    void SetMemory(int low, int high);
+    void SetRegisterInterval(int register, int low, int high);
+    void SetAlias(int register);
     Constraint();
 };
 

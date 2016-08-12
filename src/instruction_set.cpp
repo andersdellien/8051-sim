@@ -168,9 +168,9 @@ void AddImmediate::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
       cConstraint.SetNone();
       ncConstraint.SetNone();
     }
-    aConstraint.low += operand;
-    aConstraint.high += operand;
-    if (aConstraint.low > 255 || aConstraint.high > 255)
+    aConstraint.low = (aConstraint.low + operand) % 255;
+    aConstraint.high = (aConstraint.high + operand) % 255;
+    if (aConstraint.low > aConstraint.high)
     {
       aConstraint.SetNone();
     }

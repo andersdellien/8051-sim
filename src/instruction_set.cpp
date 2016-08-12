@@ -132,52 +132,52 @@ void AddImmediate::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
 {
   std::uint8_t operand = alu.flash.Read(address + 1);
   Constraint &aConstraint = c.GetConstraint(RegisterA);
-  std::uint8_t aliasReg = aConstraint.reg;
   Constraint &cConstraint = c.GetConstraint(C);
   Constraint &ncConstraint = c.GetConstraint(NC);
 
   if (carry)
   {
-    cConstraint.SetNone();
-    ncConstraint.SetNone();
+    c.SetNone(C);
+    c.SetNone(NC);
   }
-  else if (aConstraint.type == ConstraintType::Alias)
-  {
-    cConstraint.SetRegisterInterval(aliasReg, 0xff - operand + 1, 0xff);
-    ncConstraint.SetRegisterInterval(aliasReg, 0, 0xff - operand);
-  }
-  else if (aConstraint.type == ConstraintType::Interval)
+  else if (aConstraint.type == ConstraintType::Interval && c.GetAlias(RegisterA) >= 0)
   {
     if (operand >= aConstraint.low && operand <= aConstraint.high)
     {
-      cConstraint.SetRegisterInterval(RegisterA, 0xff - operand + 1, aConstraint.high);
-      ncConstraint.SetRegisterInterval(RegisterA, aConstraint.low, 0xff - operand);
+      cConstraint.SetRegisterInterval(c.GetAlias(RegisterA), 0xff - operand + 1, aConstraint.high);
+      ncConstraint.SetRegisterInterval(c.GetAlias(RegisterA), aConstraint.low, 0xff - operand);
     }
     else if (aConstraint.high + operand <= 255)
     {
-      cConstraint.SetFalse();
-      ncConstraint.SetTrue();
+      c.SetFalse(C);
+      c.SetTrue(NC);
     }
     else if (aConstraint.low + operand > 255)
     {
-      cConstraint.SetTrue();
-      ncConstraint.SetFalse();
+      c.SetTrue(C);
+      c.SetFalse(NC);
     }
     else
     {
-      cConstraint.SetNone();
-      ncConstraint.SetNone();
+      c.SetNone(C);
+      c.SetNone(NC);
     }
-    aConstraint.low = (aConstraint.low + operand) % 255;
-    aConstraint.high = (aConstraint.high + operand) % 255;
-    if (aConstraint.low > aConstraint.high)
+    int low = (aConstraint.low + operand) % 256;
+    int high = (aConstraint.high + operand) % 256;
+    if (low > high)
     {
-      aConstraint.SetNone();
+      c.SetNone(RegisterA);
+    }
+    else
+    {
+      c.SetInterval(RegisterA, low, high);
     }
   }
   else
   {
-    aConstraint.SetNone();
+    c.SetNone(RegisterA);
+    c.SetNone(C);
+    c.SetNone(NC);
   }
 }
 
@@ -599,7 +599,7 @@ void CLR_E4::Execute(void) const
 
 void CLR_E4::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  c.GetConstraint(RegisterA).SetInterval(0, 0);
+  c.SetInterval(RegisterA, 0, 0);
 }
 
 CPL_F4::CPL_F4(Alu &a) : Instruction(a)
@@ -1171,15 +1171,11 @@ void JC::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::u
 
   if (cConstraint.type == ConstraintType::RegisterInterval && destination == carrySetDestination)
   {
-    Constraint& regConstraint = c.GetConstraint(static_cast<enum Constraints>(cConstraint.reg));
-
-    regConstraint.SetInterval(cConstraint.low, cConstraint.high);
+    c.SetInterval(static_cast<enum Constraints>(cConstraint.reg), cConstraint.low, cConstraint.high);
   }
   else if (ncConstraint.type == ConstraintType::RegisterInterval && destination == carryClearDestination)
   {
-    Constraint& regConstraint = c.GetConstraint(static_cast<enum Constraints>(ncConstraint.reg));
-
-    regConstraint.SetInterval(ncConstraint.low, ncConstraint.high);
+    c.SetInterval(static_cast<enum Constraints>(ncConstraint.reg), ncConstraint.low, ncConstraint.high);
   }
 }
 
@@ -1319,11 +1315,8 @@ void MOV_90::Execute() const
 
 void MOV_90::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  Constraint& dplConstraint = c.GetConstraint(DPL);
-  Constraint& dphConstraint = c.GetConstraint(DPH);
-
-  dplConstraint.SetInterval(alu.flash.Read(address+1), alu.flash.Read(address+1));
-  dphConstraint.SetInterval(alu.flash.Read(address+2), alu.flash.Read(address+2));
+  c.SetInterval(DPL, alu.flash.Read(address+1), alu.flash.Read(address+1));
+  c.SetInterval(DPH, alu.flash.Read(address+2), alu.flash.Read(address+2));
 }
 
 MOV_75::MOV_75(Alu &a) : Instruction(a)
@@ -1515,9 +1508,7 @@ void MovRegisterA::Execute() const
 
 void MovRegisterA::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  Constraint& aConstraint = c.GetConstraint(RegisterA);
-
-  aConstraint.SetAlias(opcode & RegisterMask);
+  c.SetAlias(static_cast<enum Constraints>(opcode & RegisterMask), RegisterA);
 }
 
 MovRegisterAddress::MovRegisterAddress(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)
@@ -1621,18 +1612,7 @@ std::string MovARegister::Disassemble(std::uint16_t address) const
 
 void MovARegister::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, std::uint16_t destination)
 {
-  std::uint8_t reg = opcode & RegisterMask;
-  Constraint& regConstraint = c.GetConstraint(static_cast<enum Constraints>(reg));
-  Constraint& aConstraint = c.GetConstraint(RegisterA);
-
-  if (regConstraint.type == ConstraintType::Interval)
-  {
-    aConstraint.SetInterval(regConstraint.low, regConstraint.high);
-  }
-  else
-  {
-    aConstraint.SetAlias(opcode & RegisterMask);
-  }
+  c.SetAlias(RegisterA, static_cast<enum Constraints>(opcode & RegisterMask));
 }
 
 void MovARegister::Execute() const
@@ -1672,11 +1652,11 @@ void MOV_F5::UpdateConstraints(RegisterConstraints &c, std::uint16_t address, st
 
   if (addr == alu.sfrDPL.address)
   {
-    c.GetConstraint(DPL) = c.GetConstraint(RegisterA);
+    c.SetAlias(DPL, RegisterA);
   }
   else if (addr == alu.sfrDPH.address)
   {
-    c.GetConstraint(DPH) = c.GetConstraint(RegisterA);
+    c.SetAlias(DPH, RegisterA);
   }
 }
 

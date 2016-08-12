@@ -52,10 +52,6 @@ void Constraint::Print(std::string name)
   {
     std::cout << "Register " << reg << " Interval: " << low << " " << high;
   }
-  else if (type == ConstraintType::Alias)
-  {
-    std::cout << "Alias " << reg;
-  }
   std::cout << std::endl;
 }
 
@@ -84,12 +80,6 @@ void Constraint::SetRegisterInterval(int r, int l, int h)
   reg = r;
   low = l;
   high = h;
-}
-
-void Constraint::SetAlias(int r)
-{
-  type = ConstraintType::Alias;
-  reg = r;
 }
 
 void Constraint::SetTrue()
@@ -126,6 +116,101 @@ void RegisterConstraints::Print()
   {
     constraints[constraintRef[i]].Print(constraintNames[i]);
   }
+}
+
+// Returns the first found alias of the given constraint
+int RegisterConstraints::GetAlias(enum Constraints c)
+{
+  for (int i = 0; i < NumConstraints; i++)
+  {
+    if (i != c && constraintRef[i] == constraintRef[c])
+    {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+// Find an available slot in the Constraint array
+// Either the existing one (if not shared), or a new one.
+int RegisterConstraints::CreateRef(enum Constraints c)
+{
+  int count = 0;
+  bool occupied[NumConstraints];
+
+  for (int i = 0; i < NumConstraints; i++)
+  {
+    occupied[i] = false;
+  }
+
+  for (int i = 0; i < NumConstraints; i++)
+  {
+    occupied[constraintRef[i]] = true;
+    if (constraintRef[i] == constraintRef[c])
+    {
+      count++;
+    }
+  }
+
+  // If the current constraint isn't shared, we're done.
+  if (count == 1)
+  {
+    return c;
+  }
+
+  // Otherwise, pick the first available one
+  for (int i = 0; i < NumConstraints; i++)
+  {
+    if (!occupied[i])
+    {
+      return i;
+    }
+  }
+
+  // We'll never reach this point, there will always be an available constraint
+  return 0;
+}
+
+void RegisterConstraints::SetNone(enum Constraints c)
+{
+  constraintRef[c] = CreateRef(c);
+  constraints[constraintRef[c]].SetNone();
+}
+
+void RegisterConstraints::SetInterval(enum Constraints c, int low, int high)
+{
+  constraintRef[c] = CreateRef(c);
+  constraints[constraintRef[c]].SetInterval(low, high);
+}
+
+void RegisterConstraints::SetMemory(enum Constraints c, int low, int high)
+{
+  constraintRef[c] = CreateRef(c);
+  constraints[constraintRef[c]].SetMemory(low, high);
+}
+
+void RegisterConstraints::SetRegisterInterval(enum Constraints c, int reg, int low, int high)
+{
+  constraintRef[c] = CreateRef(c);
+  constraints[constraintRef[c]].SetRegisterInterval(reg, low, high);
+}
+
+void RegisterConstraints::SetAlias(enum Constraints a, enum Constraints b)
+{
+  constraintRef[a] = constraintRef[b];
+}
+
+void RegisterConstraints::SetTrue(enum Constraints c)
+{
+  constraintRef[c] = CreateRef(c);
+  constraints[constraintRef[c]].SetTrue();
+}
+
+void RegisterConstraints::SetFalse(enum Constraints c)
+{
+  constraintRef[c] = CreateRef(c);
+  constraints[constraintRef[c]].SetFalse();
 }
 
 Constraint& RegisterConstraints::GetConstraint(enum Constraints c)

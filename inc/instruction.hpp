@@ -32,7 +32,6 @@ enum Constraints {R0, R1, R2, R3, R4, R5, R6, R7, RegisterA, DPL, DPH, C, NC, Nu
 enum class ConstraintType
 {
   None, // We make no assumptions about the register contents
-  Alias, // The register is an alias of register 'reg'
   Interval, // The register is between 'low' and 'high'
   RegisterInterval, // Only used for C and !C - the flag is set if register 'reg' is between 'low' and 'high'
   Memory, // Register 'reg' is the contents of a memory location between 'low' and 'high'
@@ -50,7 +49,6 @@ class Constraint
     void SetInterval(int low, int high);
     void SetMemory(int low, int high);
     void SetRegisterInterval(int register, int low, int high);
-    void SetAlias(int register);
     void SetTrue();
     void SetFalse();
     Constraint();
@@ -65,6 +63,16 @@ class RegisterConstraints
     void Clear();
     RegisterConstraints();
     Constraint& GetConstraint(enum Constraints);
+    void SetNone(enum Constraints);
+    void SetInterval(enum Constraints, int low, int high);
+    void SetMemory(enum Constraints, int low, int high);
+    void SetRegisterInterval(enum Constraints, int register, int low, int high);
+    void SetAlias(enum Constraints, enum Constraints);
+    void SetTrue(enum Constraints);
+    void SetFalse(enum Constraints);
+    int GetAlias(enum Constraints c);
+  private:
+    int CreateRef(enum Constraints c);
 };
 
 class Instruction

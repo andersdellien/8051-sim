@@ -153,6 +153,16 @@ void AddImmediate::UpdateConstraints(RegisterConstraints &c, std::uint16_t addre
       cConstraint.SetRegisterInterval(RegisterA, 0xff - operand + 1, aConstraint.high);
       ncConstraint.SetRegisterInterval(RegisterA, aConstraint.low, 0xff - operand);
     }
+    else if (aConstraint.high + operand <= 255)
+    {
+      cConstraint.SetFalse();
+      ncConstraint.SetTrue();
+    }
+    else if (aConstraint.low + operand > 255)
+    {
+      cConstraint.SetTrue();
+      ncConstraint.SetFalse();
+    }
     else
     {
       cConstraint.SetNone();

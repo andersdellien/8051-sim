@@ -32,23 +32,31 @@ void Constraint::Print(std::string name)
   }
 
   std::cout << name << " ";
-
-  if (type == ConstraintType::Memory)
+  if (type == ConstraintType::True)
   {
-    std::cout << "Memory: " << low << " " << high << std::endl;
+    std::cout << "True";
+  }
+  else if (type == ConstraintType::False)
+  {
+    std::cout << "False";
+  }
+  else if (type == ConstraintType::Memory)
+  {
+    std::cout << "Memory: " << low << " " << high;
   }
   else if (type == ConstraintType::Interval)
   {
-    std::cout << "Interval: " << low << " " << high << std::endl;
+    std::cout << "Interval: " << low << " " << high;
   }
   else if (type == ConstraintType::RegisterInterval)
   {
-    std::cout << "Register " << reg << " Interval: " << low << " " << high << std::endl;
+    std::cout << "Register " << reg << " Interval: " << low << " " << high;
   }
   else if (type == ConstraintType::Alias)
   {
-    std::cout << "Alias " << reg << std::endl;
+    std::cout << "Alias " << reg;
   }
+  std::cout << std::endl;
 }
 
 void Constraint::SetNone()
@@ -82,6 +90,16 @@ void Constraint::SetAlias(int r)
 {
   type = ConstraintType::Alias;
   reg = r;
+}
+
+void Constraint::SetTrue()
+{
+  type = ConstraintType::True;
+}
+
+void Constraint::SetFalse()
+{
+  type = ConstraintType::False;
 }
 
 Constraint::Constraint()

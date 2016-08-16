@@ -19,346 +19,335 @@
 #include "command.hpp"
 #include "instruction_coverage.hpp"
 #include "symbol_table.hpp"
+#include <ncurses.h>
 
-std::set<Command*> Command::commands;
-std::vector<bool> traceInstruction(256);
+constexpr auto blockCmd = "block";
+constexpr auto breakListCmd = "break list";
+constexpr auto breakSetCmd = "break set";
+constexpr auto breakClearCmd = "break clear";
+constexpr auto traceSfrOnCmd = "trace sfr on";
+constexpr auto traceSfrOffCmd = "trace sfr off";
+constexpr auto traceNoneCmd = "trace none";
+constexpr auto traceAllCmd = "trace all";
+constexpr auto traceInstructionCmd = "trace instruction";
+constexpr auto coverageInitializeCmd = "coverage initialize";
+constexpr auto coverageListCmd = "coverage list";
+constexpr auto uartRxCmd = "uart rx";
+constexpr auto resetCmd = "reset";
+constexpr auto registersCmd = "registers";
+constexpr auto stepCmd = "step once";
+constexpr auto stepInstructionsCmd = "step instructions";
+constexpr auto runCmd = "run";
+constexpr auto goCmd = "go";
+constexpr auto loadCmd = "load";
+constexpr auto disassembleCmd = "disassemble";
+constexpr auto flashCmd = "flash";
+constexpr auto iramCmd = "iram";
 
-Command::Command()
+Command::Command(Shell &s) : shell(s),
+  instructionCount(0),
+  instructionLimit(0),
+  breakCount(0),
+  breakLimit(0)
 {
-  commands.insert(this);
+  shell.RegisterCommand(blockCmd, this);
+  shell.RegisterCommand(breakListCmd, this);
+  shell.RegisterCommand(breakSetCmd, this, {ParameterType::Numeric});
+  shell.RegisterCommand(breakClearCmd, this);
+  shell.RegisterCommand(traceSfrOnCmd, this);
+  shell.RegisterCommand(traceSfrOffCmd, this);
+  shell.RegisterCommand(traceNoneCmd, this);
+  shell.RegisterCommand(traceAllCmd, this);
+  shell.RegisterCommand(traceInstructionCmd, this, {ParameterType::Numeric});
+  shell.RegisterCommand(coverageInitializeCmd, this);
+  shell.RegisterCommand(coverageListCmd, this);
+  shell.RegisterCommand(uartRxCmd, this, {ParameterType::String});
+  shell.RegisterCommand(resetCmd, this);
+  shell.RegisterCommand(registersCmd, this);
+  shell.RegisterCommand(stepCmd, this);
+  shell.RegisterCommand(stepInstructionsCmd, this, {ParameterType::Numeric});
+  shell.RegisterCommand(runCmd, this);
+  shell.RegisterCommand(goCmd, this, {ParameterType::Numeric});
+  shell.RegisterCommand(loadCmd, this, {ParameterType::String});
+  shell.RegisterCommand(disassembleCmd, this, {ParameterType::Numeric, ParameterType::Numeric});
+  shell.RegisterCommand(flashCmd, this, {ParameterType::Numeric, ParameterType::Numeric});
+  shell.RegisterCommand(iramCmd, this, {ParameterType::Numeric, ParameterType::Numeric});
+  for (int i = 0; i < NumBreakpoints; i++)
+  {
+    breakpoints[i] = -1;
+  }
 }
 
-void Command::OnInstructionExecuted(Cpu8051 &handler) {}
-bool Command::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit) { return false; }
-void Command::OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value) {}
-void Command::OnUARTTx(Cpu8051 &handler, char tx) {}
-
-bool Command::dispatchCommand(Cpu8051 &handler, std::vector<std::string>& tokens)
+void Command::OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter*> parameters)
 {
-  bool cmdHandled = true;
-
-  for (std::set<Command*>::iterator i = commands.begin(); i != commands.end(); i++)
+  cpu.alu.RegisterCallback(this, &cpu);
+  if (!command.compare(blockCmd))
   {
-    cmdHandled |= (*i)->executeCommand(handler, tokens);
-  }
-
-  if (!cmdHandled)
-  {
-    std::cout << "Command not recognized" << std::endl;
-  }
-
-  return cmdHandled;
-}
-
-BlockCommand::BlockCommand() : Command() {}
-
-bool BlockCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
-{
-  bool retVal = false;
-
-  if (tokens[0] == "block")
-  {
-    retVal = true;
-    for (std::vector<Block*>::iterator i = handler.blocks.begin(); i != handler.blocks.end(); i++)
+    for (std::vector<Block*>::iterator i = cpu.blocks.begin(); i != cpu.blocks.end(); i++)
     {
       int t = (*i)->remainingTicks;
-      std::cout << (*i)->GetName() << " ";
+      printw("%s ", (*i)->GetName().c_str());
       if (t == -1)
       {
-        std::cout << "idle";
+        printw("idle");
       }
       else
       {
-        std::cout << t;
+        printw("%d", t);
       }
-      std::cout << std::endl;
+      printw("\n");
     }
   }
-
-  return retVal;
-}
-
-BreakCommand::BreakCommand() : Command() {}
-
-bool BreakCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
-{
-  bool retVal = false;
-
-  if (tokens[0] == "break") {
-    if (tokens[1] == "list")
-    {
-      for (int i = 0; i < NumBreakpoints; i++)
-      {
-        if (handler.breakpoints[i] != -1)
-        {
-          std::cout << std::hex << handler.breakpoints[i] << std::endl;
-        }
-      }
-    }
-    else if (tokens[1] == "clear")
-    {
-      for (int i = 0; i < NumBreakpoints; i++)
-      {
-        handler.breakpoints[i] = -1;
-      }
-    }
-    else if (tokens[1] == "set")
-    {
-      for (int i = 0; i < NumBreakpoints; i++)
-      {
-        if (handler.breakpoints[i] == -1)
-        {
-          handler.breakpoints[i] = stoi(tokens[2], nullptr, 16);
-        }
-      }
-    }
-  }
-
-  return retVal;
-}
-
-TraceCommand::TraceCommand() : Command() {}
-
-bool TraceCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
-{
-  bool retVal = false;
-
-  if (tokens[0] == "trace")
+  else if (!command.compare(breakListCmd))
   {
-    if (tokens[1] == "sfr")
+    for (int i = 0; i < NumBreakpoints; i++)
     {
-      if (tokens[2] == "on")
+      if (breakpoints[i] != -1)
       {
-        handler.alu.SetTraceSfr(true);
-      }
-      else if (tokens[2] == "off")
-      {
-        handler.alu.SetTraceSfr(false);
+        printw("%x\n", breakpoints[i]);
       }
     }
-    else if (tokens[1] == "all")
+  }
+  else if (!command.compare(breakClearCmd))
+  {
+    for (int i = 0; i < NumBreakpoints; i++)
     {
-      for (std::uint16_t i = 0x00; i <= 0x255; i++)
+      breakpoints[i] = -1;
+    }
+  }
+  else if (!command.compare(breakSetCmd))
+  {
+    for (int i = 0; i < NumBreakpoints; i++)
+    {
+      if (breakpoints[i] == -1)
       {
-        traceInstruction[i] = true;
+        breakpoints[i] = parameters[0]->number;
+        break;
       }
     }
-    else if (tokens[1] == "none")
+  }
+  else if (!command.compare(traceSfrOnCmd))
+  {
+    cpu.alu.SetTraceSfr(true);
+  }
+  else if (!command.compare(traceSfrOffCmd))
+  {
+    cpu.alu.SetTraceSfr(false);
+  }
+  else if (!command.compare(traceAllCmd))
+  {
+    for (int i = 0; i <= 255; i++)
     {
-      for (std::uint16_t i = 0x00; i <= 0x255; i++)
-      {
-        traceInstruction[i] = true;
-      }
-    }
-    else
-    {
-      traceInstruction[stoi(tokens[1], nullptr, 16)] = true;
+      shell.trace[i] = true;
     }
   }
-  return retVal;
-}
-
-MiscCommand::MiscCommand() : Command() {breakLimit = -1;}
-
-bool MiscCommand::executeCommand(Cpu8051& handler, std::vector<std::string>& tokens)
-{
-  bool retVal = false;
-
-  if (tokens[0] == "cov")
+  else if (!command.compare(traceNoneCmd))
   {
-    if (tokens[1] == "init")
+    for (int i = 0; i <= 255; i++)
     {
-      int total, executed;
-
-      InstructionCoverage::GetInstance().Initialize(handler.alu);
-      InstructionCoverage::GetInstance().GetCoverage(total, executed);
-      std::cout << "Found " << std::dec << total << " instructions" << std::endl;
-    }
-    else if (tokens[1] == "list")
-    {
-      int total, executed;
-      InstructionCoverage::GetInstance().GetCoverage(total, executed);
-      std::cout << std::dec << "Total: " << total << " executed: " << executed << " percentage: " << std::setw(2) <<  (100.0*executed) / total << std::endl;      
+      shell.trace[i] = true;
     }
   }
-  else if (tokens[0] == "uart")
+  else if (!command.compare(traceInstructionCmd))
   {
-    retVal = true;
-    if (tokens[1] == "rx")
-    {
-      handler.uart.SimulateRx(tokens[2][0]);
-    }
+    shell.trace[parameters[0]->number] = true;
   }
-  else if (tokens[0] == "reset")
+  else if (!command.compare(coverageInitializeCmd))
   {
-    retVal = true;
-    handler.Reset();
+    int total, executed;
+
+    InstructionCoverage::GetInstance().Initialize(cpu.alu);
+    InstructionCoverage::GetInstance().GetCoverage(total, executed);
+    printw("Found %d instructions\n");
   }
-  else if (tokens[0] == "reg")
+  else if (!command.compare(coverageListCmd))
   {
-    retVal = true;
-    std::cout << std::hex << "PC:" << std::setw(4) << (int) handler.alu.GetPC();
-    std::cout << " SP:" << std::setw(2) << (int) handler.alu.GetSP();
-    std::cout << " A:" << std::setw(2) << (int) handler.alu.GetA();
-    std::cout << " DPTR:" << std::setw(4) << (int) handler.alu.GetDPTR() << std::endl;
+    int total, executed;
+    InstructionCoverage::GetInstance().GetCoverage(total, executed);
+    printw("Total: %d executed: %d percentage: %f\n", total, executed, (100.0*executed) / total);
+  }
+  else if (!command.compare(uartRxCmd))
+  {
+    cpu.uart.SimulateRx(parameters[0]->string[0]);
+  }
+  else if (!command.compare(resetCmd))
+  {
+    cpu.Reset();
+  }
+  else if (!command.compare(registersCmd))
+  {
+    printw("PC:%4.4x ", cpu.alu.GetPC());
+    printw("SP:%2.2x ", cpu.alu.GetSP());
+    printw("A:%2.2x ", cpu.alu.GetA());
+    printw("DPTR:%4.4x\n", cpu.alu.GetDPTR());
     for (int i = 0; i < 8; i++)
     {
-      std::cout << "R" << i << ":" << std::setw(2) << (int) handler.alu.GetReg(i) << " ";
+      printw("R%d:%2.2x ", i, cpu.alu.GetReg(i));
     }
-    std::cout << std::endl;
+    printw("\n");
   }
-  else if (tokens[0] == "step")
+  else if (!command.compare(stepCmd))
   {
-    retVal = true;
-    instructionLimit = 1;
-    breakLimit = -1;
-    instructionCount = 0;
+    breakLimit = 0;
     breakCount = 0;
-    if (tokens.size() > 1)
+    instructionCount = 0;
+    instructionLimit = 1;
+    while (instructionCount < instructionLimit)
     {
-      instructionLimit = stoi(tokens[1], nullptr, 16);
+      cpu.Tick();
     }
+  }
+  else if (!command.compare(stepInstructionsCmd))
+  {
+    breakLimit = 0;
+    breakCount = 0;
+    instructionCount = 0;
+    instructionLimit = parameters[0]->number;
     while (instructionCount != instructionLimit)
     {
-      handler.Tick();
+      cpu.Tick();
     }
   }
-  else if (tokens[0] == "go")
+  else if (!command.compare(runCmd))
   {
-    retVal = true;
-    instructionLimit = -1;
-    breakLimit = 1;
     instructionCount = 0;
+    instructionLimit = 0;
     breakCount = 0;
-    if (tokens.size() > 1)
+    breakLimit = 1;
+    while (breakCount < breakLimit)
     {
-      breakLimit = stoi(tokens[1], nullptr, 16);
+      cpu.Tick();
     }
+  }
+  else if (!command.compare(goCmd))
+  {
+    instructionCount = 0;
+    instructionLimit = 0;
+    breakCount = 0;
+    breakLimit = parameters[0]->number;
     while (breakCount != breakLimit)
     {
-      handler.Tick();
+      cpu.Tick();
     }
   }
-  else if (tokens[0] == "load")
+  else if (!command.compare(loadCmd))
   {
-    retVal = true;
     std::string hex = "hex";
     std::string sym = "rst";
-    if (tokens[1].rfind(hex) + hex.length() == tokens[1].length())
+    std::string &fileName = parameters[0]->string;
+
+    if (fileName.rfind(hex) + hex.length() == fileName.length())
     {
-      handler.alu.flash.ParseHex(tokens[1]);
+      cpu.alu.flash.ParseHex(parameters[0]->string);
     }
-    else if (tokens[1].rfind(sym) + sym.length() == tokens[1].length())
+    else if (fileName.rfind(sym) + sym.length() == fileName.length())
     {
-      SymbolTable::GetInstance().ParseFile(tokens[1]);
+      SymbolTable::GetInstance().ParseFile(fileName);
     }
     else
     {
-      std::cout << "Unknown file " << tokens[1] << std::endl;
+      printw("Unknown file:%s\n", fileName.c_str());
     }
   }
-  else if (tokens[0] == "disassemble")
+  else if (!command.compare(disassembleCmd))
   {
-    retVal = true;
-    std::uint16_t address = stoi(tokens[1], nullptr, 16);
-    std::uint16_t length = stoi(tokens[2], nullptr, 16);
+    std::uint16_t address = parameters[0]->number;
+    std::uint16_t length = parameters[1]->number;
     std::uint16_t limit = address + length;
     while (address <= limit)
     {
-      std::cout << std::hex << std::setfill('0') << std::setw(4) << address << " " << handler.alu.Disassemble(address) << std::endl;
-      address += 1 + handler.alu.GetOperands(address);
+      printw("%x %s\n", address, cpu.alu.Disassemble(address).c_str());
+      address += 1 + cpu.alu.GetOperands(address);
     }
   }
-  else if (tokens[0] == "flash" || tokens[0] == "iram")
+  else if (!command.compare(flashCmd) || !command.compare(iramCmd))
   {
-    retVal = true;
-    std::uint16_t address = stoi(tokens[1], nullptr, 16);
-    std::uint16_t length = stoi(tokens[2], nullptr, 16);
+    std::uint16_t address = parameters[0]->number;
+    std::uint16_t length = parameters[1]->number;
     bool newline = false;
     Memory *mem;
-    if (tokens[0] == "flash")
+    if (!command.compare(flashCmd))
     {
-      mem = &handler.alu.flash;
+      mem = &cpu.alu.flash;
     }
     else
     {
-      mem = &handler.alu.iram;
+      mem = &cpu.alu.iram;
     }
     for (int i = 0; i < length; i++)
     {
       const int itemsPerLine = 16;
       if (i % itemsPerLine == 0)
       {
-        std::cout << std::hex << std::setfill('0') << std::setw(4) << address + i << " ";
+        printw("%4.4x ", address + i);
       }
-      std::cout << std::hex << std::setw(2) << (int) mem->Read(address + i);
+      printw("%2.2x", mem->Read(address + i));
       if (i % itemsPerLine == itemsPerLine - 1)
       {
-        std::cout << std::endl;
+        printw("\n");
         newline = true;
       }
       else
       {
-        std::cout << ' ';
+        printw(" ");
         newline = false;
       }
     }
     if (!newline)
     {
-      std::cout << std::endl;
+      printw("\n");
     }
   }
-
-  return retVal;
 }
 
-void MiscCommand::OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value)
+void Command::OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value)
 {
-  std::cout << "Write " << value << " to port " << (int) port << " bit " << (int) bit << std::endl;
+  printw("Write %d to port %d bit %d\n", value, port, bit);
 }
 
-void MiscCommand::OnUARTTx(Cpu8051 &handler, char tx)
+void Command::OnUARTTx(Cpu8051 &handler, char tx)
 {
-  std::cout << "UART Tx:" << tx << std::endl;
+  printw("UART Tx:%c\n", tx);
 }
 
-bool MiscCommand::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit)
+bool Command::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit)
 {
-  std::string line;
+  printw("Read of GPIO port %d bit %d\n", port, bit);
 
-  std::cout << "Read of GPIO port " << (int) port << " bit " << (int) bit << std::endl;
-  std::getline(std::cin, line);
+  int c = getch();
 
-  if (line[0] == '1')
+  if (c == '1')
   {
-    std::cout << "Logic high" << std::endl;
+    printw("Logic high\n");
     return true;
   }
   else
   {
-    std::cout << "Logic low" << std::endl;
+    printw("Logic low\n");
     return false;
   }
 }
 
-void MiscCommand::OnInstructionExecuted(Cpu8051 &handler)
+void Command::OnInstructionExecuted(Cpu8051 &cpu)
 {
+  int pc = cpu.alu.GetPC();
+
   instructionCount++;
   for (int i = 0; i < NumBreakpoints; i++)
   {
-    if (handler.breakpoints[i] != -1 && handler.breakpoints[i] == handler.alu.GetPC())
+    if (breakpoints[i] == pc)
     {
       breakCount++;
       break;
     }
   }
-  if (breakCount == breakLimit)
+  if (breakLimit && (breakCount == breakLimit))
   {
-    std::cout << "break at " << std::hex << handler.alu.GetPC() << std::endl;
+    printw("break at %4.4x\n", pc);
   }
-  if (traceInstruction[handler.alu.flash.Read(handler.alu.GetPC())] ||
+  if (shell.trace[cpu.alu.flash.Read(pc)] ||
       breakCount == breakLimit || instructionLimit > 0)
   {
-    std::cout << std::dec << handler.GetTicks() << " " << std::hex << std::setw(4) << std::setfill('0') << handler.alu.GetPC() << " " << handler.alu.Disassemble(handler.alu.GetPC()) << std::endl;
+    printw("%d %4.4x %s\n", cpu.GetTicks(), pc, cpu.alu.Disassemble(pc).c_str());
   }
 }

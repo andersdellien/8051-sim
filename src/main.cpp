@@ -16,10 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "command.hpp"
 #include "shell.hpp"
 
 int main(int argc, char **argv)
 {
   Shell shell;
+  Command command(shell);
   shell.CommandLoop();
 }

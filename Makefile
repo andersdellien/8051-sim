@@ -5,7 +5,7 @@ INCLUDE_DIR := inc
 CPP_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(addprefix $(OBJ_DIR)/,$(notdir $(CPP_FILES:.cpp=.o)))
 
-LD_FLAGS :=
+LD_FLAGS := -lncurses
 CC_FLAGS := -I $(INCLUDE_DIR) -O3 -g -std=c++11
 
 EXE_FILE := 8051-sim

@@ -20,19 +20,52 @@
 #define _SHELL_HPP
 
 #include "cpu8051.hpp"
-#include "command.hpp"
+#include "trie.hpp"
+#include <string>
+#include <vector>
+
+enum class ParameterType
+{
+  String,
+  Numeric
+};
+
+class Parameter
+{
+  public:
+    ParameterType type;
+    std::string string;
+    int number;
+    Parameter(int number);
+    Parameter(std::string string);
+};
+
+class CommandCallback
+{
+  public:
+    virtual void OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter*> parameters) = 0;
+};
+
+class CommandInfo
+{
+  public:
+    std::string command;
+    CommandCallback *callback;
+    std::vector<ParameterType> parameterTypes;
+    CommandInfo(std::string command, CommandCallback *callback, std::vector<ParameterType> parameterTypes);
+};
 
 class Shell
 {
-  public:
-    void CommandLoop();
-
+  private:
     Cpu8051 cpu;
-
-    BlockCommand blockCommand;
-    BreakCommand breakCommand;
-    TraceCommand traceCommand;
-    MiscCommand miscCommand;
+    Trie trie;
+    std::vector<CommandInfo*> callbacks;
+  public:
+    bool trace[256];
+    void CommandLoop();
+    void RegisterCommand(std::string command, CommandCallback *callback, std::vector<ParameterType> parameters);
+    void RegisterCommand(std::string command, CommandCallback *callback);
 };
 
 #endif

@@ -51,8 +51,6 @@ class Cpu8051Callbacks
 
 typedef std::pair<long long,char> ExternalEvent;
 
-constexpr int NumBreakpoints = 4;
-
 class Cpu8051: public Scheduler
 {
   public:
@@ -63,7 +61,6 @@ class Cpu8051: public Scheduler
     void InjectEvent(int deltaTicks, char c);
     void ReportActive(Block *b);
     std::vector<Block*> blocks;
-    int breakpoints[NumBreakpoints];
 
     Alu alu;
     Port0 port0;

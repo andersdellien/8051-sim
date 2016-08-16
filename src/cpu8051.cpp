@@ -46,10 +46,6 @@ Cpu8051::Cpu8051() :
   {
     activeBlocks.push_back(blocks[i]);
   }
-  for (int i = 0; i < NumBreakpoints; i++)
-  {
-    breakpoints[i] = -1;
-  }
   Reset();
 }
 

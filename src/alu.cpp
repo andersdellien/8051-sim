@@ -28,6 +28,7 @@
 #include "exceptions.hpp"
 #include "sfr.hpp"
 #include "command.hpp"
+#include <ncurses.h>
 
 #define INTERRUPT_PENDING_TIMER0 1
 #define INTERRUPT_PENDING_UART0 2
@@ -395,7 +396,7 @@ void Alu::Write(std::uint8_t address, std::uint8_t data)
   }
   else
   {
-    std::cout << "Illegal byte address " << (int) address << " PC " << GetPC() << std::endl;
+    printw("Illegal byte address %x PC %x\n", address, GetPC());
     throw new IllegalAddressException();
   }
 }
@@ -412,7 +413,7 @@ std::uint8_t Alu::Read(std::uint8_t address)
   }
   else
   {
-    std::cout << "Illegal byte address " << (int) address << std::endl;
+    printw("Illegal byte address %x PC %x\n", address, GetPC());
     throw new IllegalAddressException();
   }
 }
@@ -432,7 +433,7 @@ bool Alu::ReadBit(std::uint8_t address)
   }
   else
   {
-    std::cout << "Illegal bit address " << (int) address << std::endl;
+    printw("Illegal bit address %x PC %x\n", address, GetPC());
     throw new IllegalAddressException();
   }
 }
@@ -458,7 +459,7 @@ void Alu::WriteBit(std::uint8_t address, bool value)
   }
   else
   {
-    std::cout << "Illegal bit address " << (int) address << std::endl;
+    printw("Illegal bit address %x PC %x\n", address, GetPC());
     throw new IllegalAddressException();
   }
 }

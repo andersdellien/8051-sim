@@ -19,65 +19,29 @@
 #ifndef _COMMAND_HPP
 #define _COMMAND_HPP
 
-#include <iostream>
-#include <stdexcept>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <set>
-
 #include "cpu8051.hpp"
+#include "shell.hpp"
 
-class Command : public Cpu8051Callbacks
+constexpr auto NumBreakpoints = 4;
+
+class Command : public Cpu8051Callbacks, public CommandCallback
 {
-  public:
-    Command();
-    virtual void OnInstructionExecuted(Cpu8051 &handler);
-    virtual bool OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit);
-    virtual void OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value);
-    virtual void OnUARTTx(Cpu8051 &handler, char tx);
-    virtual bool executeCommand(Cpu8051 &handler, std::vector<std::string>& tokens) = 0;
-    static bool dispatchCommand(Cpu8051 &handler, std::vector<std::string>& tokens);
-  protected:
+  private:
+    bool trace[256];
     int instructionCount;
     int instructionLimit;
     int breakCount;
     int breakLimit;
-
-    static std::set<Command*> commands;
-};
-
-class BlockCommand : public Command
-{
+    int breakpoints[NumBreakpoints];
+  protected:
+    Shell &shell;
   public:
-    BlockCommand();
-    bool executeCommand(Cpu8051& handler, std::vector<std::string>& tokens);
-};
-
-class BreakCommand : public Command
-{
-  public:
-    BreakCommand();
-    bool executeCommand(Cpu8051& handler, std::vector<std::string>& tokens);
-};
-
-class TraceCommand : public Command
-{
-  public:
-    TraceCommand();
-    bool executeCommand(Cpu8051& handler, std::vector<std::string>& tokens);
-};
-
-class MiscCommand : public Command
-{
-  public:
-    MiscCommand();
-    bool executeCommand(Cpu8051& handler, std::vector<std::string>& tokens);
-    virtual void OnInstructionExecuted(Cpu8051 &handler);
-    virtual bool OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit);
-    virtual void OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value);
-    virtual void OnUARTTx(Cpu8051 &handler, char tx);
+    Command(Shell&);
+    void OnInstructionExecuted(Cpu8051 &cpu);
+    bool OnGPIORead(Cpu8051 &cpu, std::uint8_t port, std::uint8_t bit);
+    void OnGPIOWrite(Cpu8051 &vpu, std::uint8_t port, std::uint8_t bit, bool value);
+    void OnUARTTx(Cpu8051 &cpu, char tx);
+    void OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter*> parameters);
 };
 
 #endif

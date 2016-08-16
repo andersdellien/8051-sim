@@ -19,7 +19,7 @@
 #include <string>
 #include <cstdint>
 #include <fstream>
-#include <iostream>
+#include <ncurses.h>
 #include "flash.hpp"
 #include "exceptions.hpp"
 
@@ -89,5 +89,5 @@ void Flash::ParseHex(std::string fileName)
       throw new InvalidHexFileException();
     }
   }
-  std::cout << "Read " << byteCount << " bytes from " << fileName << std::endl;
+  printw("Read %d bytes from %s\n", byteCount, fileName.c_str());
 }

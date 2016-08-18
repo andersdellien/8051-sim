@@ -218,11 +218,11 @@ Constraint& RegisterConstraints::GetConstraint(enum Constraints c)
   return constraints[constraintRef[c]];
 }
 
-Instruction::Instruction(Alu& a, std::uint8_t o) : alu(a), opcode(o)
+Instruction::Instruction(Alu& a, std::uint8_t o) : opcode(o), alu(a)
 {
 }
 
-Instruction::Instruction(Alu& a) : alu(a), opcode(0)
+Instruction::Instruction(Alu& a) : opcode(0), alu(a)
 {
 }
 

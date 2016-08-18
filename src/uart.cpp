@@ -59,8 +59,8 @@ void SBUF0::Write(std::uint8_t tx)
 
 Uart::Uart(std::string name, Scheduler &s, Alu &a) :
   Block(name, s, a),
-  scon0("SCON0", *this, 0x98, 0x40, {0x0}),
-  sbuf0("SBUF0", *this, 0x99, 0x00, {0x0})
+  sbuf0("SBUF0", *this, 0x99, 0x00, {0x0}),
+  scon0("SCON0", *this, 0x98, 0x40, {0x0})
 {
 }
 

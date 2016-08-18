@@ -24,11 +24,11 @@
 #include <string>
 #include <vector>
 
-Parameter::Parameter(std::string s) : string(s), type(ParameterType::String)
+Parameter::Parameter(std::string s) : type(ParameterType::String), string(s)
 {
 }
 
-Parameter::Parameter(int n) : number(n), type(ParameterType::Numeric)
+Parameter::Parameter(int n) : type(ParameterType::Numeric), number(n)
 {
 }
 
@@ -92,9 +92,12 @@ void Shell::CommandLoop()
       {
         if (command.length())
         {
-          int x, y;
+          int x = -1, y = -1;
           getsyx(y, x);
-          move(y, x - 1);
+          if (x >= 0 && y >= 0)
+          {
+            move(y, x - 1);
+          }
           delch();
           refresh();
 
@@ -178,9 +181,12 @@ void Shell::CommandLoop()
       {
         if (parameter.length())
         {
-          int x, y;
+          int x = -1, y = -1;
           getsyx(y, x);
-          move(y, x - 1);
+          if (x >= 0 && y >= 0)
+          {
+            move(y, x - 1);
+          }
           delch();
           refresh();
           parameter = parameter.substr(0, parameter.length() - 1);

@@ -47,11 +47,12 @@ constexpr auto disassembleCmd = "disassemble";
 constexpr auto flashCmd = "flash";
 constexpr auto iramCmd = "iram";
 
-Command::Command(Shell &s) : shell(s),
+Command::Command(Shell &s) :
   instructionCount(0),
   instructionLimit(0),
   breakCount(0),
-  breakLimit(0)
+  breakLimit(0),
+  shell(s)
 {
   shell.RegisterCommand(blockCmd, this);
   shell.RegisterCommand(breakListCmd, this);

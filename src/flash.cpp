@@ -56,6 +56,7 @@ void Flash::ParseHex(std::string fileName)
     std::string data = line.substr(9, 2 * count);
     int checkSum = std::stoi(line.substr(line.length() - 2, 2), nullptr, 16);
 
+    (void) checkSum;
     if (type == Data)
     {
       for (int i = 0; i < data.length(); i += 2)

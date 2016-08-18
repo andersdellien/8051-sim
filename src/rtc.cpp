@@ -102,11 +102,11 @@ void RTC0DAT::Write(std::uint8_t value)
 
 Rtc::Rtc(std::string name, Scheduler &s, Alu &a) :
   Block(name, s, a),
-  rtc0adr("RTC0ADR", *this, 0xac, 0x00, {0x0}),
-  rtc0dat("RTC0DAT", *this, 0xad, 0x00, {0x0}),
-  rtc0key("RTC0KEY", *this, 0xae, 0x00, {0x0}),
+  rtc0cn(0),
   alarm(0),
-  rtc0cn(0)
+  rtc0adr("RTC0ADR", *this, 0xac, 0x00, {0x0}),
+  rtc0key("RTC0KEY", *this, 0xae, 0x00, {0x0}),
+  rtc0dat("RTC0DAT", *this, 0xad, 0x00, {0x0})
 {
 }
 

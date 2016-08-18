@@ -26,7 +26,11 @@
 #include "symbol_table.hpp"
 
 Sfr::Sfr(std::string n, Block &b, std::uint8_t addr, std::uint8_t r, std::set<std::uint8_t> p) :
-  name(n), block(b), address(addr), resetValue(r), pages(p)
+  address(addr),
+  pages(p),
+  name(n),
+  block(b),
+  resetValue(r)
 {
   SymbolTable::GetInstance().RegisterSymbol(address, name);
   block.RegisterSfr(this);

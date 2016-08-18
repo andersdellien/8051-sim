@@ -29,8 +29,8 @@ Cpu8051::Cpu8051() :
   system("System", *this, alu),
   uart("Uart", *this, alu),
   adc("Adc", *this, alu),
-  timer("Timer", *this, alu),
   rtc("Rtc", *this, alu),
+  timer("Timer", *this, alu),
   ticks(0),
   activatedBlock(false)
 {

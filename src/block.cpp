@@ -22,7 +22,7 @@
 #include "alu.hpp"
 #include "scheduler.hpp"
 
-Block::Block(std::string n, Scheduler &s, Alu &a) : name(n), alu(a), scheduler(s)
+Block::Block(std::string n, Scheduler &s, Alu &a) : alu(a), scheduler(s), name(n)
 {
 }
 

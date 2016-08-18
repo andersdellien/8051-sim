@@ -141,19 +141,19 @@ void Command::OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter
   {
     for (int i = 0; i <= 255; i++)
     {
-      shell.trace[i] = true;
+      trace[i] = true;
     }
   }
   else if (!command.compare(traceNoneCmd))
   {
     for (int i = 0; i <= 255; i++)
     {
-      shell.trace[i] = true;
+      trace[i] = true;
     }
   }
   else if (!command.compare(traceInstructionCmd))
   {
-    shell.trace[parameters[0]->number] = true;
+    trace[parameters[0]->number] = true;
   }
   else if (!command.compare(coverageInitializeCmd))
   {
@@ -348,7 +348,7 @@ void Command::OnInstructionExecuted(Cpu8051 &cpu)
   {
     printw("break at %4.4x\n", pc);
   }
-  if (shell.trace[cpu.alu.flash.Read(pc)] ||
+  if (trace[cpu.alu.flash.Read(pc)] ||
       breakCount == breakLimit || instructionLimit > 0)
   {
     printw("%d %4.4x %s\n", cpu.GetTicks(), pc, cpu.alu.Disassemble(pc).c_str());

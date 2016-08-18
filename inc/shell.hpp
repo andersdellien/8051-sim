@@ -62,7 +62,6 @@ class Shell
     Trie trie;
     std::vector<CommandInfo*> callbacks;
   public:
-    bool trace[256];
     void CommandLoop();
     void RegisterCommand(std::string command, CommandCallback *callback, std::vector<ParameterType> parameters);
     void RegisterCommand(std::string command, CommandCallback *callback);

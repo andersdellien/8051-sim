@@ -16,11 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
+#include <cstdint>
 #include <stdexcept>
-#include "timer.hpp"
-#include "sfr.hpp"
+#include <string>
 #include "block.hpp"
+#include "sfr.hpp"
+#include "timer.hpp"
 
 #define T0M 4
 #define SCA 3

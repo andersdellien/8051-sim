@@ -19,9 +19,12 @@
 #ifndef _RTC_HPP
 #define _RTC_HPP
 
+#include <cstdint>
 #include <set>
+#include <string>
 #include "alu.hpp"
 #include "block.hpp"
+#include "sfr.hpp"
 
 class RTC0DAT: public Sfr
 {

@@ -19,9 +19,10 @@
 #ifndef _PORT0_HPP
 #define _PORT0_HPP
 
-#include <set>
-#include "port.hpp"
+#include <string>
 #include "alu.hpp"
+#include "port.hpp"
+#include "sfr.hpp"
 
 class Port0 : public Port
 {

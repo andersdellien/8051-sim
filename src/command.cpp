@@ -16,10 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "command.hpp"
-#include "instruction_coverage.hpp"
-#include "symbol_table.hpp"
+#include <vector>
 #include <ncurses.h>
+#include "command.hpp"
+#include "cpu8051.hpp"
+#include "instruction_coverage.hpp"
+#include "shell.hpp"
+#include "symbol_table.hpp"
 
 constexpr auto blockCmd = "block";
 constexpr auto breakListCmd = "break list";

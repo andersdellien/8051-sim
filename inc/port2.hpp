@@ -19,8 +19,10 @@
 #ifndef _PORT2_HPP
 #define _PORT2_HPP
 
-#include "port.hpp"
+#include <string>
 #include "alu.hpp"
+#include "port.hpp"
+#include "sfr.hpp"
 
 class Port2 : public Port
 {

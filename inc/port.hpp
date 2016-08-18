@@ -19,9 +19,11 @@
 #ifndef _PORT_HPP
 #define _PORT_HPP
 
+#include <cstdint>
+#include <set>
+#include <string>
 #include "alu.hpp"
 #include "block.hpp"
-
 
 // Common superclass for P0, P1 and P2
 class SfrIO: public SfrBitAddressable

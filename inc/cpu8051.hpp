@@ -19,13 +19,7 @@
 #ifndef _CPU8051_HPP
 #define _CPU8051_HPP
 
-#include <iostream>
 #include <list>
-#include <stdexcept>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <iomanip>
 #include <queue>
 
 #include "alu.hpp"

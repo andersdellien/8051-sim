@@ -17,7 +17,9 @@
  */
 
 #include <iostream>
+#include <cstdint>
 #include <set>
+#include <string>
 #include "alu.hpp"
 #include "block.hpp"
 #include "rtc.hpp"

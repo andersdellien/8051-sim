@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
+#include <string>
+#include "port0.hpp"
 #include "port2.hpp"
 #include "sfr.hpp"
-#include "command.hpp"
 
 Port2::Port2(std::string name, Scheduler &s, Alu &a) :
   Port(name, s, a),

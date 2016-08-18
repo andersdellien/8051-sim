@@ -19,6 +19,9 @@
 #ifndef _COMMAND_HPP
 #define _COMMAND_HPP
 
+#include <cstdint>
+#include <vector>
+#include <string>
 #include "cpu8051.hpp"
 #include "shell.hpp"
 

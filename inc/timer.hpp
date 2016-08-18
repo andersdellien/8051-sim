@@ -19,6 +19,9 @@
 #ifndef _TIMER_HPP
 #define _TIMER_HPP
 
+#include <cstdint>
+#include <set>
+#include <string>
 #include "alu.hpp"
 #include "block.hpp"
 #include "sfr.hpp"

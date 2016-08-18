@@ -17,11 +17,14 @@
  */
 
 #include <iostream>
+#include <cstdint>
 #include <set>
-#include "uart.hpp"
-#include "sfr.hpp"
+#include <string>
+#include "alu.hpp"
 #include "block.hpp"
 #include "cpu8051.hpp"
+#include "sfr.hpp"
+#include "uart.hpp"
 
 SBUF0::SBUF0(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages):
   Sfr(name, block, address, resetValue, pages)

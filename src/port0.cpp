@@ -17,11 +17,9 @@
  */
 
 #include <string>
-#include <iostream>
 #include "port0.hpp"
 #include "sfr.hpp"
 #include "port.hpp"
-#include "command.hpp"
 
 Port0::Port0(std::string name, Scheduler &s, Alu &a) :
   Port(name, s, a),

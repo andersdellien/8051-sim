@@ -19,7 +19,10 @@
 #ifndef _ADC_HPP
 #define _ADC_HPP
 
+#include <string>
+#include "alu.hpp"
 #include "block.hpp"
+#include "sfr.hpp"
 
 class Adc: public Block
 {

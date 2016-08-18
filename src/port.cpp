@@ -16,11 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <cstdint>
+#include <set>
+#include <string>
 #include "alu.hpp"
-#include "port.hpp"
 #include "block.hpp"
-#include "sfr.hpp"
 #include "cpu8051.hpp"
+#include "port.hpp"
+#include "sfr.hpp"
 
 SfrIO::SfrIO(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages, std::uint8_t p):
   SfrBitAddressable(name, block, address, resetValue, pages), port(p)

@@ -20,11 +20,12 @@
 #define _ALU_HPP
 
 #include <cstdint>
-#include <vector>
-#include <set>
+#include <map>
 #include <string>
+#include <vector>
 #include "block.hpp"
 #include "flash.hpp"
+#include "memory.hpp"
 #include "sfr.hpp"
 
 class Cpu8051Callbacks;

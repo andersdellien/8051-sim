@@ -17,8 +17,8 @@
  */
 
 #include <cstdint>
+#include <ncurses.h>
 #include <string>
-#include <iostream>
 #include <set>
 #include "sfr.hpp"
 #include "block.hpp"
@@ -41,7 +41,7 @@ void Sfr::Write(std::uint8_t d)
 {
   if (block.alu.GetTraceSfr())
   {
-    std::cout << name << " write " << (int) d << std::endl;
+    printw("%s write %d\n", name.c_str(), d);
   }
   data = d;
 }
@@ -50,7 +50,7 @@ std::uint8_t Sfr::Read()
 {
   if (block.alu.GetTraceSfr())
   {
-    std::cout << name << " read " << (int) data << std::endl;
+    printw("%s read %d\n", name.c_str(), data);
   }
   return data;
 }
@@ -72,7 +72,7 @@ void SfrBitAddressable::WriteBit(std::uint8_t bit, bool value)
 
   if (block.alu.GetTraceSfr())
   {
-    std::cout << name << " write bit " << (int) bit << " " << (int) value << std::endl;
+    printw("%s write bit %d %d\n", name.c_str(), bit, value);
   }
 
   data &= ~bitShifted;
@@ -88,7 +88,7 @@ bool SfrBitAddressable::ReadBit(std::uint8_t bit)
 
   if (block.alu.GetTraceSfr())
   {
-    std::cout << name << " read bit " << (int) bit << " " << (int) (data & bitShifted) << std::endl;
+    printw("%s read bit %d %d\n", name.c_str(), bit, data & bitShifted);
   }
 
   return data & bitShifted;

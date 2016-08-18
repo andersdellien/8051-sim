@@ -17,7 +17,7 @@
  */
 
 #include <cstdint>
-#include <iostream>
+#include <ncurses.h>
 #include <stdexcept>
 #include <string>
 #include <sstream>
@@ -31,28 +31,28 @@ void Constraint::Print(std::string name)
     return;
   }
 
-  std::cout << name << " ";
+  printw("%s ", name.c_str());
   if (type == ConstraintType::True)
   {
-    std::cout << "True";
+    printw("True");
   }
   else if (type == ConstraintType::False)
   {
-    std::cout << "False";
+    printw("False");
   }
   else if (type == ConstraintType::Memory)
   {
-    std::cout << "Memory: " << low << " " << high;
+    printw("Memory: %d %d", low, high);
   }
   else if (type == ConstraintType::Interval)
   {
-    std::cout << "Interval: " << low << " " << high;
+    printw("Interval: %d %d", low, high);
   }
   else if (type == ConstraintType::RegisterInterval)
   {
-    std::cout << "Register " << reg << " Interval: " << low << " " << high;
+    printw("Register: %d %d %d", reg, low, high);
   }
-  std::cout << std::endl;
+  printw("\n");
 }
 
 void Constraint::SetNone()
@@ -233,7 +233,7 @@ std::uint8_t Instruction::GetOperands() const
 
 void Instruction::Execute() const
 {
-  std::cout << "Instruction " << std::hex << (int) opcode << " at address " << alu.GetPC() << " not implemented" << std::endl;
+  printw("Instruction %x at address %4.4x not implemented\n", opcode, alu.GetPC());
   throw new std::runtime_error("instruction not implemented");
 }
 

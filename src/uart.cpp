@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
 #include <cstdint>
+#include <ncurses.h>
 #include <set>
 #include <string>
 #include "alu.hpp"
@@ -77,7 +77,7 @@ void Uart::SimulateRx(char c)
   }
   else
   {
-    std::cout << "UART input with RX disabled" << std::endl;
+    printw("UART input with RX disabled\n");
   }
 }
 

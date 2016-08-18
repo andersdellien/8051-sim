@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
 #include <cstdint>
+#include <ncurses.h>
 #include <set>
 #include <string>
 #include "alu.hpp"
@@ -95,7 +95,7 @@ void RTC0DAT::Write(std::uint8_t value)
   }
   else
   {
-    std::cout << "Invalid RTC register " << (int) reg << std::endl;
+    printw("Invalid RTC register %2.2x\n", reg);
   }
   rtc->rtc0adr.data++;
 }

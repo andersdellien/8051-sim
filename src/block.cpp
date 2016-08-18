@@ -17,7 +17,7 @@
  */
 
 #include <exception>
-#include <iostream>
+#include <ncurses.h>
 #include "block.hpp"
 #include "alu.hpp"
 #include "scheduler.hpp"
@@ -50,7 +50,7 @@ void Block::Tick(int ticks)
   }
   if (ticks > remainingTicks)
   {
-    std::cout << "Block " << name << " remaining " << remainingTicks << " tick " << ticks << std::endl;
+    printw("Block %s remaining %d ticks %d\n", name.c_str(), remainingTicks, ticks);
     throw new std::runtime_error("Invalid tick");
   }
   remainingTicks -= ticks;

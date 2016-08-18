@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <iostream>
 #include <cstdint>
+#include <ncurses.h>
 #include "memory.hpp"
 #include "exceptions.hpp"
 
@@ -34,7 +34,7 @@ std::uint8_t Memory::Read(std::uint16_t address) const
   }
   else
   {
-    std::cout << "Illegal memory read at " << address << std::endl;
+    printw("Illegal memory read at %4.4x\n", address);
     throw new IllegalAddressException();
   }
 }
@@ -47,7 +47,7 @@ void Memory::Write(std::uint16_t address, std::uint8_t value)
   }
   else
   {
-    std::cout << "Illegal memory write at " << address << std::endl;
+    printw("Illegal memory write at %4.4x\n", address);
     throw new IllegalAddressException();
   }
 }

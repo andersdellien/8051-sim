@@ -80,6 +80,10 @@ Command::Command(Shell &s) :
   {
     breakpoints[i] = -1;
   }
+  for (int i = 0; i < 256; i++)
+  {
+    trace[i] = false;
+  }
 }
 
 void Command::OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter*> parameters)

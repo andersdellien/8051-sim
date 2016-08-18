@@ -18,6 +18,7 @@
 
 #include "cpu8051.hpp"
 #include "rtc.hpp"
+#include <ncurses.h>
 
 Cpu8051::Cpu8051() :
   alu("Alu", *this, 1024, 256, 8192),
@@ -95,7 +96,7 @@ void Cpu8051::Tick()
 
   if (externalEvents.size() == 0 && smallestTick <= 0)
   {
-    std::cout << "No upcoming event " << alu.GetPC() << std::endl;
+    printw("No upcoming event %4.4x\n", alu.GetPC());
     throw new std::runtime_error("No next event");
   }
   bool hasExternalEvent = false;
@@ -117,7 +118,7 @@ void Cpu8051::Tick()
   ticks += smallestTick;
   if (hasExternalEvent)
   {
-    std::cout << "Injecting " << event.second << std::endl;
+    printw("Injecting %c\n", event.second);
     uart.SimulateRx(event.second);
   }
   if (activatedBlock)

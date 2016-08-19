@@ -306,16 +306,19 @@ void Command::OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter
       printw("\n");
     }
   }
+  refresh();
 }
 
 void Command::OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value)
 {
   printw("Write %d to port %d bit %d\n", value, port, bit);
+  refresh();
 }
 
 void Command::OnUARTTx(Cpu8051 &handler, char tx)
 {
   printw("UART Tx:%c\n", tx);
+  refresh();
 }
 
 bool Command::OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit)
@@ -352,10 +355,12 @@ void Command::OnInstructionExecuted(Cpu8051 &cpu)
   if (breakLimit && (breakCount == breakLimit))
   {
     printw("break at %4.4x\n", pc);
+    refresh();
   }
   if (trace[cpu.alu.flash.Read(pc)] ||
       breakCount == breakLimit || instructionLimit > 0)
   {
     printw("%d %4.4x %s\n", cpu.GetTicks(), pc, cpu.alu.Disassemble(pc).c_str());
+    refresh();
   }
 }

@@ -58,7 +58,11 @@ void RTC0DAT::Write(std::uint8_t value)
     if (value & RTC0AEN)
     {
       rtc->remainingTicks = rtc->CalculateRemainingTicks();
-      rtc->ReportActive();
+
+      if (rtc->remainingTicks > 0)
+      {
+        rtc->ReportActive();
+      }
     }
   }
   else if (reg == RTC0XCN)
@@ -69,25 +73,41 @@ void RTC0DAT::Write(std::uint8_t value)
   {
     rtc->alarm |= value;
     rtc->remainingTicks = rtc->CalculateRemainingTicks();
-    rtc->ReportActive();
+
+    if (rtc->remainingTicks > 0)
+    {
+      rtc->ReportActive();
+    }
   }
   else if (reg == ALARM1)
   {
     rtc->alarm |= (value << 8);
     rtc->remainingTicks = rtc->CalculateRemainingTicks();
-    rtc->ReportActive();
+
+    if (rtc->remainingTicks > 0)
+    {
+      rtc->ReportActive();
+    }
   }
   else if (reg == ALARM2)
   {
     rtc->alarm |= (value << 16);
     rtc->remainingTicks = rtc->CalculateRemainingTicks();
-    rtc->ReportActive();
+
+    if (rtc->remainingTicks > 0)
+    {
+      rtc->ReportActive();
+    }
   }
   else if (reg == ALARM3)
   {
     rtc->alarm |= (value << 24);
     rtc->remainingTicks = rtc->CalculateRemainingTicks();
-    rtc->ReportActive();
+
+    if (rtc->remainingTicks > 0)
+    {
+      rtc->ReportActive();
+    }
   }
   else if (reg == CAPTURE0 || reg == CAPTURE1 || reg == CAPTURE2 || reg == CAPTURE3 || reg == RTC0XCF)
   {

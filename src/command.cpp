@@ -166,7 +166,7 @@ void Command::OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter
 
     InstructionCoverage::GetInstance().Initialize(cpu.alu);
     InstructionCoverage::GetInstance().GetCoverage(total, executed);
-    printw("Found %d instructions\n");
+    printw("Found %d instructions\n", total);
   }
   else if (!command.compare(coverageListCmd))
   {

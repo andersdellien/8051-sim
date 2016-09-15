@@ -35,7 +35,7 @@ TCON::TCON(std::string name, Block &block, std::uint8_t address, std::uint8_t re
 
 void TCON::Write(std::uint8_t value)
 {
-  bool isEnabled = (!(data & TR0) & (value & TR0));
+  bool isEnabled = (!(data & TR0) && (value & TR0));
 
   Sfr::Write(value);
   block.remainingTicks = block.CalculateRemainingTicks();

@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <ncurses.h>
+#include <iostream>
 #include <list>
 #include <string>
 
@@ -35,7 +35,7 @@ TestCase::TestCase(std::string s, bool t) : name(s), trace(t)
 
 void TestCase::OnUARTTx(Cpu8051 &handler, char tx)
 {
-  printw("UART Tx:%c\n", tx);
+  std::cout << "UART Tx:" << tx << std::endl;
 }
 
 void TestCase::OnInstructionExecuted(Cpu8051 &handler)
@@ -44,8 +44,8 @@ void TestCase::OnInstructionExecuted(Cpu8051 &handler)
 
   if (trace && handler.alu.flash.Read(pc) == 0x12)
   {
-    printw("%d %4.4x", handler.GetTicks(), pc);
-    printw(" %s\n", handler.alu.Disassemble(pc).c_str());
+    std::cout << std::dec << handler.GetTicks() << std::hex << pc;
+    std::cout << " " << handler.alu.Disassemble(pc) << std::endl;
   }
 }
 
@@ -77,15 +77,16 @@ void TestSuite::Run()
     cpu.alu.RegisterCallback(*i, &cpu);
     if ((*i)->Run(cpu))
     {
-      printw("%s passed\n", (*i)->GetName().c_str());
+      std::cout << (*i)->GetName() << " passed " << std::endl;
     }
     else
     {
-      printw("%s failed\n", (*i)->GetName().c_str());
+      std::cout << (*i)->GetName() << " failed " << std::endl;
     }
     int total, executed;
     InstructionCoverage::GetInstance().GetCoverage(total, executed);
-    printw("Total:%d executed:%d percentage:%f\n", total, executed,  (100.0*executed));
+    std::cout << "Total:" << std::dec << total << " executed: " << executed << " percentage: ";
+    std::cout << (100.0 * executed) / total << std::endl;
   }
 }
 

@@ -67,7 +67,10 @@ int SymbolTable::ParseFile(const std::string &fileName)
     }
     if (wordCount == 3 && name[0] == '_' && name[name.length()-1] == ':')
     {
-      name = name.substr(1, name.length()-2);
+      int i;
+      for (i = name.length() - 1; name[i] == ':'; i--)
+        ;
+      name = name.substr(1, i);
       std::uint16_t a = stoi(address, nullptr, 16);
       addressMap[a] = name;
       symbolMap[name] = a;

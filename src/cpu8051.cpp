@@ -119,7 +119,6 @@ void Cpu8051::Tick()
   ticks += smallestTick;
   if (hasExternalEvent)
   {
-    printw("Injecting %c\n", event.second);
     uart.SimulateRx(event.second);
   }
   if (activatedBlock)

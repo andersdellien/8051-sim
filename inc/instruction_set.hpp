@@ -910,6 +910,7 @@ class CPL_F4: public Instruction
   public:
     CPL_F4(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class MOV_F5: public Instruction

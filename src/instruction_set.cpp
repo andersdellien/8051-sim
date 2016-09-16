@@ -614,6 +614,13 @@ std::string CPL_F4::Disassemble(std::uint16_t address) const
   return "CPL A";
 }
 
+void CPL_F4::Execute() const
+{
+  alu.SetA(0xff - alu.GetA());
+
+  IncPC();
+}
+
 CPL_B3::CPL_B3(Alu &a) : Instruction(a)
 {
   opcode = 0xB3;

@@ -246,11 +246,13 @@ void Command::OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter
 
     if (fileName.rfind(hex) + hex.length() == fileName.length())
     {
-      cpu.alu.flash.ParseHex(parameters[0]->string);
+      int bytes = cpu.alu.flash.ParseHex(parameters[0]->string);
+      printw("Read %d bytes from %s\n", bytes, fileName.c_str());
     }
     else if (fileName.rfind(sym) + sym.length() == fileName.length())
     {
-      SymbolTable::GetInstance().ParseFile(fileName);
+      int symbols = SymbolTable::GetInstance().ParseFile(fileName);
+      printw("Found %d symbols in %s\n", symbols, fileName.c_str());
     }
     else
     {

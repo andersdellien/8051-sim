@@ -19,7 +19,6 @@
 #include <string>
 #include <cstdint>
 #include <fstream>
-#include <ncurses.h>
 #include "flash.hpp"
 #include "exceptions.hpp"
 
@@ -37,7 +36,7 @@ Flash::Flash(std::string name, std::uint16_t size) : Memory(name, size)
 {
 }
 
-void Flash::ParseHex(std::string fileName)
+int Flash::ParseHex(std::string fileName)
 {
   std::ifstream file;
   std::string line;
@@ -90,5 +89,5 @@ void Flash::ParseHex(std::string fileName)
       throw new InvalidHexFileException();
     }
   }
-  printw("Read %d bytes from %s\n", byteCount, fileName.c_str());
+  return byteCount;
 }

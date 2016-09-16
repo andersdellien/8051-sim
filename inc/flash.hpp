@@ -27,7 +27,7 @@ class Flash : public Memory
 {
   public:
     Flash(std::string name, std::uint16_t size);
-    void ParseHex(std::string fileName);
+    int ParseHex(std::string fileName);
 };
 
 #endif

@@ -18,11 +18,10 @@
 
 #include <fstream>
 #include <iostream>
-#include <ncurses.h>
 #include "symbol_table.hpp"
 #include <map>
 
-void SymbolTable::ParseFile(const std::string &fileName)
+int SymbolTable::ParseFile(const std::string &fileName)
 {
   std::string line;
   std::ifstream file;
@@ -75,7 +74,7 @@ void SymbolTable::ParseFile(const std::string &fileName)
       symbolCount++;
     }
   }
-  printw("Found %d symbols in %s\n", symbolCount, fileName.c_str());
+  return symbolCount;
 }
 
 void SymbolTable::LookupSymbol(const std::string &symbolName, std::uint16_t &address, bool &found)

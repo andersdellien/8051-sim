@@ -655,6 +655,15 @@ std::string CPL_B2::Disassemble(std::uint16_t address) const
   return ss.str();
 }
 
+void CPL_B2::Execute() const
+{
+  std::uint16_t address = alu.flash.Read(alu.GetPC() + 1);
+
+  alu.WriteBit(address, !alu.ReadBit(address));
+
+  IncPC();
+}
+
 DA_D4::DA_D4(Alu &a) : Instruction(a)
 {
   opcode = 0xD4;

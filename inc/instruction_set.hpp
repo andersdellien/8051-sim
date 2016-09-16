@@ -676,6 +676,7 @@ class CPL_B2: public Instruction
   public:
     CPL_B2(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class CPL_B3: public Instruction

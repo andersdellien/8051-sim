@@ -46,8 +46,8 @@ class Block
     virtual int CalculateRemainingTicks();
     void ReportActive();
     int remainingTicks;
-  protected:
     Scheduler &scheduler;
+  protected:
     std::string name;
     std::map<std::string, Sfr*> sfrRegisters;
     virtual void ClockEvent();

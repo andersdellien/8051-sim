@@ -31,6 +31,7 @@ class RTC0DAT: public Sfr
   public:
     RTC0DAT(std::string name, Block &block, std::uint8_t addresss, std::uint8_t resetValue, std::set<std::uint8_t> pages);
     void Write(std::uint8_t value);
+    std::uint8_t Read();
 };
 
 class Rtc: public Block
@@ -42,6 +43,8 @@ class Rtc: public Block
     std::uint8_t rtc0xcn;
     std::uint8_t rtc0cn;
     std::uint32_t alarm;
+    std::uint32_t capture;
+    unsigned long long ticks;
     Sfr rtc0adr;
   private:
     Sfr rtc0key;

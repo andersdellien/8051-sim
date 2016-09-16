@@ -24,6 +24,7 @@
 #include "block.hpp"
 #include "rtc.hpp"
 #include "sfr.hpp"
+#include "scheduler.hpp"
 
 // Internal RTC registers
 constexpr std::uint8_t CAPTURE0 = 0x00;
@@ -47,10 +48,49 @@ RTC0DAT::RTC0DAT(std::string name, Block &block, std::uint8_t address, std::uint
 {
 }
 
+std::uint8_t RTC0DAT::Read()
+{
+  Rtc *rtc = dynamic_cast<Rtc*>(&block);
+  std::uint8_t reg = rtc->rtc0adr.data & 0xf;
+
+  // Assume that we run the system on the Precision Oscillator divided by 16
+  // and update the capture registers accordingly
+
+  rtc->capture += ((rtc->scheduler.GetTicks() - rtc->ticks) * 16 * 32768) / 24500000;
+  rtc->ticks = rtc->scheduler.GetTicks();
+
+  std::uint8_t result = 0;
+
+  if (reg == CAPTURE0)
+  {
+    result = rtc->capture;
+  }
+  else if (reg == CAPTURE1)
+  {
+    result = rtc->capture >> 8;
+  }
+  else if (reg == CAPTURE2)
+  {
+    result = rtc->capture >> 16;
+  }
+  else if (reg == CAPTURE3)
+  {
+    result = rtc->capture >> 24;
+  }
+
+  rtc->rtc0adr.data++;
+  return result;
+}
+
 void RTC0DAT::Write(std::uint8_t value)
 {
   Rtc *rtc = dynamic_cast<Rtc*>(&block);
   std::uint8_t reg = rtc->rtc0adr.data & 0xf;
+
+  // Assume that we run the system on the Precision Oscillator divided by 16
+  // and update the capture registers accordingly
+  rtc->capture += ((rtc->scheduler.GetTicks() - rtc->ticks) * 16 * 32768) / 24500000;
+  rtc->ticks = rtc->scheduler.GetTicks();
 
   if (reg == RTC0CN)
   {
@@ -71,6 +111,7 @@ void RTC0DAT::Write(std::uint8_t value)
   }
   else if (reg == ALARM0)
   {
+    rtc->alarm &= 0xffffff00;
     rtc->alarm |= value;
     rtc->remainingTicks = rtc->CalculateRemainingTicks();
 
@@ -81,7 +122,8 @@ void RTC0DAT::Write(std::uint8_t value)
   }
   else if (reg == ALARM1)
   {
-    rtc->alarm |= (value << 8);
+    rtc->alarm &= 0xffff00ff;
+    rtc->alarm |= ((uint32_t) value << 8);
     rtc->remainingTicks = rtc->CalculateRemainingTicks();
 
     if (rtc->remainingTicks > 0)
@@ -91,7 +133,8 @@ void RTC0DAT::Write(std::uint8_t value)
   }
   else if (reg == ALARM2)
   {
-    rtc->alarm |= (value << 16);
+    rtc->alarm &= 0xff00ffff;
+    rtc->alarm |= ((uint32_t) value << 16);
     rtc->remainingTicks = rtc->CalculateRemainingTicks();
 
     if (rtc->remainingTicks > 0)
@@ -101,7 +144,8 @@ void RTC0DAT::Write(std::uint8_t value)
   }
   else if (reg == ALARM3)
   {
-    rtc->alarm |= (value << 24);
+    rtc->alarm &= 0x00ffffff;
+    rtc->alarm |= ((uint32_t) value << 24);
     rtc->remainingTicks = rtc->CalculateRemainingTicks();
 
     if (rtc->remainingTicks > 0)
@@ -109,9 +153,29 @@ void RTC0DAT::Write(std::uint8_t value)
       rtc->ReportActive();
     }
   }
-  else if (reg == CAPTURE0 || reg == CAPTURE1 || reg == CAPTURE2 || reg == CAPTURE3 || reg == RTC0XCF)
+  else if (reg == CAPTURE0)
   {
-    // Functionality controlled by these registers is currently not simulated, ignore them for now
+    rtc->capture &= 0xffffff00;
+    rtc->capture |= value;
+  }
+  else if (reg == CAPTURE1)
+  {
+    rtc->capture &= 0xffff00ff;
+    rtc->capture |= (uint32_t) value << 8;
+  }
+  else if (reg == CAPTURE2)
+  {
+    rtc->capture &= 0xff00ffff;
+    rtc->capture |= (uint32_t) value << 16;
+  }
+  else if (reg == CAPTURE3)
+  {
+    rtc->capture &= 0x00ffffff;
+    rtc->capture |= (uint32_t) value << 24;
+  }
+  else if (reg == RTC0XCF)
+  {
+    // This register is currently not simulated, ignore it for now
   }
   else
   {
@@ -124,6 +188,7 @@ Rtc::Rtc(std::string name, Scheduler &s, Alu &a) :
   Block(name, s, a),
   rtc0cn(0),
   alarm(0),
+  capture(0),
   rtc0adr("RTC0ADR", *this, 0xac, 0x00, {0x0}),
   rtc0key("RTC0KEY", *this, 0xae, 0x00, {0x0}),
   rtc0dat("RTC0DAT", *this, 0xad, 0x00, {0x0})
@@ -136,7 +201,8 @@ int Rtc::CalculateRemainingTicks()
 
   if (rtc0cn & RTC0AEN)
   {
-    ticks = (24500000 / 4) * (alarm / 32768); // Assumption: Precision oscillator divided by 4.
+    // Assumption: Precision oscillator divided by 16.
+    ticks = ((long long) (24500000 / 16) * alarm) / 32768;
   }
   else
   {
@@ -154,4 +220,6 @@ void Rtc::ClockEvent()
     rtc0cn &= ~RTC0AEN;
   }
   remainingTicks = CalculateRemainingTicks();
+  capture = 0;
+  ticks = scheduler.GetTicks();
 }

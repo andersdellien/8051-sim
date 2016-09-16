@@ -42,6 +42,7 @@ Cpu8051::Cpu8051() :
   blocks.push_back(&system);
   blocks.push_back(&uart);
   blocks.push_back(&adc);
+  blocks.push_back(&rtc);
   blocks.push_back(&timer);
   for (int i = 0; i < blocks.size(); i++)
   {

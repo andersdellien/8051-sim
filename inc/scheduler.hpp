@@ -25,6 +25,7 @@ class Scheduler
 {
   public:
     virtual void ReportActive(Block *b) = 0;
+    virtual unsigned long long GetTicks() = 0;
 };
 
 #endif

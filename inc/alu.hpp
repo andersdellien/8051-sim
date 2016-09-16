@@ -100,7 +100,7 @@ class Alu : public Block
     std::uint16_t pc;
     Sfr sfrSP;
     Sfr sfrIP;
-    Sfr sfrPSW;
+    SfrBitAddressable sfrPSW;
     SfrBitAddressable sfrIE;
     Sfr sfrSFRPAGE;
     SfrBitAddressable sfrB;

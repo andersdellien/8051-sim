@@ -223,3 +223,11 @@ void Rtc::ClockEvent()
   capture = 0;
   ticks = scheduler.GetTicks();
 }
+
+void Rtc::Reset()
+{
+  capture = 0;
+  ticks = 0;
+  alarm = 0;
+  Block::Reset();
+}

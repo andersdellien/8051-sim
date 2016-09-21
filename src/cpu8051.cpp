@@ -64,6 +64,7 @@ unsigned long long Cpu8051::GetTicks()
 
 void Cpu8051::Reset()
 {
+  ticks = 0;
   for (std::vector<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
   {
     (*i)->Reset();
@@ -83,7 +84,6 @@ void Cpu8051::Tick()
   {
     std::list<Block*>::iterator j = i;
     long long tick = (*i)->GetTicks();
-
     i++;
     if (tick == -1)
     {

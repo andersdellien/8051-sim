@@ -40,6 +40,7 @@ class Rtc: public Block
     Rtc(std::string name, Scheduler &s, Alu &alu);
     int CalculateRemainingTicks();
     void ClockEvent();
+    void Reset();
     std::uint8_t rtc0xcn;
     std::uint8_t rtc0cn;
     std::uint32_t alarm;

@@ -38,6 +38,11 @@ void TestCase::OnUARTTx(Cpu8051 &handler, char tx)
   std::cout << "UART Tx:" << tx << std::endl;
 }
 
+void TestCase::OnReset(Cpu8051 &handler)
+{
+  std::cout << "Reset" << std::endl;
+}
+
 void TestCase::OnInstructionExecuted(Cpu8051 &handler)
 {
   int pc = handler.alu.GetPC();

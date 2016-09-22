@@ -34,6 +34,7 @@ class TestCase: public Cpu8051Callbacks
     virtual bool OnGPIORead(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit) = 0;
     virtual void OnGPIOWrite(Cpu8051 &handler, std::uint8_t port, std::uint8_t bit, bool value) = 0;
     virtual void OnUARTTx(Cpu8051 &handler, char tx);
+    virtual void OnReset(Cpu8051 &handler);
     std::string GetName();
   private:
     std::string name;

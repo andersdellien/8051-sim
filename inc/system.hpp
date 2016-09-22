@@ -30,6 +30,13 @@ class CLKSEL: public Sfr
     std::uint8_t Read();
 };
 
+class RSTSRC: public Sfr
+{
+  public:
+    RSTSRC(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages);
+    void Write(std::uint8_t value);
+};
+
 class System: public Block
 {
   public:
@@ -37,7 +44,7 @@ class System: public Block
   private:
     CLKSEL clksel;
     Sfr oscicn;
-    Sfr rstsrc;
+    RSTSRC rstsrc;
     Sfr ref0cn;
     Sfr reg0cn;
     Sfr vdm0cn;

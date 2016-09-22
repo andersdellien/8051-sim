@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <set>
+#include "scheduler.hpp"
 #include "system.hpp"
 #include "sfr.hpp"
 #include "alu.hpp"
@@ -32,6 +33,19 @@ std::uint8_t CLKSEL::Read()
 {
   // Let's always assume the clock is valid
   return data | 0x80;
+}
+
+RSTSRC::RSTSRC(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages):
+  Sfr(name, block, address, resetValue, pages)
+{
+}
+
+void RSTSRC::Write(std::uint8_t value)
+{
+  if (value & 0x10)
+  {
+    block.scheduler.Reset();
+  }
 }
 
 System::System(std::string name, Scheduler &s, Alu &a) :

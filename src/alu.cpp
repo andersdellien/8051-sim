@@ -278,6 +278,10 @@ void Alu::Reset()
   }
   remainingTicks = CalculateRemainingTicks();
   ReportActive();
+  if (callbacks)
+  {
+    callbacks->OnReset(*callbackCpu);
+  }
 }
 
 std::uint16_t Alu::GetPC()

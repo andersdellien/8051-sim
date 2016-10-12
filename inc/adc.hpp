@@ -24,6 +24,14 @@
 #include "block.hpp"
 #include "sfr.hpp"
 
+class SfrADC0CN: public SfrBitAddressable
+{
+  public:
+    SfrADC0CN(std::string name, Block &b, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages);
+    std::uint8_t Read();
+    bool ReadBit(std::uint8_t bit);
+};
+
 class Adc: public Block
 {
   public:
@@ -34,6 +42,15 @@ class Adc: public Block
     Sfr adc0cf;
     Sfr adc0pwr;
     Sfr adc0ac;
+    SfrADC0CN adc0cn;
+    Sfr adc0mx;
+    Sfr ref0cn;
+    Sfr adc0gtl;
+    Sfr adc0gth;
+    Sfr adc0ltl;
+    Sfr adc0lth;
+    Sfr adc0l;
+    Sfr adc0h;
 };
 
 #endif

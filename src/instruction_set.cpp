@@ -2221,6 +2221,23 @@ RR_3::RR_3(Alu &a) : Instruction(a)
   cycles = 1;
 }
 
+void RR_3::Execute() const
+{
+  std::uint8_t a;
+
+  a = alu.GetA();
+  if (a & 1)
+  {
+    a = 0x80 | (a >> 1);
+  }
+  else
+  {
+    a = a >> 1;
+  }
+  alu.SetA(a);
+  IncPC();
+}
+
 std::string RR_3::Disassemble(std::uint16_t address) const
 {
   return "RR A";

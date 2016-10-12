@@ -54,6 +54,7 @@ class RR_3: public Instruction
   public:
     RR_3(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class INC_4: public Instruction

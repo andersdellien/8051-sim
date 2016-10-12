@@ -111,6 +111,7 @@ class Alu : public Block
     Sfr sfrFLSCL;
     Sfr sfrFLKEY;
     Sfr sfrFLWR;
+    Sfr sfrEIE1;
     bool traceSfr;
     int tickCount;
     Cpu8051Callbacks *callbacks;

@@ -54,6 +54,7 @@ Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t i
     sfrFLSCL("FLSCL", *this, 0xb7, 0x00, {0x0}),
     sfrFLKEY("FLKEY", *this, 0xb6, 0x00, {0x0, 0xf}),
     sfrFLWR("FLWR", *this, 0xe5, 0x00, {0x0, 0xf}),
+    sfrEIE1("EIE1", *this, 0xe6, 0x00, {0x0, 0xf}),
     traceSfr(false),
     callbacks(nullptr),
     interruptPending(0)

@@ -50,7 +50,7 @@ int Flash::ParseHex(std::string fileName)
       throw new InvalidHexFileException();
     }
     int count = std::stoi(line.substr(1,2), nullptr, 16);
-    int address = std::stoi(line.substr(3,4), nullptr, 16);
+    std::uint32_t address = std::stoi(line.substr(3,4), nullptr, 16);
     int type = std::stoi(line.substr(7,2), nullptr, 16);
     std::string data = line.substr(9, 2 * count);
     int checkSum = std::stoi(line.substr(line.length() - 2, 2), nullptr, 16);
@@ -61,7 +61,12 @@ int Flash::ParseHex(std::string fileName)
       for (int i = 0; i < data.length(); i += 2)
       {
         byteCount++;
-        Write(addressOffset + address + i / 2, stoi(data.substr(i, 2), nullptr, 16));
+        std::uint32_t addr = addressOffset + address + i / 2;
+        std::uint8_t val = stoi(data.substr(i, 2), nullptr, 16);
+        if (addr < size)
+        {
+          Write(addr, val);
+        }
       }
     }
     else if (type == Eof)
@@ -78,6 +83,7 @@ int Flash::ParseHex(std::string fileName)
     }
     else if (type == ExtendedLinearAddress)
     {
+      address = std::stoi(line.substr(9, 4), nullptr, 16);
       addressOffset = address << 16;
     }
     else if (type == StartLinearAddress)

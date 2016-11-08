@@ -24,9 +24,11 @@
 
 class Memory
 {
-    std::uint16_t size;
+  private:
     std::uint8_t *data;
     std::string name;
+  protected:
+    std::uint16_t size;
   public:
     std::uint16_t GetSize() const;
     Memory(std::string name, std::uint16_t size);

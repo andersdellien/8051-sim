@@ -21,7 +21,7 @@
 #include "memory.hpp"
 #include "exceptions.hpp"
 
-Memory::Memory(std::string n, std::uint16_t s) : size(s), name(n)
+Memory::Memory(std::string n, std::uint16_t s) : name(n), size(s)
 {
   data = new std::uint8_t[s];
 }

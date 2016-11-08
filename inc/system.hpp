@@ -48,6 +48,8 @@ class System: public Block
     Sfr ref0cn;
     Sfr reg0cn;
     Sfr vdm0cn;
+    Sfr crc0auto;
+    Sfr it01cf;
 };
 
 #endif

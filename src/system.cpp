@@ -55,6 +55,6 @@ System::System(std::string name, Scheduler &s, Alu &a) :
   rstsrc("RSTSRC", *this, 0xef, 0x00, {0x0}),
   ref0cn("REF0CN", *this, 0xd1, 0x18, {0x0}),
   reg0cn("REG0CN", *this, 0xc9, 0x00, {0x0}),
-  vdm0cn("VCM0CN", *this, 0xff, 0x88, {0x0})
+  vdm0cn("VDM0CN", *this, 0xff, 0x88, {0x0})
 {
 }

@@ -366,3 +366,7 @@ void Command::OnInstructionExecuted(Cpu8051 &cpu)
     refresh();
   }
 }
+
+void Command::OnReset(Cpu8051 &handler)
+{
+}

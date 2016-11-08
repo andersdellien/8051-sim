@@ -45,6 +45,7 @@ class Command : public Cpu8051Callbacks, public CommandCallback
     void OnGPIOWrite(Cpu8051 &vpu, std::uint8_t port, std::uint8_t bit, bool value);
     void OnUARTTx(Cpu8051 &cpu, char tx);
     void OnCommand(Cpu8051 &cpu, std::string command, std::vector<Parameter*> parameters);
+    void OnReset(Cpu8051 &handler);
 };
 
 #endif

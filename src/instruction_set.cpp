@@ -739,7 +739,7 @@ DJNZ_D5::DJNZ_D5(Alu &a) : Instruction(a)
 {
   opcode = 0xD5;
   operands = 2;
-  
+  cycles = 2;
 }
 
 std::string DJNZ_D5::Disassemble(std::uint16_t address) const
@@ -747,8 +747,24 @@ std::string DJNZ_D5::Disassemble(std::uint16_t address) const
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex;
   ss << "DJNZ ";
-  ss << alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
+  ss << (int) alu.flash.Read(address+1) << ", " << (int) alu.flash.Read(address+2);
   return ss.str();
+}
+
+void DJNZ_D5::Execute() const
+{
+  std::uint8_t addr = alu.flash.Read(alu.GetPC() + 1);
+  std::int8_t reladdr = alu.flash.Read(alu.GetPC() + 2);
+
+  alu.Write(addr, alu.Read(addr) - 1);
+  if (alu.Read(addr))
+  {
+    alu.SetPC(alu.GetPC() + 1 + operands + reladdr);
+  }
+  else
+  {
+    IncPC();
+  }
 }
 
 DJNZRegister::DJNZRegister(Alu &a, std::uint8_t opcode) : Instruction(a, opcode)

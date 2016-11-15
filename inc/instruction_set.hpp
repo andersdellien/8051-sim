@@ -829,6 +829,7 @@ class DJNZ_D5: public Instruction
   public:
     DJNZ_D5(Alu&);
     std::string Disassemble(std::uint16_t address) const;
+    void Execute() const;
 };
 
 class XCHD: public Instruction

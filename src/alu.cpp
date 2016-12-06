@@ -33,6 +33,21 @@
 #define INTERRUPT_PENDING_TIMER0 1
 #define INTERRUPT_PENDING_UART0 2
 
+SfrPMU0CF::SfrPMU0CF(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages) :
+  Sfr(name, block, address, resetValue, pages)
+{
+}
+
+void SfrPMU0CF::Write(std::uint8_t data)
+{
+  this->data = data;
+}
+
+std::uint8_t SfrPMU0CF::Read()
+{
+  return (this->data & 0xC0) | 4; // Let's assume we always wake up due to a RTC alarm
+}
+
 Alu::Alu(std::string name, Scheduler &s, std::uint16_t xramSize, std::uint16_t iramSize, std::uint16_t flashSize):
     Block(name, s, *this),
     flash("FLASH", flashSize),
@@ -605,7 +620,7 @@ void Alu::RTCWakeup()
 {
   // Wake-up from Sleep mode
   // There is no interrupt handler for this event, we just wake up the ALU again.
-  sfrPMU0CF.data &= ~SLEEP_MODE;
+  sfrPMU0CF.Write(sfrPMU0CF.Read() & ~SLEEP_MODE);
   remainingTicks = CalculateRemainingTicks();
   ReportActive();
 }

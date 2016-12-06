@@ -28,6 +28,14 @@
 #include "memory.hpp"
 #include "sfr.hpp"
 
+class SfrPMU0CF: public Sfr
+{
+  public:
+    SfrPMU0CF(std::string name, Block &block, std::uint8_t address, std::uint8_t resetValue, std::set<std::uint8_t> pages);
+    void Write(std::uint8_t data);
+    std::uint8_t Read();
+};
+
 class Cpu8051Callbacks;
 class Cpu8051;
 class Instruction;
@@ -105,7 +113,7 @@ class Alu : public Block
     Sfr sfrSFRPAGE;
     SfrBitAddressable sfrB;
     SfrBitAddressable sfrACC;
-    Sfr sfrPMU0CF;
+    SfrPMU0CF sfrPMU0CF;
     Sfr sfrPCON;
     Sfr sfrPSCTL;
     Sfr sfrFLSCL;
